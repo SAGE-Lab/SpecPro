@@ -13,6 +13,8 @@ public class Assignment {
         assignmentsMap = new HashMap<>();
     }
 
+    public Assignment(Assignment ass) { this((HashMap) ass.assignmentsMap.clone()); }
+
     public Assignment(HashMap<Atom, Boolean> assignment) {
         this.assignmentsMap = assignment;
     }
@@ -26,22 +28,37 @@ public class Assignment {
         }
     }
 
+    public void add(Assignment assignment) {
+        for(Map.Entry<Atom, Boolean> entry : assignment.getAssignments().entrySet()) {
+            add(entry.getKey(), entry.getValue());
+        }
+    }
+
     public Map<Atom, Boolean> getAssignments() {
         return assignmentsMap;
     }
 
     public Assignment combine(Assignment assignment) {
-        Assignment newAss = new Assignment((HashMap) this.assignmentsMap.clone());
-
         try {
-            for(Map.Entry<Atom, Boolean> entry : assignment.getAssignments().entrySet()) {
-                newAss.add(entry.getKey(), entry.getValue());
-            }
+            Assignment newAss = new Assignment(this);
+            newAss.add(assignment);
+            return newAss;
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
 
-        return newAss;
+    public Atom getAtom(String varName) {
+        for(Atom a:  assignmentsMap.keySet()) {
+            if(a.getName().equals(varName)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    public boolean getValue(Atom a) {
+        return assignmentsMap.get(a);
     }
 
     public boolean contains(Assignment assignment) {

@@ -37,6 +37,16 @@ public class Atom extends Formula {
     }
 
     @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj instanceof Atom && ((Atom)obj).getName().equals(name);
+    }
+
+    @Override
     public void accept(FormulaVisitor visitor) {
         visitor.visitAtom(this);
     }

@@ -8,7 +8,7 @@ import it.sagelab.specpro.fe.snl2fl.visitor.ExpressionVisitor;
  * @author = Simone Vuotto
  * creation date  =  03/09/15.
  */
-public class VariableExpression extends Expression{
+public class VariableExpression extends Expression {
 
     public enum Type {
         BOOLEAN,
@@ -98,4 +98,5 @@ public class VariableExpression extends Expression{
     public String toString(){
         return name;
     }
+
 }
