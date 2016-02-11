@@ -51,8 +51,8 @@ public class PathsBuilder {
     public void generateAllConditionsPaths() {
         ArrayList<Path> paths = new ArrayList<>();
         paths.add(new Path());
-        generateAllConditionsPaths(paths, 0);
-        //generateAllCombinationsPaths(paths, 0);
+        //generateAllConditionsPaths(paths, 0);
+        generateAllCombinationsPaths(paths, 0);
 
 
         for(Path p: paths) {

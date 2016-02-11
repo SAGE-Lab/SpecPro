@@ -21,12 +21,12 @@ public class BARunnerTestGenerator extends RequirementsTestGenerator {
             ++nReq;
             int nPath = 1;
             for(List<Assignment> path: trie) {
-                System.out.println("\tEvaluating path " + nPath + " / " + trie.numberOfSequences());
+                System.out.println("\tEvaluating path " + nPath + " / " + trie.size());
                 ++nPath;
                 List<Assignment> newPath = pathValidator.evaluate(path);
                 if(newPath != null) {
                     System.out.println("**********************************************************");
-                    System.out.println("New Path found!");
+                    System.out.println("New EdgeSequence found!");
                     newPath.forEach(System.out::println);
                     System.out.println("**********************************************************");
                     completePaths.insert(newPath);

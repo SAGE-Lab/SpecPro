@@ -33,7 +33,7 @@ public class PathsMultiplierTestGenerator extends RequirementsTestGenerator {
             List<List<Assignment>> pathsToRemove = new ArrayList<>();
             int n = 1;
             for(List<Assignment> currentPath: trie) {
-                System.out.println("\tpath " + (n++) + "/" + trie.numberOfSequences());
+                System.out.println("\tpath " + (n++) + "/" + trie.size());
                 if(visitedPaths.contains(currentPath))
                     continue;
                 HashSet<List<Assignment>> visited = new HashSet<>();
@@ -46,7 +46,7 @@ public class PathsMultiplierTestGenerator extends RequirementsTestGenerator {
                     for(List<Assignment> visitedPath: visited)
                         visitedPaths.insert(visitedPath);
                 } else {
-                    System.out.println("Path not valid: " + currentPath);
+                    System.out.println("EdgeSequence not valid: " + currentPath);
                     pathsToRemove.add(currentPath);
                 }
             }
@@ -66,7 +66,7 @@ public class PathsMultiplierTestGenerator extends RequirementsTestGenerator {
             System.out.println("Filtering paths " + (i + 1) + "/" + singlePaths.size());
             Trie<Assignment> trie = singlePaths.get(i);
             Trie<Assignment> filteredPaths = new Trie<>();
-            System.out.println("Initial paths: " + trie.numberOfSequences());
+            System.out.println("Initial paths: " + trie.size());
             for(List<Assignment> currentPath: trie) {
                 Trie<Assignment> temp = new Trie<>();
                 temp.insert(currentPath);
@@ -83,7 +83,7 @@ public class PathsMultiplierTestGenerator extends RequirementsTestGenerator {
                         else
                             return null;
                     });
-                    if (compatiblePaths.numberOfSequences() == 0) {
+                    if (compatiblePaths.size() == 0) {
                         isValid = false;
                         break;
                     }
@@ -91,11 +91,11 @@ public class PathsMultiplierTestGenerator extends RequirementsTestGenerator {
                 if (isValid) {
                     filteredPaths.insert(currentPath);
                 } else {
-                    System.out.println("Path filtered out: " + currentPath);
+                    System.out.println("EdgeSequence filtered out: " + currentPath);
                 }
             }
-            System.out.println("Filtered paths: " + filteredPaths.numberOfSequences());
-            if(filteredPaths.numberOfSequences() > 0) {
+            System.out.println("Filtered paths: " + filteredPaths.size());
+            if(filteredPaths.size() > 0) {
                 singlePaths.set(i, filteredPaths);
                 iterators.set(i, singlePaths.get(i).iterator());
             } else {
@@ -115,7 +115,7 @@ public class PathsMultiplierTestGenerator extends RequirementsTestGenerator {
         Trie<Assignment> trie = singlePaths.get(index);
 
         Iterator<List<Assignment>> iterator = iterators.get(index);
-        for(int i = 0; i < trie.numberOfSequences(); ++i) {
+        for(int i = 0; i < trie.size(); ++i) {
             if(!iterator.hasNext()) {
                 iterator = trie.iterator();
                 iterators.set(index, iterator);

@@ -53,7 +53,7 @@ public class PathEvaluator {
             return path;
 
         Assignment s = path.get(index);
-        // System.out.println("Evaluating: " + s);
+        System.out.println("Evaluating: " + s);
         List<List<Option>> allOptions = new ArrayList<>();
         for(int i = 0; i < currentState.length; ++i) {
             final Vertex v = currentState[i];
@@ -122,6 +122,7 @@ public class PathEvaluator {
         if(allOptions == null) {
             return null;
         }
+        //System.out.println("Merge " + allOptions.size());
         List<List<Option>> mergedOptions = new ArrayList<>();
 
         for(int i = 0; i < allOptions.size(); i += 2) {
@@ -139,6 +140,7 @@ public class PathEvaluator {
     }
 
     private List<Option> merge(List<Option> l1, List<Option> l2) {
+        System.out.println("merge " + l1.size() + " x " + l2.size());
         List<Option> mergedOpt = new ArrayList<>();
         for(Option o1: l1) {
             for(Option o2: l2) {
