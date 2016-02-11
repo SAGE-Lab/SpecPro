@@ -1,9 +1,6 @@
 package it.sagelab.specpro.collections;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 
 /**
@@ -41,6 +38,24 @@ public class Trie <K> implements Iterable<List<K>> {
     }
 
     /**
+     * Insert a sequence of elements K in the trie.
+     * @param path the array of elements to insert
+     */
+    public void insert(K[] path) {
+
+        TrieNode<K> t = root;
+
+        for(K element: path) {
+            t = t.add(element, false);
+        }
+
+        if(!t.isLeaf)
+            ++nSequences;
+
+        t.isLeaf = true;
+    }
+
+    /**
      * Check if the trie contains the sequence of elements specified in input.
      * This method only checks if the elements exist, not if the sequence is complete.
      * @see #containsSequence(List) to check if the sequence is complete
@@ -48,6 +63,19 @@ public class Trie <K> implements Iterable<List<K>> {
      */
     public boolean contains(List<K> path) {
         return find(path) != null;
+    }
+
+    /**
+     * Returns all successors of the sequence given in input.
+     *
+     * @param path the sequence to check
+     * @return the set of successors, or null if the sequence is not part of the Trie
+     */
+    public Set<K> getSuccessors(List<K> path) {
+        TrieNode<K> t = find(path);
+        if(t == null)
+            return null;
+        return t.children.keySet();
     }
 
     /**
@@ -76,7 +104,7 @@ public class Trie <K> implements Iterable<List<K>> {
      *
      * @return the number of sequences in the Trie
      */
-    public int numberOfSequences() {
+    public int size() {
         return nSequences;
     }
 
