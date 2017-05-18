@@ -23,6 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Simone Vuotto
+ * @author Massimo Narizzano
+ */
 public class Main {
 
     public static void main(String[] args) throws IOException {
