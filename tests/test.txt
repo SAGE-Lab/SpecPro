@@ -1,3 +1,0 @@
-Globally, it is always the case that P holds.
-Globally, it is never the case that S < 10 holds.
-
