@@ -26,8 +26,8 @@ import java.util.Map;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        if(args.length == 0) {
-            System.out.println("Usage: RequirementsParser <filePath>");
+        if(args.length < 2) {
+            System.out.println("Usage: RequirementsParser <filePath> <outdir>");
             System.exit(0);
         }
 
@@ -60,7 +60,7 @@ public class Main {
                                                 Pattern.loadPatterns(Pattern.PATTERNS_FILE));
             LTLTranslator ltltranslator = new LTLTranslator(qualitativeRequirements, context);
             NuSMVTranslator nuSMVTranslator = new NuSMVTranslator(ltltranslator);
-            PrintStream ps = new PrintStream(new FileOutputStream("out.smv"));
+            PrintStream ps = new PrintStream(new FileOutputStream(args[1] + "out.smv"));
 
             nuSMVTranslator.translate(ps);
 
