@@ -1,7 +1,7 @@
-package it.unige.pat2fl.req.requirements;
+package snl2fl.req.requirements;
 
 /**
- * Created by Simone Vuotto on 03/09/15.
+ * @author Simone Vuotto
  */
 public class Time {
     private final float value;

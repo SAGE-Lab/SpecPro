@@ -1,14 +1,14 @@
-package it.unige.pat2fl.fl.parser;
+package snl2fl.fl.parser;
 
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
-import it.unige.pat2fl.fl.elements.Atom;
-import it.unige.pat2fl.fl.elements.BinaryOperator;
-import it.unige.pat2fl.fl.elements.Formula;
-import it.unige.pat2fl.fl.elements.UnaryOperator;
+import snl2fl.fl.elements.Atom;
+import snl2fl.fl.elements.BinaryOperator;
+import snl2fl.fl.elements.Formula;
+import snl2fl.fl.elements.UnaryOperator;
 
 /**
- * Created by Simone Vuotto on 16/11/15.
+ * @author Simone Vuotto
  */
 public class FLBuilder extends FLGrammarBaseListener {
     /** maps nodes to Expressions with Map<ParseTree,Expression> */

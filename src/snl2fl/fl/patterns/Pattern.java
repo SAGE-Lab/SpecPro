@@ -1,4 +1,4 @@
-package it.unige.pat2fl.fl.patterns;
+package snl2fl.fl.patterns;
 
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -9,14 +9,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import it.unige.pat2fl.fl.elements.Formula;
-import it.unige.pat2fl.fl.parser.FLBuilder;
-import it.unige.pat2fl.fl.parser.FLGrammarLexer;
-import it.unige.pat2fl.fl.parser.FLGrammarParser;
-import it.unige.pat2fl.req.parser.RequirementsBuilder;
-import it.unige.pat2fl.req.parser.RequirementsGrammarLexer;
-import it.unige.pat2fl.req.parser.RequirementsGrammarParser;
-import it.unige.pat2fl.req.requirements.Requirement;
+import snl2fl.fl.elements.Formula;
+import snl2fl.fl.parser.FLBuilder;
+import snl2fl.fl.parser.FLGrammarLexer;
+import snl2fl.fl.parser.FLGrammarParser;
+import snl2fl.req.parser.RequirementsBuilder;
+import snl2fl.req.parser.RequirementsGrammarLexer;
+import snl2fl.req.parser.RequirementsGrammarParser;
+import snl2fl.req.requirements.Requirement;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Simone Vuotto on 17/11/15.
+ * @author Simone Vuotto
  */
 public class Pattern {
     public static final String PATTERNS_FILE = "/patterns_to_ltl.json";

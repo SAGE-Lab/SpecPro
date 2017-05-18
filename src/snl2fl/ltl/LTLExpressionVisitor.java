@@ -1,15 +1,15 @@
-package it.unige.pat2fl.ltl;
+package snl2fl.ltl;
 
-import it.unige.pat2fl.fl.elements.Atom;
-import it.unige.pat2fl.fl.elements.BinaryOperator;
-import it.unige.pat2fl.fl.elements.Formula;
-import it.unige.pat2fl.req.expressions.*;
-import it.unige.pat2fl.req.visitor.ContextBasedVisitor;
+import snl2fl.fl.elements.Atom;
+import snl2fl.fl.elements.BinaryOperator;
+import snl2fl.fl.elements.Formula;
+import snl2fl.req.expressions.*;
+import snl2fl.req.visitor.ContextBasedVisitor;
 
 /**
- * Created by Simone Vuotto on 06/10/15.
+ * @author Simone Vuotto
  */
-public class LTLExpressionVisitor extends ContextBasedVisitor<LTLContext> implements it.unige.pat2fl.req.visitor.ExpressionVisitor {
+public class LTLExpressionVisitor extends ContextBasedVisitor<LTLContext> implements snl2fl.req.visitor.ExpressionVisitor {
 
     private Formula formula;
 

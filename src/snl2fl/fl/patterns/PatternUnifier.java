@@ -1,18 +1,18 @@
-package it.unige.pat2fl.fl.patterns;
+package snl2fl.fl.patterns;
 
 import java.text.ParseException;
 import java.util.List;
 
-import it.unige.pat2fl.fl.elements.Atom;
-import it.unige.pat2fl.fl.elements.BinaryOperator;
-import it.unige.pat2fl.fl.elements.Formula;
-import it.unige.pat2fl.fl.elements.UnaryOperator;
-import it.unige.pat2fl.fl.visitor.FormulaVisitor;
-import it.unige.pat2fl.req.expressions.Expression;
-import it.unige.pat2fl.req.requirements.Requirement;
+import snl2fl.fl.elements.Atom;
+import snl2fl.fl.elements.BinaryOperator;
+import snl2fl.fl.elements.Formula;
+import snl2fl.fl.elements.UnaryOperator;
+import snl2fl.fl.visitor.FormulaVisitor;
+import snl2fl.req.expressions.Expression;
+import snl2fl.req.requirements.Requirement;
 
 /**
- * Created by Simone Vuotto on 24/11/15.
+ * @author Simone Vuotto
  */
 public class PatternUnifier implements FormulaVisitor {
 

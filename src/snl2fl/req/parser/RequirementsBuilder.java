@@ -1,15 +1,15 @@
-package it.unige.pat2fl.req.parser;
+package snl2fl.req.parser;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import it.unige.pat2fl.req.expressions.*;
-import it.unige.pat2fl.req.requirements.Requirement;
-import it.unige.pat2fl.req.requirements.Scope;
-import it.unige.pat2fl.req.requirements.Time;
-import it.unige.pat2fl.req.requirements.qualitative.*;
-import it.unige.pat2fl.req.requirements.realtime.*;
+import snl2fl.req.expressions.*;
+import snl2fl.req.requirements.Requirement;
+import snl2fl.req.requirements.Scope;
+import snl2fl.req.requirements.Time;
+import snl2fl.req.requirements.qualitative.*;
+import snl2fl.req.requirements.realtime.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

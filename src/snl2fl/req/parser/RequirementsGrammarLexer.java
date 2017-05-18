@@ -1,4 +1,4 @@
-package it.unige.pat2fl.req.parser;
+package snl2fl.req.parser;
 
 
 // Generated from RequirementsGrammar.g by ANTLR 4.5.1

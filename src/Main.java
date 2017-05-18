@@ -1,4 +1,4 @@
-package pat2fl;
+package snl2fl;
 
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -31,7 +31,7 @@ public class Main {
             System.exit(0);
         }
 
-	    RequirementsGrammarLexer lexer = new RequirementsGrammarLexer(new ANTLRFileStream(args[0]));
+	RequirementsGrammarLexer lexer = new RequirementsGrammarLexer(new ANTLRFileStream(args[0]));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         RequirementsGrammarParser parser = new RequirementsGrammarParser(tokens);
         ParseTreeWalker walker = new ParseTreeWalker();

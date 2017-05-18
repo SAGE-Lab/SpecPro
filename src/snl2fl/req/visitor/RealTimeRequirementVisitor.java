@@ -1,9 +1,10 @@
-package it.unige.pat2fl.req.visitor;
+package snl2fl.req.visitor;
 
-import it.unige.pat2fl.req.requirements.realtime.*;
+import snl2fl.req.requirements.realtime.*;
 
 /**
- * Created by Simone Vuotto on 02/10/15.
+ * @author Simone Vuotto
+ * creation date 02/09/15.
  */
 public interface RealTimeRequirementVisitor {
 

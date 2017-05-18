@@ -1,18 +1,18 @@
-package it.unige.pat2fl.ltl.nusmv;
+package snl2fl.ltl.nusmv;
 
 import java.io.PrintStream;
 import java.util.List;
 import java.util.TreeMap;
 
-import it.unige.pat2fl.fl.elements.Atom;
-import it.unige.pat2fl.fl.elements.Formula;
-import it.unige.pat2fl.ltl.LTLContext;
-import it.unige.pat2fl.ltl.LTLTranslator;
-import it.unige.pat2fl.req.expressions.BooleanVariableExpression;
-import it.unige.pat2fl.req.expressions.VariableExpression;
+import snl2fl.fl.elements.Atom;
+import snl2fl.fl.elements.Formula;
+import snl2fl.ltl.LTLContext;
+import snl2fl.ltl.LTLTranslator;
+import snl2fl.req.expressions.BooleanVariableExpression;
+import snl2fl.req.expressions.VariableExpression;
 
 /**
- * Created by Simone Vuotto on 11/01/16.
+ * @author Simone Vuotto
  */
 public class NuSMVTranslator {
     private final LTLTranslator translator;

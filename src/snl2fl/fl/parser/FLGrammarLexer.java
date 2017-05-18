@@ -1,5 +1,4 @@
-// Generated from FLGrammar.g by ANTLR 4.5.1
-package it.unige.pat2fl.fl.parser;
+package snl2fl.fl.parser;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -9,6 +8,7 @@ import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
+// Generated from FLGrammar.g by ANTLR 4.5.1
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class FLGrammarLexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.5.1", RuntimeMetaData.VERSION); }

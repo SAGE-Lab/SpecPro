@@ -1,9 +1,10 @@
-package it.unige.pat2fl.req.expressions;
+package snl2fl.req.expressions;
 
-import it.unige.pat2fl.req.visitor.ExpressionVisitor;
+import snl2fl.req.visitor.ExpressionVisitor;
 
 /**
- * Created by Simone Vuotto on 03/09/15.
+ * @author Simone Vuotto
+ * creation date  =  03/09/15.
  */
 public class CompareExpression extends Expression {
     protected final Expression leftExp, rightExp;

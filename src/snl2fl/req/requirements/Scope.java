@@ -1,12 +1,12 @@
-package it.unige.pat2fl.req.requirements;
+package snl2fl.req.requirements;
 
 import java.util.List;
 
-import it.unige.pat2fl.req.expressions.Expression;
-import it.unige.pat2fl.req.visitor.ScopeVisitor;
+import snl2fl.req.expressions.Expression;
+import snl2fl.req.visitor.ScopeVisitor;
 
 /**
- * Created by Simone Vuotto on 03/09/15.
+ * @author Simone Vuotto
  */
 public class Scope {
 

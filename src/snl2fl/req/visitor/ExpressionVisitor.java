@@ -1,9 +1,9 @@
-package it.unige.pat2fl.req.visitor;
+package snl2fl.req.visitor;
 
-import it.unige.pat2fl.req.expressions.*;
-
+import snl2fl.req.expressions.*;
 /**
- * Created by Simone Vuotto on 15/10/15.
+ * @author Simone Vuotto
+ * creation date 15/10/15.
  */
 public interface ExpressionVisitor {
 

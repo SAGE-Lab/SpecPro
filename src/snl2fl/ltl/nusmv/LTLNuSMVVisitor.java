@@ -1,17 +1,17 @@
-package it.unige.pat2fl.ltl.nusmv;
+package snl2fl.ltl.nusmv;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import it.unige.pat2fl.fl.elements.Atom;
-import it.unige.pat2fl.fl.elements.BinaryOperator;
-import it.unige.pat2fl.fl.elements.Formula;
-import it.unige.pat2fl.fl.elements.UnaryOperator;
-import it.unige.pat2fl.fl.visitor.FormulaVisitor;
-import it.unige.pat2fl.req.visitor.ContextBasedVisitor;
+import snl2fl.fl.elements.Atom;
+import snl2fl.fl.elements.BinaryOperator;
+import snl2fl.fl.elements.Formula;
+import snl2fl.fl.elements.UnaryOperator;
+import snl2fl.fl.visitor.FormulaVisitor;
+import snl2fl.req.visitor.ContextBasedVisitor;
 
 /**
- * Created by Simone Vuotto on 02/12/15.
+ * @author Simone Vuotto
  */
 public class LTLNuSMVVisitor extends ContextBasedVisitor<PrintStream> implements FormulaVisitor{
     private Formula formula;

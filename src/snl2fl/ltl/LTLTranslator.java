@@ -1,20 +1,20 @@
-package it.unige.pat2fl.ltl;
+package snl2fl.ltl;
 
 import org.json.JSONException;
 
-import it.unige.pat2fl.fl.elements.Atom;
-import it.unige.pat2fl.fl.elements.BinaryOperator;
-import it.unige.pat2fl.fl.elements.Formula;
-import it.unige.pat2fl.fl.patterns.Pattern;
-import it.unige.pat2fl.fl.patterns.PatternUnifier;
-import it.unige.pat2fl.req.expressions.Expression;
-import it.unige.pat2fl.req.requirements.qualitative.QualitativeRequirement;
+import snl2fl.fl.elements.Atom;
+import snl2fl.fl.elements.BinaryOperator;
+import snl2fl.fl.elements.Formula;
+import snl2fl.fl.patterns.Pattern;
+import snl2fl.fl.patterns.PatternUnifier;
+import snl2fl.req.expressions.Expression;
+import snl2fl.req.requirements.qualitative.QualitativeRequirement;
 
 import java.io.IOException;
 import java.util.*;
 
 /**
- * Created by Simone Vuotto on 02/10/15.
+ * @author Simone Vuotto
  */
 public class LTLTranslator {
 

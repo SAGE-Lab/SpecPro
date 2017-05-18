@@ -1,5 +1,5 @@
 // Generated from FLGrammar.g by ANTLR 4.5.1
-package it.unige.pat2fl.fl.parser;
+package snl2fl.fl.parser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**

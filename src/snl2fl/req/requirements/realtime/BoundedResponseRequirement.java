@@ -1,14 +1,14 @@
-package it.unige.pat2fl.req.requirements.realtime;
+package snl2fl.req.requirements.realtime;
 
 import java.util.List;
 
-import it.unige.pat2fl.req.expressions.Expression;
-import it.unige.pat2fl.req.requirements.Scope;
-import it.unige.pat2fl.req.requirements.Time;
-import it.unige.pat2fl.req.visitor.RealTimeRequirementVisitor;
+import snl2fl.req.expressions.Expression;
+import snl2fl.req.requirements.Scope;
+import snl2fl.req.requirements.Time;
+import snl2fl.req.visitor.RealTimeRequirementVisitor;
 
 /**
- * Created by Simone Vuotto on 04/09/15.
+ * @author Simone Vuotto
  */
 public class BoundedResponseRequirement extends RealTimeRequirement {
     public BoundedResponseRequirement(Scope scope, List<Expression> expressions, Time t) {

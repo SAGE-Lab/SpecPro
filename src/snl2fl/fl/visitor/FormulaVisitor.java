@@ -1,11 +1,11 @@
-package it.unige.pat2fl.fl.visitor;
+package snl2fl.fl.visitor;
 
-import it.unige.pat2fl.fl.elements.Atom;
-import it.unige.pat2fl.fl.elements.BinaryOperator;
-import it.unige.pat2fl.fl.elements.UnaryOperator;
+import snl2fl.fl.elements.Atom;
+import snl2fl.fl.elements.BinaryOperator;
+import snl2fl.fl.elements.UnaryOperator;
 
 /**
- * Created by Simone Vuotto on 24/11/15.
+ * @author Simone Vuotto
  */
 public interface FormulaVisitor {
 

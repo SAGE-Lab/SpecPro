@@ -1,5 +1,5 @@
-// Generated from FLGrammar.g by ANTLR 4.5.1
-package it.unige.pat2fl.fl.parser;
+package snl2fl.fl.parser;
+
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 
+// Generated from FLGrammar.g by ANTLR 4.5.1
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class FLGrammarParser extends Parser {
 	static { RuntimeMetaData.checkVersion("4.5.1", RuntimeMetaData.VERSION); }

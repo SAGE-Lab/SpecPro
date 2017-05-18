@@ -1,11 +1,11 @@
-package it.unige.pat2fl.req.requirements;
+package snl2fl.req.requirements;
 
 import java.util.List;
 
-import it.unige.pat2fl.req.expressions.Expression;
+import snl2fl.req.expressions.Expression;
 
 /**
- * Created by Simone Vuotto on 03/09/15.
+ * @author Simone Vuotto
  */
 public abstract class Requirement {
     private final Scope scope;

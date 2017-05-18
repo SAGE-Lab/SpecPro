@@ -1,12 +1,15 @@
-package it.unige.pat2fl.req.requirements.qualitative;
+package snl2fl.req.requirements.qualitative;
 
 import java.util.List;
 
-import it.unige.pat2fl.req.expressions.Expression;
-import it.unige.pat2fl.req.requirements.Requirement;
-import it.unige.pat2fl.req.requirements.Scope;
-import it.unige.pat2fl.req.visitor.QualitativeRequirementVisitor;
+import snl2fl.req.expressions.Expression;
+import snl2fl.req.requirements.Requirement;
+import snl2fl.req.requirements.Scope;
+import snl2fl.req.visitor.QualitativeRequirementVisitor;
 
+/**
+ * @author Simone Vuotto
+ */
 public abstract class QualitativeRequirement extends Requirement {
 
     public QualitativeRequirement(Scope scope, List<Expression> expressions) {

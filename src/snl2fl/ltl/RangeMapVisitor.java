@@ -1,14 +1,14 @@
-package it.unige.pat2fl.ltl;
+package snl2fl.ltl;
 
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import it.unige.pat2fl.fl.elements.Atom;
-import it.unige.pat2fl.req.expressions.*;
-import it.unige.pat2fl.req.visitor.ExpressionVisitor;
+import snl2fl.fl.elements.Atom;
+import snl2fl.req.expressions.*;
+import snl2fl.req.visitor.ExpressionVisitor;
 
 /**
- * Created by Simone Vuotto on 15/10/15.
+ * @author Simone Vuotto
  */
 public class RangeMapVisitor implements ExpressionVisitor {
 

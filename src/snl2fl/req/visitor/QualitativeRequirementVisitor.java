@@ -1,9 +1,10 @@
-package it.unige.pat2fl.req.visitor;
+package snl2fl.req.visitor;
 
-import it.unige.pat2fl.req.requirements.qualitative.*;
+import snl2fl.req.requirements.qualitative.*;
 
 /**
- * Created by Simone Vuotto on 02/10/15.
+ * @author Simone Vuotto
+ * creation date 02/10/15.
  */
 public interface QualitativeRequirementVisitor {
 

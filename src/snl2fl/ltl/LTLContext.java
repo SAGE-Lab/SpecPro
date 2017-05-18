@@ -1,18 +1,18 @@
-package it.unige.pat2fl.ltl;
+package snl2fl.ltl;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-import it.unige.pat2fl.fl.elements.Atom;
-import it.unige.pat2fl.fl.elements.BinaryOperator;
-import it.unige.pat2fl.fl.elements.Formula;
-import it.unige.pat2fl.fl.elements.UnaryOperator;
-import it.unige.pat2fl.fl.patterns.Pattern;
-import it.unige.pat2fl.req.expressions.CompareExpression;
-import it.unige.pat2fl.req.expressions.VariableExpression;
+import snl2fl.fl.elements.Atom;
+import snl2fl.fl.elements.BinaryOperator;
+import snl2fl.fl.elements.Formula;
+import snl2fl.fl.elements.UnaryOperator;
+import snl2fl.fl.patterns.Pattern;
+import snl2fl.req.expressions.CompareExpression;
+import snl2fl.req.expressions.VariableExpression;
 
 /**
- * Created by Simone Vuotto on 03/11/15.
+ * @author Simone Vuotto
  */
 public class LTLContext {
     private Map<String, VariableExpression> symbolTable;
