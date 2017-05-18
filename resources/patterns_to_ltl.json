@@ -1,0 +1,102 @@
+[
+  {
+    "body": "it is never the case that P holds.",
+    "formula": {
+                "Globally": "[](!P)",
+                "Before R": "<>R -> (!P U R)",
+                "After Q": "[](Q -> [](!P))",
+                "Between Q and R": "[]((Q & !R & <>R) -> (!P U R))",
+                "After Q and R": "[](Q & !R -> (!P W R))"
+                }
+  },
+  {
+    "body": "P eventually holds.",
+    "formula" : {
+                "Globally": "<>(P)",
+                "Before R": "!R W (P & !R)",
+                "After Q": "[](!Q | <>(Q & <>P))",
+                "Between Q and R": "[](Q & !R -> (!R W (P & !R)))",
+                "After Q and R": "[](Q & !R -> (!R U (P & !R)))"
+                }
+  },
+  {
+    "body": "it is always the case that P holds.",
+    "formula" : {
+                "Globally": "[](P)",
+                "Before R": "<>R -> (P U R)",
+                "After Q": "[](Q -> [](P))",
+                "Between Q and R": "[]((Q & !R & <>R) -> (P U R))",
+                "After Q and R": "[](Q & !R -> (P W R))"
+                }
+  },
+  {
+    "body": "it is always the case that if P holds, then S previously held.",
+    "formula": {
+                "Globally": "!P W S",
+                "Before R": "<>R -> (!P U (S | R))",
+                "After Q": "[]!Q | <>(Q & (!P W S))",
+                "Between Q and R": "[]((Q & !R & <>R) -> (!P U (S | R)))",
+                "After Q and R": "[](Q & !R -> (!P W (S | R)))"
+                }
+  },
+  {
+    "body": "it is always the case that if S holds and is succeeded by T, then P previously held.",
+    "formula": {
+                "Globally": "(<>(S & o<>T)) -> ((!S) U P)",
+                "Before R": "<>R -> ((!(S & (!R) & o(!R U (T & !R)))) U (R | P))",
+                "After Q": " ([]!Q) | ((!Q) U (Q & (<>(S & o<>T)) -> ((!S) U P)))",
+                "Between Q and R": "[]((Q & <>R) -> ((!(S & (!R) & o(!R U (T & !R)))) U (R | P)))",
+                "After Q and R": "[](Q -> (!(S & (!R) & o(!R U (T & !R))) U (R | P) | [](!(S & o<>T)))) "
+                }
+  },
+  {
+    "body": "it is always the case that if P holds, then S previously held and was preceded by T.",
+    "formula": {
+                "Globally": "<>P -> (!P U (S & !P & o(!P U T)))",
+                "Before R": "<>R -> (!P U (R | (S & !P & o(!P U T))))",
+                "After Q": "([]!Q) | (!Q U (Q & <>P -> (!P U (S & !P & o(!P U T)))))",
+                "Between Q and R": "[]((Q & <>R) -> (!P U (R | (S & !P & o(!P U T)))))",
+                "After Q and R":   "[](Q -> (<>P -> (!P U (R | (S & !P & o(!P U T))))))"
+                }
+  },
+  {
+    "body": "it is always the case that if P holds, then S eventually holds.",
+    "formula": {
+                "Globally": "[](P -> <>S)",
+                "Before R": "<>R -> (P -> (!R U (S & !R))) U R",
+                "After Q": "[](Q -> [](P -> <>S))",
+                "Between Q and R": "[]((Q & !R & <>R) -> (P -> (!R U (S & !R)) U R))",
+                "After Q and R": "[](Q & !R -> ((P -> (!R U (S & !R))) W R))"
+                }
+  },
+  {
+    "body": "it is always the case that if P holds, then S eventually holds and is succeeded by T.",
+    "formula": {
+                "Globally": "[] (P -> <>(S & o<>T)) ",
+                "Before R": " <>R -> (P -> (!R U (S & !R & o(!R U T)))) U R",
+                "After Q": "[] (Q -> [] (P -> (S & o<> T)))",
+                "Between Q and R": " [] ((Q & <>R) -> (P -> (!R U (S & !R & o(!R U T)))) U R)",
+                "After Q and R": "[] (Q -> (P -> (!R U (S & !R & o(!R U T)))) U  (R | [] (P -> (S & o<> T))))"
+                }
+  },
+  {
+    "body": "it is always the case that if P holds and is succeeded by S, then T eventually holds after S.",
+    "formula": {
+                "Globally": "[] (S & o<> T -> o(<>(T & <> P)))",
+                "Before R": "<>R -> (S & o(!R U T) -> o(!R U (T & <> P))) U R",
+                "After Q": "[](Q -> [](S & o<> T -> o(!T U (T & <> P))))",
+                "Between Q and R": "[]((Q & <>R) -> (S & o(!R U T) -> o(!R U (T & <> P))) U R)",
+                "After Q and R": "[](Q -> (S & o(!R U T) -> o(!R U (T & <> P))) U (R | [](S & o(!R U T) -> o(!R U (T & <> P)))))"
+                }
+  },
+  {
+    "body": "it is always the case that if P holds, then S eventually holds and is succeeded by T, where Z does not hold between S and T.",
+    "formula": {
+                "Globally": "[](P -> <>(S & !Z & o(!Z U T)))",
+                "Before R": "<>R -> (P -> (!R U (S & !R & !Z & o((!R & !Z) U T)))) U R",
+                "After Q": "[](Q -> [](P -> (S & !Z & o(!Z U T))))",
+                "Between Q and R": "[]((Q & <>R) -> (P -> (!R U (S & !R & !Z & o((!R & !Z) U T)))) U R)",
+                "After Q and R": "[](Q -> (P -> (!R U (S & !R & !Z & o((!R & !Z) U T)))) U (R | [](P -> (S & !Z & o(!Z U T)))))"
+                }
+  }
+]

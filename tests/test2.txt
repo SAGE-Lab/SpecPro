@@ -1,0 +1,1 @@
+After B, it is always the case that if P holds, then S previously held.
