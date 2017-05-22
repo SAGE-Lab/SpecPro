@@ -12,15 +12,30 @@ import snl2fl.req.expressions.Expression;
 import snl2fl.req.requirements.Requirement;
 
 /**
+ * The Class PatternUnifier.
+ *
  * @author Simone Vuotto
  */
 public class PatternUnifier implements FormulaVisitor {
 
+    /** The formula. */
     private Formula formula;
+    
+    /** The pattern. */
     private Pattern pattern;
+    
+    /** The body formulae. */
     private List<Formula> scopeFormulae, bodyFormulae;
 
 
+    /**
+     * Unify.
+     *
+     * @param pattern the pattern
+     * @param scopeFormulae the scope formulae
+     * @param bodyFormulae the body formulae
+     * @return the formula
+     */
     public Formula unify(Pattern pattern, List<Formula> scopeFormulae, List<Formula> bodyFormulae) {
         this.pattern = pattern;
         this.scopeFormulae = scopeFormulae;
@@ -29,12 +44,18 @@ public class PatternUnifier implements FormulaVisitor {
         return formula;
     }
 
+    /* (non-Javadoc)
+     * @see snl2fl.fl.visitor.FormulaVisitor#visitUnaryOperator(snl2fl.fl.elements.UnaryOperator)
+     */
     @Override
     public void visitUnaryOperator(UnaryOperator op) {
         op.getChild().accept(this);
         formula = new UnaryOperator(formula, op.getOperator());
     }
 
+    /* (non-Javadoc)
+     * @see snl2fl.fl.visitor.FormulaVisitor#visitBinaryOperator(snl2fl.fl.elements.BinaryOperator)
+     */
     @Override
     public void visitBinaryOperator(BinaryOperator op) {
         op.getLeftFormula().accept(this);
@@ -44,6 +65,9 @@ public class PatternUnifier implements FormulaVisitor {
         formula = new BinaryOperator(leftFormula, rightFormula, op.getOperator());
     }
 
+    /* (non-Javadoc)
+     * @see snl2fl.fl.visitor.FormulaVisitor#visitAtom(snl2fl.fl.elements.Atom)
+     */
     @Override
     public void visitAtom(Atom at) {
         Requirement r = pattern.getRequirement();
@@ -59,6 +83,13 @@ public class PatternUnifier implements FormulaVisitor {
             formula = bodyFormulae.get(bodyIndex);
     }
 
+    /**
+     * Find atom.
+     *
+     * @param name the name
+     * @param expressions the expressions
+     * @return the int
+     */
     private int findAtom(String name, List<Expression> expressions){
         for(int i = 0; i < expressions.size(); ++i)
             if(expressions.get(i).toString().equals(name))

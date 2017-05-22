@@ -7,18 +7,34 @@ import snl2fl.req.expressions.*;
 import snl2fl.req.visitor.ContextBasedVisitor;
 
 /**
+ * The Class LTLExpressionVisitor.
+ *
  * @author Simone Vuotto
  */
 public class LTLExpressionVisitor extends ContextBasedVisitor<LTLContext> implements snl2fl.req.visitor.ExpressionVisitor {
 
+    /** The formula. */
     private Formula formula;
 
+    /**
+     * Instantiates a new LTL expression visitor.
+     *
+     * @param context the context
+     */
     public LTLExpressionVisitor(LTLContext context) {
         super(context);
     }
 
+    /**
+     * Gets the formula.
+     *
+     * @return the formula
+     */
     public Formula getFormula() { return formula; }
 
+    /* (non-Javadoc)
+     * @see snl2fl.req.visitor.ExpressionVisitor#visitBooleanExpression(snl2fl.req.expressions.BooleanExpression)
+     */
     @Override
     public void visitBooleanExpression(BooleanExpression exp) {
         exp.getLeftExp().accept(this);
@@ -40,6 +56,9 @@ public class LTLExpressionVisitor extends ContextBasedVisitor<LTLContext> implem
         this.formula = formula;
     }
 
+    /* (non-Javadoc)
+     * @see snl2fl.req.visitor.ExpressionVisitor#visitCompareExpression(snl2fl.req.expressions.CompareExpression)
+     */
     @Override
     public void visitCompareExpression(CompareExpression exp) {
         Float threshold = null;
@@ -57,16 +76,25 @@ public class LTLExpressionVisitor extends ContextBasedVisitor<LTLContext> implem
         formula = getContext().getFormula(varName, threshold, exp.getOperator());
     }
 
+    /* (non-Javadoc)
+     * @see snl2fl.req.visitor.ExpressionVisitor#visitBooleanVariableExpression(snl2fl.req.expressions.BooleanVariableExpression)
+     */
     @Override
     public void visitBooleanVariableExpression(BooleanVariableExpression exp) {
         formula = new Atom(exp.getName());
     }
 
+    /* (non-Javadoc)
+     * @see snl2fl.req.visitor.ExpressionVisitor#visitNumberExpression(snl2fl.req.expressions.NumberExpression)
+     */
     @Override
     public void visitNumberExpression(NumberExpression exp) {
 
     }
 
+    /* (non-Javadoc)
+     * @see snl2fl.req.visitor.ExpressionVisitor#visitFloatVariableExpression(snl2fl.req.expressions.FloatVariableExpression)
+     */
     @Override
     public void visitFloatVariableExpression(FloatVariableExpression exp) {
 

@@ -12,15 +12,29 @@ import snl2fl.req.expressions.BooleanVariableExpression;
 import snl2fl.req.expressions.VariableExpression;
 
 /**
+ * The Class NuSMVTranslator.
+ *
  * @author Simone Vuotto
  */
 public class NuSMVTranslator {
+    
+    /** The translator. */
     private final LTLTranslator translator;
 
+    /**
+     * Instantiates a new nu SMV translator.
+     *
+     * @param translator the translator
+     */
     public NuSMVTranslator(LTLTranslator translator) {
         this.translator = translator;
     }
 
+    /**
+     * Translate.
+     *
+     * @param stream the stream
+     */
     public void translate(PrintStream stream) {
         stream.println("MODULE main");
         this.printVariables(stream);
@@ -48,6 +62,11 @@ public class NuSMVTranslator {
 
     }
 
+    /**
+     * Prints the variables.
+     *
+     * @param stream the stream
+     */
     public void printVariables(PrintStream stream) {
         stream.println("VAR\n");
         LTLContext context = translator.getContext();

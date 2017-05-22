@@ -14,20 +14,40 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * The Class LTLTranslator.
+ *
  * @author Simone Vuotto
  */
 public class LTLTranslator {
 
+    /** The requirements. */
     private List<QualitativeRequirement> requirements;
+    
+    /** The context. */
     private LTLContext context;
+    
+    /** The expression visitor. */
     private LTLExpressionVisitor expressionVisitor;
 
+    /**
+     * Instantiates a new LTL translator.
+     *
+     * @param requirements the requirements
+     * @param context the context
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws JSONException the JSON exception
+     */
     public LTLTranslator(List<QualitativeRequirement> requirements, LTLContext context) throws IOException, JSONException {
         this.requirements = requirements;
         this.context = context;
         expressionVisitor = new LTLExpressionVisitor(context);
     }
 
+    /**
+     * Translate.
+     *
+     * @return the list
+     */
     public List<Formula> translate() {
         PatternUnifier patternUnifier = new PatternUnifier();
         ArrayList<Formula> formulae = new ArrayList<>();
@@ -42,6 +62,11 @@ public class LTLTranslator {
         return formulae;
     }
 
+    /**
+     * Gets the invariants.
+     *
+     * @return the invariants
+     */
     public List<Formula> getInvariants() {
         ArrayList<Formula> invariants = new ArrayList<>();
         Map<String, TreeMap<Float, Atom[]>> rangeMap = context.getRangeMap();
@@ -61,6 +86,12 @@ public class LTLTranslator {
         return invariants;
     }
 
+    /**
+     * Parses the expressions.
+     *
+     * @param expressions the expressions
+     * @return the list
+     */
     private List<Formula> parseExpressions(List<Expression> expressions) {
         ArrayList<Formula> formulae = new ArrayList<>(expressions.size());
         for(Expression e : expressions) {
@@ -70,6 +101,12 @@ public class LTLTranslator {
         return formulae;
     }
 
+    /**
+     * Compute range map.
+     *
+     * @param requirements the requirements
+     * @return the map
+     */
     public static Map<String, TreeMap<Float, Atom[]>> computeRangeMap(List<QualitativeRequirement> requirements){
         RangeMapVisitor rangeMapVisitor = new RangeMapVisitor();
         for(QualitativeRequirement r : requirements) {
@@ -81,6 +118,11 @@ public class LTLTranslator {
         return rangeMapVisitor.getRangeMap();
     }
 
+    /**
+     * Gets the context.
+     *
+     * @return the context
+     */
     public LTLContext getContext() {
         return context;
     }

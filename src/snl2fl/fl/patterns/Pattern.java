@@ -26,22 +26,54 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The Class Pattern.
+ *
  * @author Simone Vuotto
  */
 public class Pattern {
+    
+    /** The Constant PATTERNS_FILE. */
     public static final String PATTERNS_FILE = "/patterns_to_ltl.json";
+    
+    /** The formula. */
     private final Formula formula;
+    
+    /** The requirement. */
     private final Requirement requirement;
 
+    /**
+     * Instantiates a new pattern.
+     *
+     * @param requirement the requirement
+     * @param formula the formula
+     */
     public Pattern(Requirement requirement, Formula formula) {
         this.requirement = requirement;
         this.formula = formula;
     }
 
+    /**
+     * Gets the formula.
+     *
+     * @return the formula
+     */
     public Formula getFormula() { return formula; }
 
+    /**
+     * Gets the requirement.
+     *
+     * @return the requirement
+     */
     public Requirement getRequirement() { return  requirement; }
 
+    /**
+     * Load patterns.
+     *
+     * @param configurationFile the configuration file
+     * @return the map
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws JSONException the JSON exception
+     */
     public static Map<String, Pattern> loadPatterns(String configurationFile) throws IOException, JSONException {
     	HashMap<String, Pattern> patterns = new HashMap<String, Pattern>();
         ParseTreeWalker walker = new ParseTreeWalker();
