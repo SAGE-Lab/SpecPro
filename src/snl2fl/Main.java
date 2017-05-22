@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * The Class Main.
- *
+ * <img src="../docs-images/ltl-cd.png">
  * @author Simone Vuotto
  * @author Massimo Narizzano
  */
