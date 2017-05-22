@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The Class Main.
+ *
  * @author Simone Vuotto
  * @author Massimo Narizzano
  */
