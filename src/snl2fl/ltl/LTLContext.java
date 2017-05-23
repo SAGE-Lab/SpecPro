@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.NavigableMap;
 
 import snl2fl.fl.elements.Atom;
 import snl2fl.fl.elements.BinaryOperator;
@@ -131,14 +132,10 @@ public class LTLContext {
      */
     public Atom[] getAtoms(String varName, Float threshold, CompareExpression.Operator operator) {
     	TreeMap<Float, Atom[]> treeMap = rangeMap.get(varName);
-    	/*@TODO:if (threshold < 0)  thrown exception */
-    	// threshold+1 because threshold otherwise is excluded, while it is necessary to include it.
-    	SortedMap<Float,Atom[]> submap = treeMap.subMap((float) 0,threshold+1);
+    	NavigableMap<Float,Atom[]> submap = treeMap.headMap(threshold, true);
     	Collection<Atom[]> c = submap.values();
-
     	//obtain an Iterator for Collection
     	Iterator<Atom[]> itr = c.iterator();
-    	
     	//iterate through TreeMap values iterator
     	ArrayList<Atom> vars = new ArrayList<Atom>();
     	while(itr.hasNext()) {
