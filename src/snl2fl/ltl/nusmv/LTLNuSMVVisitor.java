@@ -1,6 +1,5 @@
 package snl2fl.ltl.nusmv;
 
-import java.io.OutputStream;
 import java.io.PrintStream;
 
 import snl2fl.fl.elements.Atom;
