@@ -1,7 +1,11 @@
 package snl2fl.ltl;
 
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 import snl2fl.fl.elements.Atom;
 import snl2fl.fl.elements.BinaryOperator;
@@ -9,6 +13,7 @@ import snl2fl.fl.elements.Formula;
 import snl2fl.fl.elements.UnaryOperator;
 import snl2fl.fl.patterns.Pattern;
 import snl2fl.req.expressions.CompareExpression;
+import snl2fl.req.expressions.CompareExpression.Operator;
 import snl2fl.req.expressions.VariableExpression;
 
 
@@ -87,35 +92,66 @@ public class LTLContext {
      * @return the formula
      */
     public Formula getFormula(String varName, Float threshold, CompareExpression.Operator operator) {
-        Atom equalAtom = getEqualAtom(varName, threshold);
-        Atom lowerAtom = getLowerAtom(varName, threshold);
-        Formula f = null;
-        switch (operator) {
-            case EQUAL:
-                f = equalAtom;
-                break;
-            case GREATER:
-                f = new BinaryOperator(
-                        new UnaryOperator(lowerAtom, UnaryOperator.Operator.NOT),
-                        new UnaryOperator(equalAtom, UnaryOperator.Operator.NOT),
-                        BinaryOperator.Operator.AND);
-                break;
-            case GREATER_EQUAL:
-                f = new UnaryOperator(lowerAtom, UnaryOperator.Operator.NOT);
-                break;
-            case LOWER:
-                f = lowerAtom;
-                break;
-            case LOWER_EQUAL:
-                f = new BinaryOperator(lowerAtom, equalAtom, BinaryOperator.Operator.OR);
-                break;
-            case NOT_EQUAL:
-                f = new UnaryOperator(equalAtom, UnaryOperator.Operator.NOT);
-                break;
-        }
-        return f;
-    }
+    	 Formula f = null;
+    	 if (operator == Operator.EQUAL) {
+    		 f = getEqualAtom(varName, threshold);
+    	 } else {
+    		 Atom[] variables = getAtoms(varName,threshold,operator);
+    		 for (int i = 0; i < variables.length; i++) {
+    			 Atom a = variables[i];
+    			 if (f == null){
+    				 if ((operator == Operator.GREATER) || 
+    					 (operator == Operator.GREATER_EQUAL)) {
+    					 f = new UnaryOperator(a, UnaryOperator.Operator.NOT);
+    				 } else {
+    					 f = a;
+    				 }
+    			 } else {
+    				 if ((operator == Operator.GREATER) || 
+       					 (operator == Operator.GREATER_EQUAL)) {	
+    					 f = new BinaryOperator(f, new UnaryOperator(a, UnaryOperator.Operator.NOT),
+    	                                        BinaryOperator.Operator.AND);
+    				 } else {
+    					 // TODO: thrown exception if operator is not LOWER or LOWER_EQUAL
+    					 f = new BinaryOperator(f,a, BinaryOperator.Operator.OR);
+    				 }
+    			 }
+    		 }	
+    	 }
+    	 return f;
+    }	
 
+    /**
+     * Gets the set of the Atoms of a given compare expression.
+     * 
+     * @param varName the var name
+     * @param threshold the threshold
+     * @param operator the operator
+     * @return the set of atoms in the compare expression formula.
+     */
+    public Atom[] getAtoms(String varName, Float threshold, CompareExpression.Operator operator) {
+    	TreeMap<Float, Atom[]> treeMap = rangeMap.get(varName);
+    	/*@TODO:if (threshold < 0)  thrown exception */
+    	// threshold+1 because threshold otherwise is excluded, while it is necessary to include it.
+    	SortedMap<Float,Atom[]> submap = treeMap.subMap((float) 0,threshold+1);
+    	Collection<Atom[]> c = submap.values();
+
+    	//obtain an Iterator for Collection
+    	Iterator<Atom[]> itr = c.iterator();
+    	
+    	//iterate through TreeMap values iterator
+    	ArrayList<Atom> vars = new ArrayList<Atom>();
+    	while(itr.hasNext()) {
+    		Atom[] a = itr.next();
+    		vars.add(a[0]);
+	    	if (itr.hasNext() ||
+    			(operator == Operator.GREATER) || 
+    			(operator == Operator.LOWER_EQUAL)) {
+	    		vars.add(a[1]);	
+	    	}
+    	}
+    	return vars.toArray(new Atom[vars.size()]);
+    }
     /**
      * Gets the equal atom.
      *
