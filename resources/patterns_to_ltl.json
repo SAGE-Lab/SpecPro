@@ -14,7 +14,7 @@
     "formula" : {
                 "Globally": "<>(P)",
                 "Before R": "!R W (P & !R)",
-                "After Q": "[](!Q | <>(Q & <>P))",
+                "After Q": "[](!Q) | <>(Q & <>P)",
                 "Between Q and R": "[](Q & !R -> (!R W (P & !R)))",
                 "After Q until R": "[](Q & !R -> (!R U (P & !R)))"
                 }
