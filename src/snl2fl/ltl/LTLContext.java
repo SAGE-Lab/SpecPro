@@ -1,7 +1,6 @@
 package snl2fl.ltl;
 
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Collection;
 import java.util.Iterator;

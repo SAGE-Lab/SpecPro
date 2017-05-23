@@ -1,9 +1,12 @@
 package snl2fl.ltl;
 
+import snl2fl.req.expressions.CompareExpression.Operator;
+
 import org.json.JSONException;
 
 import snl2fl.fl.elements.Atom;
 import snl2fl.fl.elements.BinaryOperator;
+import snl2fl.fl.elements.UnaryOperator;
 import snl2fl.fl.elements.Formula;
 import snl2fl.fl.patterns.Pattern;
 import snl2fl.fl.patterns.PatternUnifier;
@@ -71,16 +74,15 @@ public class LTLTranslator {
         ArrayList<Formula> invariants = new ArrayList<>();
         Map<String, TreeMap<Float, Atom[]>> rangeMap = context.getRangeMap();
         for(String varName : rangeMap.keySet()) {
-            Atom[] prevA = null;
             TreeMap<Float, Atom[]> rangesToAtoms = rangeMap.get(varName);
-            for(Atom[] a : rangesToAtoms.values()) {
-                invariants.add(new BinaryOperator(a[0], a[1], BinaryOperator.Operator.XOR));
-                if(prevA != null) {
-                    Formula f1 = new BinaryOperator(prevA[0], prevA[1], BinaryOperator.Operator.OR);
-                    Formula f2 = new BinaryOperator(f1, a[0], BinaryOperator.Operator.IMPLICATION);
-                    invariants.add(f2);
-                }
-                prevA = a;
+            // With LOWER_EQUAL and the last key, all the Atoms associated with the variables are returned
+            Atom[] variables = context.getAtoms(varName,rangesToAtoms.lastKey(),Operator.LOWER_EQUAL);
+            for (int i = 0; i < variables.length-1; i++) {
+            	for (int j = i+1; j < variables.length; j++) {
+            		invariants.add(new BinaryOperator(new UnaryOperator(variables[i], UnaryOperator.Operator.NOT),
+            				                          new UnaryOperator(variables[j], UnaryOperator.Operator.NOT),
+            				                          BinaryOperator.Operator.OR));
+            	}
             }
         }
         return invariants;
