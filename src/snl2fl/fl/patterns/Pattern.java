@@ -88,11 +88,9 @@ public class Pattern {
             String body = obj.getString("body");
             JSONObject formulae = obj.getJSONObject("formula");
             Iterator keys = formulae.keys();
-            //System.out.print("Stikazz Pattern\n");
             while(keys.hasNext()) {
                 String scope = (String) keys.next();
                 String textRequirement = scope + ", "+body;
-                //System.out.print(textRequirement + "\n");
                 //Parse the requirement
                 RequirementsGrammarLexer lexer = new RequirementsGrammarLexer(new ANTLRInputStream(textRequirement));
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
