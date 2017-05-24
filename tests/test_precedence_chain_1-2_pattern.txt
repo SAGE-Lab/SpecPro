@@ -1,0 +1,5 @@
+Globally, it is always the case that if  S1 > 10 holds and is succeeded by S2 > 10, then S3 < 20 previously held.
+Before S2 < 10, it is always the case that if  S1 < 20 holds and is succeeded by S2 > 10, then S3 < 20 previously held.
+After S2 = 10, it is always the case that if  S1 >= 30 holds and is succeeded by S2 > 10, then S3 < 20 previously held.
+Between S2<20 and S2 >= 10, it is always the case that if  S1 > 20 holds and is succeeded by S2 > 10, then S3 < 20 previously held.
+After S2<20 until S2 >= 10, it is always the case that if  S1 > 10 holds and is succeeded by S2 > 10, then S3 < 20 previously held.

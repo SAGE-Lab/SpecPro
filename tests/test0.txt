@@ -1,3 +1,3 @@
-Globally, it is never the case that S < 10 holds.
 Globally, it is never the case that S < 20 holds.
+Globally, it is never the case that S < 10 holds.
 Globally, it is never the case that S > 30 holds.

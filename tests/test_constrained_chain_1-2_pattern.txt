@@ -1,0 +1,5 @@
+Globally, it is always the case that if  S1 > 10 holds, then S3 < 20 eventually holds and is succeeded by S1 < 10, where S2 > 20 does not hold between S3 < 20 and S2 > 20 .
+Before S2 < 10, it is always the case that if  S1 < 20 holds, then S3 < 20 eventually holds and is succeeded by S1 < 10, where S2 > 20 does not hold between S3 < 20 and S2 > 20 .
+After S2 = 10, it is always the case that if  S1 >= 30 holds, then S3 < 20 eventually holds and is succeeded by S1 < 10, where S2 > 20 does not hold between S3 < 20 and S2 > 20 .
+Between S2<20 and S2 >= 10, it is always the case that if  S1 > 20 holds, then S3 < 20 eventually holds and is succeeded by S1 < 10, where S2 > 20 does not hold between S3 < 20 and S2 > 20 .
+After S2<20 until S2 >= 10, it is always the case that if  S1 > 10 holds, then S3 < 20 eventually holds and is succeeded by S1 < 10, where S2 > 20 does not hold between S3 < 20 and S2 > 20 .
