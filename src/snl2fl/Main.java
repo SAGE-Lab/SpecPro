@@ -59,7 +59,7 @@ public class Main {
         for(String var : symbolTable.keySet())
             System.out.println(var);
         */
-
+        String patternFile = "/home/massimo/Local/eclipse-workspace/snl2fl/resources/patterns_to_ltl.json";
         ArrayList<QualitativeRequirement> qualitativeRequirements = new ArrayList<>();
         for(Requirement r : requirements) {
             if (r instanceof QualitativeRequirement)
