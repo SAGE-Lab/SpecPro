@@ -9,6 +9,8 @@ import snl2fl.fl.patterns.Pattern;
 import snl2fl.ltl.LTLContext;
 import snl2fl.ltl.LTLTranslator;
 import snl2fl.ltl.nusmv.NuSMVTranslator;
+import snl2fl.ltl.panda.PANDATranslator;
+
 import snl2fl.req.expressions.VariableExpression;
 import snl2fl.req.parser.RequirementsBuilder;
 import snl2fl.req.parser.RequirementsGrammarLexer;
@@ -33,20 +35,24 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         if(args.length < 2) {
-            System.out.println("Usage: RequirementsParser <filePath> <outdir>");
+            System.out.println("Usage: RequirementsParser <filePath> <outfile> <options>");
+            System.out.println("<options> : -panda (write the out.panda in PANDA input format)");
+            
             System.exit(0);
         }
+        
 
-	RequirementsGrammarLexer lexer = new RequirementsGrammarLexer(new ANTLRFileStream(args[0]));
+        RequirementsGrammarLexer lexer = new RequirementsGrammarLexer(new ANTLRFileStream(args[0]));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         RequirementsGrammarParser parser = new RequirementsGrammarParser(tokens);
         ParseTreeWalker walker = new ParseTreeWalker();
-	RequirementsBuilder builder = new RequirementsBuilder();
+        RequirementsBuilder builder = new RequirementsBuilder();
         walker.walk(builder, parser.file());
         List<Requirement> requirements = builder.getRequirementList();
         Map<String, VariableExpression> symbolTable = builder.getSymbolTable();
-	/*
-        System.out.println("Requirements");
+	/*    	
+    	
+       	System.out.println("Requirements");
         for(Requirement r : requirements)
             System.out.println(r);
         System.out.println("Symbol Table");
@@ -65,12 +71,25 @@ public class Main {
             LTLContext context = new LTLContext(symbolTable, LTLTranslator.computeRangeMap(qualitativeRequirements),
                                                 Pattern.loadPatterns(Pattern.PATTERNS_FILE));
             LTLTranslator ltltranslator = new LTLTranslator(qualitativeRequirements, context);
-            NuSMVTranslator nuSMVTranslator = new NuSMVTranslator(ltltranslator);
-            PrintStream ps = new PrintStream(new FileOutputStream(args[1] + "out.smv"));
+        
+            if (args.length == 2) {
+            	System.out.println("Translating into NuSMV syntax");
+            	NuSMVTranslator nuSMVTranslator = new NuSMVTranslator(ltltranslator);
+        		PrintStream ps = new PrintStream(new FileOutputStream(args[1]));
+        		
+    			nuSMVTranslator.translate(ps);
+        			
+        		ps.close();
+			} else if (args[2].equals("-panda")){
+				System.out.println("Translating into PANDA syntax");
+				PANDATranslator pandaTranslator = new PANDATranslator(ltltranslator);
+        		PrintStream ps = new PrintStream(new FileOutputStream(args[1]));
 
-            nuSMVTranslator.translate(ps);
+        		pandaTranslator.translate(ps);
 
-            ps.close();
+        		ps.close();
+
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
