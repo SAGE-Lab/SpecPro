@@ -36,7 +36,7 @@ public class PANDATranslator {
      *  - \phi_A : derived by the aritmetic constraint
      *  - \phi_R : i.e. the translation of the requirements into LTL
      *  Finally the formula cheched is the negated one:
-     *  \phi_A -> \phi_R.
+     *  \phi_A -> \not\phi_R.
      * 
      * @param stream The stream on which the LTL formula is written
      */
@@ -46,7 +46,7 @@ public class PANDATranslator {
         List<Formula> ltlFormulae = translator.translate();
         List<Formula> invariants = translator.getInvariants();
         // Since PANDA tool negate the input formula we add the negation
-        // at the begininng of the formula.
+        // at the begin of the formula.
         stream.print("~(");
         
         // Print the arithmetics constraints (\phi_A)
@@ -61,7 +61,7 @@ public class PANDATranslator {
         }
         stream.print(")");
         // Print the requirements constraints (\phi_R)	
-        stream.print(" | G(");
+        stream.print(" | ~G(");
         for(int i=0; i < ltlFormulae.size(); ++i) {
             Formula formula = ltlFormulae.get(i);
             stream.print("(");
