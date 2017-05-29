@@ -47,6 +47,7 @@ public class NuSMVTranslator {
             stream.print(";\n");
         }
 
+        // Print the negation of the formula representing the requirements 
         stream.println();
         List<Formula> ltlFormulae = translator.translate();
         stream.print("LTLSPEC !(");
@@ -58,8 +59,21 @@ public class NuSMVTranslator {
             if(i < ltlFormulae.size() - 1)
                 stream.print(" & ");
         }
-        stream.print(");");
-
+        stream.print(");\n");
+        
+        // Print the formula representing the requirements directly 
+        stream.println();
+        stream.print("LTLSPEC (");
+        for(int i=0; i < ltlFormulae.size(); ++i) {
+            Formula formula = ltlFormulae.get(i);
+            stream.print("(");
+            formula.accept(visitor);
+            stream.print(")");
+            if(i < ltlFormulae.size() - 1)
+                stream.print(" & ");
+        }
+        stream.print(");\n");      
+        
     }
 
     /**
