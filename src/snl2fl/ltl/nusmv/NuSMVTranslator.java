@@ -3,6 +3,8 @@ package snl2fl.ltl.nusmv;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.Map;
+import java.util.Set;
 
 import snl2fl.fl.elements.Atom;
 import snl2fl.fl.elements.Formula;
@@ -89,12 +91,14 @@ public class NuSMVTranslator {
             if(ve instanceof BooleanVariableExpression)
                 stream.println("\t"+ve.getName()+" : boolean;");
         // Print range variables encoded with atoms
-        for(TreeMap<Float, Atom[]> t : context.getRangeMap().values())
-            for(Atom[] a : t.values()) {
-                stream.println("\t"+a[0].getName()+" : boolean;");
-                stream.println("\t"+a[1].getName()+" : boolean;");
-
-            }
+        for(String name: context.getRangeMap().keySet()) {
+        	TreeMap<Float, Atom[]> t = context.getRangeMap().get(name);
+        	for(Float a_key : t.keySet()) {
+        		Atom[] a = t.get(a_key);
+        		stream.println("\t"+a[0].getName()+" : boolean; -- " + name + " < " + a_key);
+                stream.println("\t"+a[1].getName()+" : boolean; -- " + name + " = " + a_key);
+        	}
+        }
     }
 
 
