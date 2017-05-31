@@ -10,6 +10,7 @@ import snl2fl.ltl.LTLContext;
 import snl2fl.ltl.LTLTranslator;
 import snl2fl.ltl.nusmv.NuSMVTranslator;
 import snl2fl.ltl.panda.PANDATranslator;
+import snl2fl.ltl.aalta.AALTATranslator;
 
 import snl2fl.req.expressions.VariableExpression;
 import snl2fl.req.parser.RequirementsBuilder;
@@ -35,10 +36,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         if(args.length < 2) {
-            System.out.println("Usage: RequirementsParser <filePath> <outfile> <options>");
-            System.out.println("<options> : -panda   (write the out.panda in PANDA input format(default is nusmv))");
-            System.out.println("            -noinvar (write the out.nusmv without INVAR(default is with invar)");
-            System.exit(0);
+           printCommandLine();
         }
         
 
@@ -92,6 +90,19 @@ public class Main {
         		PrintStream ps = new PrintStream(new FileOutputStream(args[1]));
         		
     			nuSMVTranslator.translate(ps,"noinvar");            	
+    			ps.close();
+            } else if (args[2].equals("-aalta")){
+				System.out.println("Translating into AALTA syntax");
+				AALTATranslator aaltaTranslator = new AALTATranslator(ltltranslator);
+        		PrintStream ps_direct = new PrintStream(new FileOutputStream(args[1] + ".direct"));
+        		aaltaTranslator.translate(ps_direct,"direct");
+        		PrintStream ps_negated = new PrintStream(new FileOutputStream(args[1] + ".negated"));
+        		aaltaTranslator.translate(ps_negated,"negated");
+
+        		ps_negated.close();
+        		ps_direct.close();
+            } else {
+            	
             }
 
         } catch (JSONException e) {
@@ -100,4 +111,13 @@ public class Main {
 
 
     }
+    
+    
+    private static void printCommandLine(){
+    	System.out.println("Usage: RequirementsParser <filePath> <outfile> <options>");
+        System.out.println("<options> : -panda   (write the out.panda in PANDA input format(default is nusmv))");
+        System.out.println("            -noinvar (write the out.nusmv without INVAR(default is with invar)");
+        System.exit(0);
+    }
+    
 }
