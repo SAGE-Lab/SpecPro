@@ -36,8 +36,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         if(args.length < 2) {
             System.out.println("Usage: RequirementsParser <filePath> <outfile> <options>");
-            System.out.println("<options> : -panda (write the out.panda in PANDA input format)");
-            
+            System.out.println("<options> : -panda   (write the out.panda in PANDA input format(default is nusmv))");
+            System.out.println("            -noinvar (write the out.nusmv without INVAR(default is with invar)");
             System.exit(0);
         }
         
@@ -59,7 +59,6 @@ public class Main {
         for(String var : symbolTable.keySet())
             System.out.println(var);
         */
-        String patternFile = "/home/massimo/Local/eclipse-workspace/snl2fl/resources/patterns_to_ltl.json";
         ArrayList<QualitativeRequirement> qualitativeRequirements = new ArrayList<>();
         for(Requirement r : requirements) {
             if (r instanceof QualitativeRequirement)
@@ -76,9 +75,7 @@ public class Main {
             	System.out.println("Translating into NuSMV syntax");
             	NuSMVTranslator nuSMVTranslator = new NuSMVTranslator(ltltranslator);
         		PrintStream ps = new PrintStream(new FileOutputStream(args[1]));
-        		
-    			nuSMVTranslator.translate(ps);
-        			
+    			nuSMVTranslator.translate(ps,"invar");
         		ps.close();
 			} else if (args[2].equals("-panda")){
 				System.out.println("Translating into PANDA syntax");
@@ -89,6 +86,12 @@ public class Main {
 
         		ps.close();
 
+            } else if (args[2].equals("-noinvar")){
+            	System.out.println("Translating into NuSMV syntax");
+            	NuSMVTranslator nuSMVTranslator = new NuSMVTranslator(ltltranslator);
+        		PrintStream ps = new PrintStream(new FileOutputStream(args[1]));
+        		
+    			nuSMVTranslator.translate(ps,"noinvar");            	
             }
 
         } catch (JSONException e) {

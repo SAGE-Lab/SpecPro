@@ -3,8 +3,6 @@ package snl2fl.ltl.nusmv;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.Map;
-import java.util.Set;
 
 import snl2fl.fl.elements.Atom;
 import snl2fl.fl.elements.Formula;
@@ -17,6 +15,7 @@ import snl2fl.req.expressions.VariableExpression;
  * The Class NuSMVTranslator.
  *
  * @author Simone Vuotto
+ * 
  */
 public class NuSMVTranslator {
     
@@ -33,48 +32,113 @@ public class NuSMVTranslator {
     }
 
     /**
-     * Translate.
-     *
+     * Translate the formula in input into a model checking problem with universal automata.
+     * Two type of translation are possible: 
+     * (1) Adding the arithmetic constraints as invar in the model, i.e. pruning the amount of possible 
+     *     behaviors of the universal automata ("invar" value of the option)
+     * (2) Adding the arithmetic constraints in the LTLSPEC specification (noinvar option)
+     * 
+     * @param option indicate the type of output: invar as (1) or noinvar as (2) 
      * @param stream the stream
      */
-    public void translate(PrintStream stream) {
+    public void translate(PrintStream stream, String option) {
         stream.println("MODULE main");
         this.printVariables(stream);
         stream.println();
         LTLNuSMVVisitor visitor = new LTLNuSMVVisitor(stream);
         List<Formula> invariants = translator.getInvariants();
-        for(Formula inv : invariants) {
-            stream.print("INVAR ");
-            inv.accept(visitor);
-            stream.print(";\n");
-        }
 
-        // Print the negation of the formula representing the requirements 
-        stream.println();
-        List<Formula> ltlFormulae = translator.translate();
-        stream.print("LTLSPEC !(");
-        for(int i=0; i < ltlFormulae.size(); ++i) {
-            Formula formula = ltlFormulae.get(i);
-            stream.print("(");
-            formula.accept(visitor);
-            stream.print(")");
-            if(i < ltlFormulae.size() - 1)
-                stream.print(" & ");
+        if (option.equals("invar")) { 
+        	// Writing the translation constraining the Universal model
+        	for(Formula inv : invariants) {
+        		stream.print("INVAR ");
+        		inv.accept(visitor);
+        		stream.print(";\n");
+        	}
+
+        	// Print the negation of the formula representing the requirements 
+        	stream.println();
+        	List<Formula> ltlFormulae = translator.translate();
+        	stream.println("-- Negated Formula");
+        	stream.print("LTLSPEC !(");
+        	for(int i=0; i < ltlFormulae.size(); ++i) {
+        		Formula formula = ltlFormulae.get(i);
+        		stream.print("(");
+        		formula.accept(visitor);
+        		stream.print(")");
+        		if(i < ltlFormulae.size() - 1)
+        			stream.print(" & ");
+        	}
+        	stream.print(");\n");
+        	stream.println();
+        	
+        	// Print the formula representing the requirements directly         
+        	stream.println("-- Directed Formula");
+        	stream.print("LTLSPEC (");
+        	for(int i=0; i < ltlFormulae.size(); ++i) {
+        		Formula formula = ltlFormulae.get(i);
+        		stream.print("(");
+        		formula.accept(visitor);
+        		stream.print(")");
+        		if(i < ltlFormulae.size() - 1)
+        			stream.print(" & ");
+            }
+        	stream.print(");\n");      
+        }else if (option.equals("noinvar")) { 
+        	// Writing the translation without the INVAR 
+        	stream.println("-- Negated Formula");
+        	stream.print("LTLSPEC ");
+        	stream.print("!G(");
+        	for(int i=0; i < invariants.size(); i++) {
+            	Formula inv = invariants.get(i);
+            	stream.print("(");
+                inv.accept(visitor);
+                stream.print(")");
+                if(i < invariants.size() - 1)
+                    stream.print(" & ");
+            }
+        	stream.print(")");
+        	
+        	List<Formula> ltlFormulae = translator.translate();
+        	// Print the requirements constraints (\phi_R)	
+        	stream.print(" | !(");
+        	for(int i=0; i < ltlFormulae.size(); ++i) {
+        		Formula formula = ltlFormulae.get(i);
+        		stream.print("(");
+        		formula.accept(visitor);
+        		stream.print(")");
+        		if(i < ltlFormulae.size() - 1)
+        			stream.print(" & ");
+        	}
+        	stream.print(");\n");      
+        	
+        	stream.println("-- Direct Formula");
+        	stream.print("LTLSPEC ");
+        	stream.print("!G(");
+        	for(int i=0; i < invariants.size(); i++) {
+            	Formula inv = invariants.get(i);
+            	stream.print("(");
+                inv.accept(visitor);
+                stream.print(")");
+                if(i < invariants.size() - 1)
+                    stream.print(" & ");
+            }
+        	
+        	stream.print(")");
+        	// Print the requirements constraints (\phi_R)	
+        	stream.print(" | !(");
+        	for(int i=0; i < ltlFormulae.size(); ++i) {
+        		Formula formula = ltlFormulae.get(i);
+        		stream.print("(");
+        		formula.accept(visitor);
+        		stream.print(")");
+        		if(i < ltlFormulae.size() - 1)
+        			stream.print(" & ");
+        	}
+        	stream.print(");\n");  	
+        } else {
+        	// Thrown an exception
         }
-        stream.print(");\n");
-        
-        // Print the formula representing the requirements directly 
-        stream.println();
-        stream.print("LTLSPEC (");
-        for(int i=0; i < ltlFormulae.size(); ++i) {
-            Formula formula = ltlFormulae.get(i);
-            stream.print("(");
-            formula.accept(visitor);
-            stream.print(")");
-            if(i < ltlFormulae.size() - 1)
-                stream.print(" & ");
-        }
-        stream.print(");\n");      
         
     }
 
