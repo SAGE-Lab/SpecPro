@@ -15,7 +15,6 @@ import snl2fl.req.expressions.VariableExpression;
  * The Class NuSMVTranslator.
  *
  * @author Simone Vuotto
- * 
  */
 public class NuSMVTranslator {
     
@@ -126,7 +125,7 @@ public class NuSMVTranslator {
         	
         	stream.print(")");
         	// Print the requirements constraints (\phi_R)	
-        	stream.print(" | !(");
+        	stream.print(" | (");
         	for(int i=0; i < ltlFormulae.size(); ++i) {
         		Formula formula = ltlFormulae.get(i);
         		stream.print("(");
