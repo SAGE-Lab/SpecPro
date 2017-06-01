@@ -71,18 +71,7 @@ public class NuSMVTranslator {
         	stream.print(");\n");
         	stream.println();
         	
-        	// Print the formula representing the requirements directly         
-        	stream.println("-- Directed Formula");
-        	stream.print("LTLSPEC (");
-        	for(int i=0; i < ltlFormulae.size(); ++i) {
-        		Formula formula = ltlFormulae.get(i);
-        		stream.print("(");
-        		formula.accept(visitor);
-        		stream.print(")");
-        		if(i < ltlFormulae.size() - 1)
-        			stream.print(" & ");
-            }
-        	stream.print(");\n");      
+        	      
         }else if (option.equals("noinvar")) { 
         	// Writing the translation without the INVAR 
         	stream.println("-- Negated Formula");
@@ -111,30 +100,6 @@ public class NuSMVTranslator {
         	}
         	stream.print(");\n");      
         	
-        	stream.println("-- Direct Formula");
-        	stream.print("LTLSPEC ");
-        	stream.print("!G(");
-        	for(int i=0; i < invariants.size(); i++) {
-            	Formula inv = invariants.get(i);
-            	stream.print("(");
-                inv.accept(visitor);
-                stream.print(")");
-                if(i < invariants.size() - 1)
-                    stream.print(" & ");
-            }
-        	
-        	stream.print(")");
-        	// Print the requirements constraints (\phi_R)	
-        	stream.print(" | (");
-        	for(int i=0; i < ltlFormulae.size(); ++i) {
-        		Formula formula = ltlFormulae.get(i);
-        		stream.print("(");
-        		formula.accept(visitor);
-        		stream.print(")");
-        		if(i < ltlFormulae.size() - 1)
-        			stream.print(" & ");
-        	}
-        	stream.print(");\n");  	
         } else {
         	// Thrown an exception
         }

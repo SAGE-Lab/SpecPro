@@ -60,7 +60,7 @@ public class PANDATranslator {
                 stream.print(" & ");
         }
         stream.print(")");
-        // Print the requirements constraints (\phi_R)	
+        // Print the requirements constraints (\phi_R)
         stream.print(" | ~(");
         for(int i=0; i < ltlFormulae.size(); ++i) {
             Formula formula = ltlFormulae.get(i);
