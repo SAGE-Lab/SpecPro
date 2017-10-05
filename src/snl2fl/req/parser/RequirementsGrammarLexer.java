@@ -1,7 +1,5 @@
+// Generated from RequirementsGrammar.g4 by ANTLR 4.5.3
 package snl2fl.req.parser;
-
-
-// Generated from RequirementsGrammar.g by ANTLR 4.5.1
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -13,7 +11,7 @@ import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class RequirementsGrammarLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.5.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -103,7 +101,7 @@ public class RequirementsGrammarLexer extends Lexer {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "RequirementsGrammar.g"; }
+	public String getGrammarFileName() { return "RequirementsGrammar.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }

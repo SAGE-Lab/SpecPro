@@ -1,7 +1,5 @@
+// Generated from RequirementsGrammar.g4 by ANTLR 4.5.3
 package snl2fl.req.parser;
-
-
-// Generated from RequirementsGrammar.g by ANTLR 4.5.1
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -13,7 +11,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class RequirementsGrammarParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.5.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -99,7 +97,7 @@ public class RequirementsGrammarParser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "RequirementsGrammar.g"; }
+	public String getGrammarFileName() { return "RequirementsGrammar.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -243,6 +241,7 @@ public class RequirementsGrammarParser extends Parser {
 		enterRule(_localctx, 4, RULE_scope);
 		try {
 			setState(79);
+			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
@@ -334,6 +333,7 @@ public class RequirementsGrammarParser extends Parser {
 		enterRule(_localctx, 6, RULE_specification);
 		try {
 			setState(83);
+			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
@@ -418,6 +418,7 @@ public class RequirementsGrammarParser extends Parser {
 		enterRule(_localctx, 8, RULE_qualitative);
 		try {
 			setState(97);
+			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
@@ -1249,6 +1250,7 @@ public class RequirementsGrammarParser extends Parser {
 		enterRule(_localctx, 32, RULE_realtime);
 		try {
 			setState(236);
+			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
@@ -1783,6 +1785,7 @@ public class RequirementsGrammarParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(318);
+			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 			case 1:
 				{

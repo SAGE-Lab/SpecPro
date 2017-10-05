@@ -1,5 +1,5 @@
+// Generated from FLGrammar.g4 by ANTLR 4.5.3
 package snl2fl.fl.parser;
-
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -9,10 +9,9 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-// Generated from FLGrammar.g by ANTLR 4.5.1
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class FLGrammarParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.5.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -68,7 +67,7 @@ public class FLGrammarParser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "FLGrammar.g"; }
+	public String getGrammarFileName() { return "FLGrammar.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -226,6 +225,20 @@ public class FLGrammarParser extends Parser {
 			{
 			setState(14);
 			switch (_input.LA(1)) {
+			case T__0:
+				{
+				_localctx = new BracketFormulaContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+
+				setState(7);
+				match(T__0);
+				setState(8);
+				formula(0);
+				setState(9);
+				match(T__1);
+				}
+				break;
 			case T__2:
 			case T__3:
 			case T__4:
@@ -234,29 +247,15 @@ public class FLGrammarParser extends Parser {
 				_localctx = new UnaryOpContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-
-				setState(7);
+				setState(11);
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) ) {
 				_errHandler.recoverInline(this);
 				} else {
 					consume();
 				}
-				setState(8);
+				setState(12);
 				formula(4);
-				}
-				break;
-			case T__0:
-				{
-				_localctx = new BracketFormulaContext(_localctx);
-				_ctx = _localctx;
-				_prevctx = _localctx;
-				setState(9);
-				match(T__0);
-				setState(10);
-				formula(0);
-				setState(11);
-				match(T__1);
 				}
 				break;
 			case ATOM:
@@ -281,6 +280,7 @@ public class FLGrammarParser extends Parser {
 					_prevctx = _localctx;
 					{
 					setState(22);
+					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 					case 1:
 						{
@@ -358,8 +358,8 @@ public class FLGrammarParser extends Parser {
 		"\t\3\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3\21\n\3\3\3\3\3\3\3\3"+
 		"\3\3\3\3\3\7\3\31\n\3\f\3\16\3\34\13\3\3\3\2\3\4\4\2\4\2\5\3\2\5\b\3\2"+
 		"\t\13\3\2\f\17\37\2\6\3\2\2\2\4\20\3\2\2\2\6\7\5\4\3\2\7\3\3\2\2\2\b\t"+
-		"\b\3\1\2\t\n\t\2\2\2\n\21\5\4\3\6\13\f\7\3\2\2\f\r\5\4\3\2\r\16\7\4\2"+
-		"\2\16\21\3\2\2\2\17\21\7\21\2\2\20\b\3\2\2\2\20\13\3\2\2\2\20\17\3\2\2"+
+		"\b\3\1\2\t\n\7\3\2\2\n\13\5\4\3\2\13\f\7\4\2\2\f\21\3\2\2\2\r\16\t\2\2"+
+		"\2\16\21\5\4\3\6\17\21\7\21\2\2\20\b\3\2\2\2\20\r\3\2\2\2\20\17\3\2\2"+
 		"\2\21\32\3\2\2\2\22\23\f\5\2\2\23\24\t\3\2\2\24\31\5\4\3\6\25\26\f\4\2"+
 		"\2\26\27\t\4\2\2\27\31\5\4\3\5\30\22\3\2\2\2\30\25\3\2\2\2\31\34\3\2\2"+
 		"\2\32\30\3\2\2\2\32\33\3\2\2\2\33\5\3\2\2\2\34\32\3\2\2\2\5\20\30\32";

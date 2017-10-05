@@ -74,10 +74,13 @@ public class Pattern {
      * @throws JSONException the JSON exception
      */
     public static Map<String, Pattern> loadPatterns(String configurationFile) throws IOException, JSONException {
-    	HashMap<String, Pattern> patterns = new HashMap<String, Pattern>();
+    	HashMap<String, Pattern> patterns = new HashMap<>();
         ParseTreeWalker walker = new ParseTreeWalker();
 
         InputStream is = Pattern.class.getResourceAsStream(configurationFile);
+
+        if(is == null) throw new IOException("Resource not found");
+
         String json = IOUtils.toString(is);
   
         JSONArray jsonArray = new JSONArray(json);

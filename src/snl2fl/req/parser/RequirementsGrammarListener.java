@@ -1,7 +1,5 @@
+// Generated from RequirementsGrammar.g4 by ANTLR 4.5.3
 package snl2fl.req.parser;
-
-
-// Generated from RequirementsGrammar.g by ANTLR 4.5.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
