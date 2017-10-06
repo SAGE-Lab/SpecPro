@@ -15,7 +15,7 @@ import snl2fl.req.visitor.ExpressionVisitor;
 public class RangeMapVisitor implements ExpressionVisitor {
 
     /** The range map. */
-    HashMap<String, TreeMap<Float, Atom[]>> rangeMap = new HashMap<>();
+    private HashMap<String, TreeMap<Float, Atom[]>> rangeMap = new HashMap<>();
 
     /**
      * Gets the range map.
@@ -31,6 +31,14 @@ public class RangeMapVisitor implements ExpressionVisitor {
      */
     @Override
     public void visitBooleanExpression(BooleanExpression exp) {
+
+    }
+
+    /* (non-Javadoc)
+     * @see snl2fl.req.visitor.ExpressionVisitor#visitUnaryExpression(snl2fl.req.expressions.UnaryExpression)
+     */
+    @Override
+    public void visitUnaryExpression(UnaryExpression exp) {
 
     }
 

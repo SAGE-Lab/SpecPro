@@ -6,7 +6,6 @@ import snl2fl.req.visitor.ExpressionVisitor;
  * The Class BooleanExpression.
  *
  * @author = Simone Vuotto
- * creation date  =  03/09/15.
  */
 public class BooleanExpression extends Expression {
     
@@ -53,7 +52,7 @@ public class BooleanExpression extends Expression {
         public String toString(){
             return op;
         }
-    };
+    }
 
     /**
      * Instantiates a new boolean expression.

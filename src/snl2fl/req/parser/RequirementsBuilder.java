@@ -22,16 +22,16 @@ import java.util.Map;
 public class RequirementsBuilder extends RequirementsGrammarBaseListener {
     
     /**  maps nodes to Expressions with Map<ParseTree,Expression>. */
-    ParseTreeProperty<Object> values = new ParseTreeProperty<Object>();
+    private ParseTreeProperty<Object> values = new ParseTreeProperty<Object>();
     
     /**  Symbol Table  *. */
-    Map<String, VariableExpression> symbolTable = new HashMap<>();
+    private Map<String, VariableExpression> symbolTable = new HashMap<>();
     
     /** The requirement list. */
-    ArrayList<Requirement> requirementList = new ArrayList<>();
+    private ArrayList<Requirement> requirementList = new ArrayList<>();
     
     /** The scope. */
-    Scope scope = null;
+    private Scope scope = null;
 
     /**
      *  Getter Methods *.
@@ -290,6 +290,17 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
         Expression leftExp = getExpression(ctx.expr(0));
         Expression rightExp = getExpression(ctx.expr(1));
         BooleanExpression expression = new BooleanExpression(leftExp, rightExp, operator);
+        setValue(ctx, expression);
+    }
+
+    /* (non-Javadoc)
+     * @see snl2fl.req.parser.RequirementsGrammarBaseListener#exitUnaryExpression(snl2fl.req.parser.RequirementsGrammarParser.UnaryExpressionContext)
+     */
+    @Override
+    public void exitUnaryExpression(RequirementsGrammarParser.UnaryExpressionContext ctx) {
+        UnaryExpression.Operator operator = UnaryExpression.getOperator(ctx.getChild(0).getText());
+        Expression exp = getExpression(ctx.expr());
+        UnaryExpression expression = new UnaryExpression(exp, operator);
         setValue(ctx, expression);
     }
 

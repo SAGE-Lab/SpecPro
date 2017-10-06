@@ -3,6 +3,7 @@ package snl2fl.ltl;
 import snl2fl.fl.elements.Atom;
 import snl2fl.fl.elements.BinaryOperator;
 import snl2fl.fl.elements.Formula;
+import snl2fl.fl.elements.UnaryOperator;
 import snl2fl.req.expressions.*;
 import snl2fl.req.visitor.ContextBasedVisitor;
 
@@ -54,6 +55,20 @@ public class LTLExpressionVisitor extends ContextBasedVisitor<LTLContext> implem
                 break;
         }
         this.formula = formula;
+    }
+
+    /* (non-Javadoc)
+     * @see snl2fl.req.visitor.ExpressionVisitor#visitUnaryExpression(snl2fl.req.expressions.UnaryExpression)
+     */
+    @Override
+    public void visitUnaryExpression(UnaryExpression exp) {
+        exp.getExp().accept(this);
+        switch (exp.getOperator()) {
+            case NOT:
+                this.formula = new UnaryOperator(this.formula, UnaryOperator.Operator.NOT);
+                break;
+        }
+
     }
 
     /* (non-Javadoc)

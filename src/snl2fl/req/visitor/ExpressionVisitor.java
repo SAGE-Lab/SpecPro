@@ -18,6 +18,13 @@ public interface ExpressionVisitor {
     public void visitBooleanExpression(BooleanExpression exp);
 
     /**
+     * Visit unary expression.
+     *
+     * @param exp the exp
+     */
+    public void visitUnaryExpression(UnaryExpression exp);
+
+    /**
      * Visit compare expression.
      *
      * @param exp the exp

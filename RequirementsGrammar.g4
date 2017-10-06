@@ -34,6 +34,7 @@ expr
     : '(' expr ')'                                                          #BracketExpression
     | (ID | NUMBER) ( '=' | '>' | '>=' | '<' | '<=' | '!=') (ID | NUMBER)   #CompareExpression
     | expr ('and' | 'or' | 'xor') expr                                      #BooleanExpression
+    | 'not' expr                                                            #UnaryExpression
     | ID                                                                    #IDExpression
     ;
 

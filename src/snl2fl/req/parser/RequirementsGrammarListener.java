@@ -274,6 +274,18 @@ public interface RequirementsGrammarListener extends ParseTreeListener {
 	 */
 	void exitIDExpression(RequirementsGrammarParser.IDExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code UnaryExpression}
+	 * labeled alternative in {@link RequirementsGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnaryExpression(RequirementsGrammarParser.UnaryExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code UnaryExpression}
+	 * labeled alternative in {@link RequirementsGrammarParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnaryExpression(RequirementsGrammarParser.UnaryExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code CompareExpression}
 	 * labeled alternative in {@link RequirementsGrammarParser#expr}.
 	 * @param ctx the parse tree

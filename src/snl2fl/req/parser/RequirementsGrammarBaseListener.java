@@ -328,6 +328,18 @@ public class RequirementsGrammarBaseListener implements RequirementsGrammarListe
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterUnaryExpression(RequirementsGrammarParser.UnaryExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUnaryExpression(RequirementsGrammarParser.UnaryExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterCompareExpression(RequirementsGrammarParser.CompareExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
