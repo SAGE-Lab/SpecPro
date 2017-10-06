@@ -8,6 +8,26 @@
    as LTL (Linear Temporal Logic).
 
 ## How to compile
+   # COMMAND LINE
+   javac -classpath .:src/:lib/*:resources/ src/snl2fl/Main.java -d bin/
+
+   # ECLIPSE
+     
+## How to run
+  There are many way to run snl2fl and they differ for the type of otuput provided.
+  There are 4 output provided: 
+
+  # SMV with INVAR, generate a NuSMV problem with inequalities managed by INVAR
+    java -classpath .:bin/:lib/*:resources/ snl2fl.Main <inputfile> <outputfile>
+
+  # SMV without INVAR generate a NuSMV problem with inequalities written into LTLSPEC 
+    java -classpath .:bin/:lib/*:resources/ snl2fl.Main <inputfile> <outputfile> -noinvar
+
+  # PANDA output, it writes the formula as a LTL, used by PANDA tool  
+    java -classpath .:bin/:lib/*:resources/ snl2fl.Main <inputfile> <outputfile> -panda
+
+  # AALTA output, it writes the formula as a LTL, used by AALTA tool  
+    java -classpath .:bin/:lib/*:resources/ snl2fl.Main <inputfile> <outputfile> -aalta
 
 ### Build the grammars
 
