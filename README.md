@@ -8,7 +8,7 @@
    as LTL (Linear Temporal Logic).
 
 ## How to compile
-   # COMMAND LINE
+   ### COMMAND LINE
    javac -classpath .:src/:lib/*:resources/ src/snl2fl/Main.java -d bin/
 
    # ECLIPSE
@@ -17,19 +17,19 @@
   There are many way to run snl2fl and they differ for the type of otuput provided.
   There are 4 output provided: 
 
-  # SMV with INVAR, generate a NuSMV problem with inequalities managed by INVAR
+  ### SMV with INVAR, generate a NuSMV problem with inequalities managed by INVAR
     java -classpath .:bin/:lib/*:resources/ snl2fl.Main <inputfile> <outputfile>
 
-  # SMV without INVAR generate a NuSMV problem with inequalities written into LTLSPEC 
+  ### SMV without INVAR generate a NuSMV problem with inequalities written into LTLSPEC 
     java -classpath .:bin/:lib/*:resources/ snl2fl.Main <inputfile> <outputfile> -noinvar
 
-  # PANDA output, it writes the formula as a LTL, used by PANDA tool  
+  ### PANDA output, it writes the formula as a LTL, used by PANDA tool  
     java -classpath .:bin/:lib/*:resources/ snl2fl.Main <inputfile> <outputfile> -panda
 
-  # AALTA output, it writes the formula as a LTL, used by AALTA tool  
+  ### AALTA output, it writes the formula as a LTL, used by AALTA tool  
     java -classpath .:bin/:lib/*:resources/ snl2fl.Main <inputfile> <outputfile> -aalta
 
-### Build the grammars
+## Build the grammars
 
 There are two grammars used in **snl2fl**: 
 
@@ -51,8 +51,6 @@ Once you have installed ANTLR4, all you have to do is:
 3. Build RequirementsGrammar:
         
         antlr4 -o src/snl2fl/req/parser -package snl2fl.req.parser RequirementsGrammar.g4
-
-## How to run
 
 
 ## References
