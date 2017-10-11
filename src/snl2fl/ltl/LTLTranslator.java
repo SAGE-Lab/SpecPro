@@ -55,12 +55,18 @@ public class LTLTranslator {
         PatternUnifier patternUnifier = new PatternUnifier();
         ArrayList<Formula> formulae = new ArrayList<>();
         for(QualitativeRequirement r : requirements) {
-            Pattern pattern = context.getPattern(r.key());
-            if(pattern == null)
-                throw new RuntimeException("Pattern "+ r.key()+" not found!");
-            List<Formula> scopeFormulae = parseExpressions(r.getScope().getExpressions());
-            List<Formula> bodyFormulae = parseExpressions(r.getExpressions());
-            formulae.add(patternUnifier.unify(pattern, scopeFormulae, bodyFormulae));
+
+            try {
+                Pattern pattern = context.getPattern(r.key());
+                if(pattern == null)
+                    throw new RuntimeException("Pattern " + r.key() + " not found!");
+                List<Formula> scopeFormulae = parseExpressions(r.getScope().getExpressions());
+                List<Formula> bodyFormulae = parseExpressions(r.getExpressions());
+                formulae.add(patternUnifier.unify(pattern, scopeFormulae, bodyFormulae));
+
+            } catch (RuntimeException e) {
+                throw new RuntimeException("Requirement " + requirements.indexOf(r) + ": " + e.getMessage());
+            }
         }
         return formulae;
     }

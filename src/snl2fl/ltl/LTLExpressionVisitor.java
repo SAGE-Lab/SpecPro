@@ -86,8 +86,11 @@ public class LTLExpressionVisitor extends ContextBasedVisitor<LTLContext> implem
             threshold =  ((NumberExpression)exp.getRightExp()).floatValue();
         if(exp.getRightExp() instanceof FloatVariableExpression)
             varName = ((FloatVariableExpression)exp.getRightExp()).getName();
-        if(threshold == null || varName == null)
-            return; // Not handled the case of two constants or two variables.
+        if(threshold == null)
+            throw new IllegalArgumentException("The case with two variables in a comparison expression is not handled.");
+        if(varName == null)
+            throw new IllegalArgumentException("The case with two constants in a comparison expression is not handled.");
+
         formula = getContext().getFormula(varName, threshold, exp.getOperator());
     }
 

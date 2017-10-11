@@ -62,8 +62,11 @@ public class Main {
             if (r instanceof QualitativeRequirement)
                 qualitativeRequirements.add((QualitativeRequirement)r);
             else
-                System.out.println("Requirement "+requirements.indexOf(r)+" is not a qualitative requirement");
+                System.out.println("Requirement "+requirements.indexOf(r)+" is not a qualitative requirement, it is skipped.");
         }
+
+        System.out.println("Processing " + qualitativeRequirements.size() + "requirements...");
+
         try {
             LTLContext context = new LTLContext(symbolTable, LTLTranslator.computeRangeMap(qualitativeRequirements),
                                                 Pattern.loadPatterns(Pattern.PATTERNS_FILE));
@@ -102,7 +105,8 @@ public class Main {
         		ps_negated.close();
         		ps_direct.close();
             } else {
-            	
+            	System.out.println("Argument " + args[2] + " not recognized.");
+            	printCommandLine();
             }
 
         } catch (JSONException e) {
