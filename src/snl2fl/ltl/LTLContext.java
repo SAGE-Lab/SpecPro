@@ -131,7 +131,11 @@ public class LTLContext {
      */
     public Atom[] getAtoms(String varName, Float threshold, CompareExpression.Operator operator) {
     	TreeMap<Float, Atom[]> treeMap = rangeMap.get(varName);
-    	NavigableMap<Float,Atom[]> submap = treeMap.headMap(threshold, true);
+    	if(treeMap == null) {
+            throw new RuntimeException("Variable " + varName + " not found");
+        }
+
+        NavigableMap<Float,Atom[]> submap = treeMap.headMap(threshold, true);
     	Collection<Atom[]> c = submap.values();
     	//obtain an Iterator for Collection
     	Iterator<Atom[]> itr = c.iterator();

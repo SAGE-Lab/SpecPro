@@ -31,7 +31,8 @@ public class RangeMapVisitor implements ExpressionVisitor {
      */
     @Override
     public void visitBooleanExpression(BooleanExpression exp) {
-
+        exp.getLeftExp().accept(this);
+        exp.getRightExp().accept(this);
     }
 
     /* (non-Javadoc)
@@ -39,7 +40,7 @@ public class RangeMapVisitor implements ExpressionVisitor {
      */
     @Override
     public void visitUnaryExpression(UnaryExpression exp) {
-
+        exp.getExp().accept(this);
     }
 
     /* (non-Javadoc)
