@@ -3,6 +3,7 @@ package snl2fl;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.apache.commons.cli.*;
 import org.json.JSONException;
 
 import snl2fl.fl.patterns.Pattern;
@@ -19,6 +20,7 @@ import snl2fl.req.parser.RequirementsGrammarParser;
 import snl2fl.req.requirements.Requirement;
 import snl2fl.req.requirements.qualitative.QualitativeRequirement;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -34,13 +36,62 @@ import java.util.Map;
  */
 public class Main {
 
-    public static void main(String[] args) throws IOException {
-        if(args.length < 2) {
-           printCommandLine();
-        }
-        
+    public static void main(String[] args) {
 
-        RequirementsGrammarLexer lexer = new RequirementsGrammarLexer(new ANTLRFileStream(args[0]));
+        CommandLineParser commandLineParser = new DefaultParser();
+
+        // create the Options
+        Options options = new Options();
+        options.addOption("h", "help", false, "print the help message");
+
+        OptionGroup group = new OptionGroup();
+        group.addOption(new Option("a", "aalta", false, "translate for Aalta model checker"));
+        group.addOption(new Option("p", "panda", false, "translate for Panda model checker"));
+        group.addOption(new Option("n", "nusmv", false, "translate for NuSMV model checker (default)"));
+        options.addOptionGroup(group);
+
+        options.addOption(null, "noinvar", false, "translate without INVAR statemens (only for NuSMV)");
+        options.addOption(null, "negated", false, "translate with negated notation (only for Aalta)");
+
+        try {
+            CommandLine commandLine = commandLineParser.parse( options, args );
+            String[] files = commandLine.getArgs();
+
+            if(commandLine.hasOption("h") || files.length != 2) {
+                new HelpFormatter().printHelp("snl2fl [OPTIONS] <infile> <outfile>", options);
+                System.exit(0);
+            }
+
+            LTLTranslator ltltranslator = buildLTLTranslator(files[0]);
+            PrintStream ps = new PrintStream(new FileOutputStream(files[1]));
+
+            if(commandLine.hasOption("a")) {
+                System.out.println("Translating into AALTA syntax");
+                AALTATranslator aaltaTranslator = new AALTATranslator(ltltranslator);
+                aaltaTranslator.setNegated(commandLine.hasOption("negated"));
+                aaltaTranslator.translate(ps);
+            }
+            else if(commandLine.hasOption("p")) {
+                System.out.println("Translating into PANDA syntax");
+                PANDATranslator pandaTranslator = new PANDATranslator(ltltranslator);
+                pandaTranslator.translate(ps);
+            }
+            else {
+                System.out.println("Translating into NuSMV syntax");
+                NuSMVTranslator nuSMVTranslator = new NuSMVTranslator(ltltranslator);
+                nuSMVTranslator.setNoinvar(commandLine.hasOption("noinvar"));
+                nuSMVTranslator.translate(ps);
+            }
+
+            ps.close();
+
+        } catch (ParseException | IOException | JSONException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+
+    private static LTLTranslator buildLTLTranslator(String infile) throws IOException, JSONException {
+        RequirementsGrammarLexer lexer = new RequirementsGrammarLexer(new ANTLRFileStream(infile));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         RequirementsGrammarParser parser = new RequirementsGrammarParser(tokens);
         ParseTreeWalker walker = new ParseTreeWalker();
@@ -48,15 +99,7 @@ public class Main {
         walker.walk(builder, parser.file());
         List<Requirement> requirements = builder.getRequirementList();
         Map<String, VariableExpression> symbolTable = builder.getSymbolTable();
-	/*    	
-    	
-       	System.out.println("Requirements");
-        for(Requirement r : requirements)
-            System.out.println(r);
-        System.out.println("Symbol Table");
-        for(String var : symbolTable.keySet())
-            System.out.println(var);
-        */
+
         ArrayList<QualitativeRequirement> qualitativeRequirements = new ArrayList<>();
         for(Requirement r : requirements) {
             if (r instanceof QualitativeRequirement)
@@ -67,61 +110,10 @@ public class Main {
 
         System.out.println("Processing " + qualitativeRequirements.size() + "requirements...");
 
-        try {
-            LTLContext context = new LTLContext(symbolTable, LTLTranslator.computeRangeMap(qualitativeRequirements),
-                                                Pattern.loadPatterns(Pattern.PATTERNS_FILE));
-            LTLTranslator ltltranslator = new LTLTranslator(qualitativeRequirements, context);
-        
-            if (args.length == 2) {
-            	System.out.println("Translating into NuSMV syntax");
-            	NuSMVTranslator nuSMVTranslator = new NuSMVTranslator(ltltranslator);
-        		PrintStream ps = new PrintStream(new FileOutputStream(args[1]));
-    			nuSMVTranslator.translate(ps,"invar");
-        		ps.close();
-			} else if (args[2].equals("-panda")){
-				System.out.println("Translating into PANDA syntax");
-				PANDATranslator pandaTranslator = new PANDATranslator(ltltranslator);
-        		PrintStream ps = new PrintStream(new FileOutputStream(args[1]));
+        LTLContext context = new LTLContext(symbolTable, LTLTranslator.computeRangeMap(qualitativeRequirements),
+                Pattern.loadPatterns(Pattern.PATTERNS_FILE));
 
-        		pandaTranslator.translate(ps);
-
-        		ps.close();
-
-            } else if (args[2].equals("-noinvar")){
-            	System.out.println("Translating into NuSMV syntax");
-            	NuSMVTranslator nuSMVTranslator = new NuSMVTranslator(ltltranslator);
-        		PrintStream ps = new PrintStream(new FileOutputStream(args[1]));
-        		
-    			nuSMVTranslator.translate(ps,"noinvar");            	
-    			ps.close();
-            } else if (args[2].equals("-aalta")){
-				System.out.println("Translating into AALTA syntax");
-				AALTATranslator aaltaTranslator = new AALTATranslator(ltltranslator);
-        		PrintStream ps_direct = new PrintStream(new FileOutputStream(args[1] + ".direct"));
-        		aaltaTranslator.translate(ps_direct,"direct");
-        		PrintStream ps_negated = new PrintStream(new FileOutputStream(args[1] + ".negated"));
-        		aaltaTranslator.translate(ps_negated,"negated");
-
-        		ps_negated.close();
-        		ps_direct.close();
-            } else {
-            	System.out.println("Argument " + args[2] + " not recognized.");
-            	printCommandLine();
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
+        return new LTLTranslator(qualitativeRequirements, context);
     }
-    
-    
-    private static void printCommandLine(){
-    	System.out.println("Usage: RequirementsParser <filePath> <outfile> <options>");
-        System.out.println("<options> : -panda   (write the out.panda in PANDA input format(default is nusmv))");
-        System.out.println("            -noinvar (write the out.nusmv without INVAR(default is with invar)");
-        System.exit(0);
-    }
-    
+
 }

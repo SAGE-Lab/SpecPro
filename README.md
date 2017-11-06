@@ -2,32 +2,37 @@
 # snl2fl
 
 ## Introduction
-   This project started the 01/09/2015. snl2fl stands for Structured
-   Natural Language To Formal Language, and it is a transalator from a
-   structured language (Patterns [1][2][3]) to man formal languages, such
-   as LTL (Linear Temporal Logic).
+   **snl2fl** stands for Structured Natural Language To Formal Language.
+   It is a transalator from a structured language (Patterns [1][2][3]) to many formal languages, 
+   such as LTL (Linear Temporal Logic).
+   
+   It is used to formally verify the consistency of a set of requirements written in a human readable format.
 
 ## How to compile
    ### COMMAND LINE
-   javac -classpath .:src/:lib/*:resources/ src/snl2fl/Main.java -d bin/
-
-   # ECLIPSE
+   
+    javac -classpath .:src/:lib/*:resources/ src/snl2fl/Main.java -d bin/
      
 ## How to run
   There are many way to run snl2fl and they differ for the type of otuput provided.
   There are 4 output provided: 
 
-  ### SMV with INVAR, generate a NuSMV problem with inequalities managed by INVAR
-    java -classpath .:bin/:lib/*:resources/ snl2fl.Main <inputfile> <outputfile>
+  * SMV with INVAR, generate a NuSMV problem with inequalities managed by INVAR
+    
+        java -classpath .:bin/:lib/*:resources/ snl2fl.Main --nusmv <inputfile> <outputfile>
 
-  ### SMV without INVAR generate a NuSMV problem with inequalities written into LTLSPEC 
-    java -classpath .:bin/:lib/*:resources/ snl2fl.Main <inputfile> <outputfile> -noinvar
+  * SMV without INVAR generate a NuSMV problem with inequalities written into LTLSPEC 
+    
+        java -classpath .:bin/:lib/*:resources/ snl2fl.Main --nusmv --noinvar <inputfile> <outputfile> 
 
-  ### PANDA output, it writes the formula as a LTL, used by PANDA tool  
-    java -classpath .:bin/:lib/*:resources/ snl2fl.Main <inputfile> <outputfile> -panda
+  * PANDA output, it writes the formula as a LTL, used by PANDA tool  
+    
+        java -classpath .:bin/:lib/*:resources/ snl2fl.Main --panda <inputfile> <outputfile> 
 
-  ### AALTA output, it writes the formula as a LTL, used by AALTA tool  
-    java -classpath .:bin/:lib/*:resources/ snl2fl.Main <inputfile> <outputfile> -aalta
+  * AALTA output, it writes the formula as a LTL, used by AALTA tool (add --negated option if you want the negated formula)
+    
+        java -classpath .:bin/:lib/*:resources/ snl2fl.Main --aalta <inputfile> <outputfile>
+  
 
 ## Build the grammars
 

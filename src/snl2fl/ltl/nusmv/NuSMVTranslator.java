@@ -21,6 +21,9 @@ public class NuSMVTranslator {
     /** The translator. */
     private final LTLTranslator translator;
 
+    /** Property to indicate if the translation should not use INVAR statements*/
+    private boolean noinvar;
+
     /**
      * Instantiates a new nu SMV translator.
      *
@@ -30,24 +33,32 @@ public class NuSMVTranslator {
         this.translator = translator;
     }
 
+
+    public void setNoinvar(boolean noinvar) {
+        this.noinvar = noinvar;
+    }
+
+    public boolean isNoinvar() {
+        return noinvar;
+    }
+
     /**
      * Translate the formula in input into a model checking problem with universal automata.
      * Two type of translation are possible: 
      * (1) Adding the arithmetic constraints as invar in the model, i.e. pruning the amount of possible 
      *     behaviors of the universal automata ("invar" value of the option)
      * (2) Adding the arithmetic constraints in the LTLSPEC specification (noinvar option)
-     * 
-     * @param option indicate the type of output: invar as (1) or noinvar as (2) 
+     *
      * @param stream the stream
      */
-    public void translate(PrintStream stream, String option) {
+    public void translate(PrintStream stream) {
         stream.println("MODULE main");
         this.printVariables(stream);
         stream.println();
         LTLNuSMVVisitor visitor = new LTLNuSMVVisitor(stream);
         List<Formula> invariants = translator.getInvariants();
 
-        if (option.equals("invar")) { 
+        if (!noinvar) {
         	// Writing the translation constraining the Universal model
         	for(Formula inv : invariants) {
         		stream.print("INVAR ");
@@ -60,50 +71,42 @@ public class NuSMVTranslator {
         	List<Formula> ltlFormulae = translator.translate();
         	stream.println("-- Negated Formula");
         	stream.print("LTLSPEC !(");
-        	for(int i=0; i < ltlFormulae.size(); ++i) {
-        		Formula formula = ltlFormulae.get(i);
-        		stream.print("(");
-        		formula.accept(visitor);
-        		stream.print(")");
-        		if(i < ltlFormulae.size() - 1)
-        			stream.print(" & ");
-        	}
-        	stream.print(");\n");
-        	stream.println();
-        	
+        	this.printFormulae(stream, visitor, ltlFormulae);
+        	stream.println(");");
         	      
-        }else if (option.equals("noinvar")) { 
+        } else {
         	// Writing the translation without the INVAR 
         	stream.println("-- Negated Formula");
         	stream.print("LTLSPEC ");
         	stream.print("!G(");
-        	for(int i=0; i < invariants.size(); i++) {
-            	Formula inv = invariants.get(i);
-            	stream.print("(");
-                inv.accept(visitor);
-                stream.print(")");
-                if(i < invariants.size() - 1)
-                    stream.print(" & ");
-            }
+            this.printFormulae(stream, visitor, invariants);
         	stream.print(")");
         	
         	List<Formula> ltlFormulae = translator.translate();
         	// Print the requirements constraints (\phi_R)	
         	stream.print(" | !(");
-        	for(int i=0; i < ltlFormulae.size(); ++i) {
-        		Formula formula = ltlFormulae.get(i);
-        		stream.print("(");
-        		formula.accept(visitor);
-        		stream.print(")");
-        		if(i < ltlFormulae.size() - 1)
-        			stream.print(" & ");
-        	}
-        	stream.print(");\n");      
-        	
-        } else {
-        	// Thrown an exception
+            this.printFormulae(stream, visitor, ltlFormulae);
+        	stream.println(");");
         }
         
+    }
+
+    /**
+     * Prints the list of formulae.
+     * @param stream the stream
+     * @param visitor the visitor to print the formulae
+     * @param ltlFormulae the list of formulae
+     */
+    private void printFormulae(PrintStream stream, LTLNuSMVVisitor visitor, List<Formula> ltlFormulae) {
+
+        for(int i=0; i < ltlFormulae.size(); ++i) {
+            Formula formula = ltlFormulae.get(i);
+            stream.print("(");
+            formula.accept(visitor);
+            stream.print(")");
+            if(i < ltlFormulae.size() - 1)
+                stream.print(" & ");
+        }
     }
 
     /**
@@ -111,7 +114,7 @@ public class NuSMVTranslator {
      *
      * @param stream the stream
      */
-    public void printVariables(PrintStream stream) {
+    private void printVariables(PrintStream stream) {
         stream.println("VAR\n");
         LTLContext context = translator.getContext();
         // Print boolean variables

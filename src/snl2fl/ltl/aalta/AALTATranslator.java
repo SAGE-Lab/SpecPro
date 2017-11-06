@@ -21,6 +21,10 @@ public class AALTATranslator {
     /** The translator. */
     private final LTLTranslator translator;
 
+    /** Property to indicate if the translation should be negated*/
+    private boolean negated;
+
+
     /**
      * Instantiates a new nu SMV translator.
      *
@@ -28,6 +32,14 @@ public class AALTATranslator {
      */
     public AALTATranslator(LTLTranslator translator) {
         this.translator = translator;
+    }
+
+    public boolean isNegated() {
+        return negated;
+    }
+
+    public void setNegated(boolean negated) {
+        this.negated = negated;
     }
 
     /**
@@ -39,7 +51,7 @@ public class AALTATranslator {
      * 
      * @param stream The stream on which the LTL formula is written
      */
-    public void translate(PrintStream stream, String option) {
+    public void translate(PrintStream stream) {
     	LTLAALTAVisitor visitor = new LTLAALTAVisitor(stream);
         
         List<Formula> ltlFormulae = translator.translate();
@@ -56,9 +68,9 @@ public class AALTATranslator {
         }
         stream.print(")");
         // Print the requirements constraints (\phi_R)	
-        if(option.equals("negated")){
+        if(this.negated) {
         	stream.print(" & ~(");
-        }else if (option.equals("direct")){
+        } else {
         	stream.print(" & (");
         }
         for(int i=0; i < ltlFormulae.size(); ++i) {
