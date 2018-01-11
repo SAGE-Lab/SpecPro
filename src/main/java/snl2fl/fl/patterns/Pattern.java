@@ -7,7 +7,6 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import snl2fl.fl.elements.Formula;
 import snl2fl.fl.parser.FLBuilder;
 import snl2fl.fl.parser.FLGrammarLexer;

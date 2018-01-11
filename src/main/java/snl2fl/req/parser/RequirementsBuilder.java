@@ -1,5 +1,6 @@
 package snl2fl.req.parser;
 
+import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -29,6 +30,9 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
     
     /** The requirement list. */
     private ArrayList<Requirement> requirementList = new ArrayList<>();
+
+    /** The list of raw requirements. **/
+    private ArrayList<String> rawRequirementList = new ArrayList<>();
     
     /** The scope. */
     private Scope scope = null;
@@ -43,6 +47,15 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
     }
 
     /**
+     *  Gets the list of raw requirements.
+     *
+     * @return the raw requirement list
+     */
+    public List<String> getRawRequirements() {
+        return rawRequirementList;
+    }
+
+    /**
      * Gets the symbol table.
      *
      * @return the symbol table
@@ -51,6 +64,11 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
         return symbolTable;
     }
 
+    @Override
+    public void enterRequirement(RequirementsGrammarParser.RequirementContext ctx) {
+        String requirement = ctx.start.getInputStream().getText(new Interval(ctx.start.getStartIndex(), ctx.stop.getStopIndex()));
+        rawRequirementList.add(requirement);
+    }
 
     /**
      *  Time and Scope Listeners *.

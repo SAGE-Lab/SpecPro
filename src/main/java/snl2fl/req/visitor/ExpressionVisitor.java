@@ -15,40 +15,40 @@ public interface ExpressionVisitor {
      *
      * @param exp the exp
      */
-    public void visitBooleanExpression(BooleanExpression exp);
+    void visitBooleanExpression(BooleanExpression exp);
 
     /**
      * Visit unary expression.
      *
      * @param exp the exp
      */
-    public void visitUnaryExpression(UnaryExpression exp);
+    void visitUnaryExpression(UnaryExpression exp);
 
     /**
      * Visit compare expression.
      *
      * @param exp the exp
      */
-    public void visitCompareExpression(CompareExpression exp);
+    void visitCompareExpression(CompareExpression exp);
 
     /**
      * Visit boolean variable expression.
      *
      * @param exp the exp
      */
-    public void visitBooleanVariableExpression(BooleanVariableExpression exp);
+    void visitBooleanVariableExpression(BooleanVariableExpression exp);
 
     /**
      * Visit number expression.
      *
      * @param exp the exp
      */
-    public void visitNumberExpression(NumberExpression exp);
+    void visitNumberExpression(NumberExpression exp);
 
     /**
      * Visit float variable expression.
      *
      * @param exp the exp
      */
-    public void visitFloatVariableExpression(FloatVariableExpression exp);
+    void visitFloatVariableExpression(FloatVariableExpression exp);
 }

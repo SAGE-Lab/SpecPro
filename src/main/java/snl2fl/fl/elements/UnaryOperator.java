@@ -52,8 +52,8 @@ public class UnaryOperator extends Formula {
             return null;
         }
 
-    };
-    
+    }
+
     /** The child. */
     private final Formula child;
     

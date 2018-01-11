@@ -15,83 +15,83 @@ public interface QualitativeRequirementVisitor {
      *
      * @param requirement the requirement
      */
-    public void visitAbsenceRequirement(AbsenceRequirement requirement);
+    void visitAbsenceRequirement(AbsenceRequirement requirement);
 
     /**
      * Visit bounded existence requirement.
      *
      * @param requirement the requirement
      */
-    public void visitBoundedExistenceRequirement(BoundedExistenceRequirement requirement);
+    void visitBoundedExistenceRequirement(BoundedExistenceRequirement requirement);
 
     /**
      * Visit existence requirement.
      *
      * @param requirement the requirement
      */
-    public void visitExistenceRequirement(ExistenceRequirement requirement);
+    void visitExistenceRequirement(ExistenceRequirement requirement);
 
     /**
      * Visit precedence chain 12 requirement.
      *
      * @param requirement the requirement
      */
-    public void visitPrecedenceChain12Requirement(PrecedenceChain12Requirement requirement);
+    void visitPrecedenceChain12Requirement(PrecedenceChain12Requirement requirement);
 
     /**
      * Visit precedence chain 21 requirement.
      *
      * @param requirement the requirement
      */
-    public void visitPrecedenceChain21Requirement(PrecedenceChain21Requirement requirement);
+    void visitPrecedenceChain21Requirement(PrecedenceChain21Requirement requirement);
 
     /**
      * Visit precedence requirement.
      *
      * @param requirement the requirement
      */
-    public void visitPrecedenceRequirement(PrecedenceRequirement requirement);
+    void visitPrecedenceRequirement(PrecedenceRequirement requirement);
 
     /**
      * Visit response chain 12 requirement.
      *
      * @param requirement the requirement
      */
-    public void visitResponseChain12Requirement(ResponseChain12Requirement requirement);
+    void visitResponseChain12Requirement(ResponseChain12Requirement requirement);
 
     /**
      * Visit response chain 21 requirement.
      *
      * @param requirement the requirement
      */
-    public void visitResponseChain21Requirement(ResponseChain21Requirement requirement);
+    void visitResponseChain21Requirement(ResponseChain21Requirement requirement);
 
     /**
      * Visit response requirement.
      *
      * @param requirement the requirement
      */
-    public void visitResponseRequirement(ResponseRequirement requirement);
+    void visitResponseRequirement(ResponseRequirement requirement);
 
     /**
      * Visit universality requirement.
      *
      * @param requirement the requirement
      */
-    public void visitUniversalityRequirement(UniversalityRequirement requirement);
+    void visitUniversalityRequirement(UniversalityRequirement requirement);
 
     /**
      * Visit invariant requirement.
      *
      * @param requirement the requirement
      */
-    public void visitInvariantRequirement(InvariantRequirement requirement);
+    void visitInvariantRequirement(InvariantRequirement requirement);
 
     /**
      * Visit constrained chain 12 requirement.
      *
      * @param requriement the requriement
      */
-    public void visitConstrainedChain12Requirement(ConstrainedChain12Requriement requriement);
+    void visitConstrainedChain12Requirement(ConstrainedChain12Requriement requriement);
 
 }

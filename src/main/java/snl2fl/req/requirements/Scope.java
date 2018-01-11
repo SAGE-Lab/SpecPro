@@ -32,7 +32,7 @@ public class Scope {
         /** The after until. */
         AFTER_UNTIL, 
         /** The between. */
-        BETWEEN;
+        BETWEEN
     }
 
     /**

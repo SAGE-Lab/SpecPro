@@ -16,19 +16,19 @@ public interface FormulaVisitor {
      *
      * @param op the op
      */
-    public void visitUnaryOperator(UnaryOperator op);
+    void visitUnaryOperator(UnaryOperator op);
 
     /**
      * Visit binary operator.
      *
      * @param op the op
      */
-    public void visitBinaryOperator(BinaryOperator op);
+    void visitBinaryOperator(BinaryOperator op);
 
     /**
      * Visit atom.
      *
      * @param at the at
      */
-    public void visitAtom(Atom at);
+    void visitAtom(Atom at);
 }

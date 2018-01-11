@@ -65,7 +65,7 @@ public class CompareExpression extends Expression {
             return op;
         }
 
-    };
+    }
 
     /**
      * Gets the left exp.

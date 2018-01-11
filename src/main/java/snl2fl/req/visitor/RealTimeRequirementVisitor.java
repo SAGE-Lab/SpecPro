@@ -15,33 +15,33 @@ public interface RealTimeRequirementVisitor {
      *
      * @param requirement the requirement
      */
-    public void visitBoundedInvarianceRequirement(BoundedInvarianceRequirement requirement);
+    void visitBoundedInvarianceRequirement(BoundedInvarianceRequirement requirement);
 
     /**
      * Visit bounded recurrence requirement.
      *
      * @param requirement the requirement
      */
-    public void visitBoundedRecurrenceRequirement(BoundedRecurrenceRequirement requirement);
+    void visitBoundedRecurrenceRequirement(BoundedRecurrenceRequirement requirement);
 
     /**
      * Visit bounded response requirement.
      *
      * @param requirement the requirement
      */
-    public void visitBoundedResponseRequirement(BoundedResponseRequirement requirement);
+    void visitBoundedResponseRequirement(BoundedResponseRequirement requirement);
 
     /**
      * Visit max duration requirement.
      *
      * @param requirement the requirement
      */
-    public void visitMaxDurationRequirement(MaxDurationRequirement requirement);
+    void visitMaxDurationRequirement(MaxDurationRequirement requirement);
 
     /**
      * Visit min duration requiremnt.
      *
      * @param requirement the requirement
      */
-    public void visitMinDurationRequiremnt(MinDurationRequirement requirement);
+    void visitMinDurationRequiremnt(MinDurationRequirement requirement);
 }

@@ -15,33 +15,33 @@ public interface ScopeVisitor {
      *
      * @param scope the scope
      */
-    public void visitGloballyScope(Scope scope);
+    void visitGloballyScope(Scope scope);
 
     /**
      * Visit before scope.
      *
      * @param scope the scope
      */
-    public void visitBeforeScope(Scope scope);
+    void visitBeforeScope(Scope scope);
 
     /**
      * Visit between scope.
      *
      * @param scope the scope
      */
-    public void visitBetweenScope(Scope scope);
+    void visitBetweenScope(Scope scope);
 
     /**
      * Visit after scope.
      *
      * @param scope the scope
      */
-    public void visitAfterScope(Scope scope);
+    void visitAfterScope(Scope scope);
 
     /**
      * Visit after until scope.
      *
      * @param scope the scope
      */
-    public void visitAfterUntilScope(Scope scope);
+    void visitAfterUntilScope(Scope scope);
 }

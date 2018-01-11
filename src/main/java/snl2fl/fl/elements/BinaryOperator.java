@@ -59,8 +59,8 @@ public class BinaryOperator extends Formula {
                     return op;
             return null;
         }
-    };
-    
+    }
+
     /** The right formula. */
     private Formula leftFormula, rightFormula;
     
