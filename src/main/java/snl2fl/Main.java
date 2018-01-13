@@ -1,6 +1,7 @@
 package snl2fl;
 
 import org.antlr.v4.runtime.ANTLRFileStream;
+import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.cli.*;
@@ -20,10 +21,7 @@ import snl2fl.req.parser.RequirementsGrammarParser;
 import snl2fl.req.requirements.Requirement;
 import snl2fl.req.requirements.qualitative.QualitativeRequirement;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,58 +60,32 @@ public class Main {
                 System.exit(0);
             }
 
-            LTLTranslator ltltranslator = buildLTLTranslator(files[0]);
-            PrintStream ps = new PrintStream(new FileOutputStream(files[1]));
+            CharStream inStream = new ANTLRFileStream(files[0]);
+            OutputStream outStream = new FileOutputStream(files[1]);
+
+            Snl2FlParser snl2FlParser = new Snl2FlParser(inStream, outStream);
+            Snl2FlTranslator translator;
 
             if(commandLine.hasOption("a")) {
                 System.out.println("Translating into AALTA syntax");
-                AALTATranslator aaltaTranslator = new AALTATranslator(ltltranslator);
-                aaltaTranslator.setNegated(commandLine.hasOption("negated"));
-                aaltaTranslator.translate(ps);
+                translator = new AALTATranslator().setNegated(commandLine.hasOption("negated"));
             }
             else if(commandLine.hasOption("p")) {
                 System.out.println("Translating into PANDA syntax");
-                PANDATranslator pandaTranslator = new PANDATranslator(ltltranslator);
-                pandaTranslator.translate(ps);
+                translator = new PANDATranslator();
             }
             else {
                 System.out.println("Translating into NuSMV syntax");
-                NuSMVTranslator nuSMVTranslator = new NuSMVTranslator(ltltranslator);
-                nuSMVTranslator.setNoinvar(commandLine.hasOption("noinvar"));
-                nuSMVTranslator.translate(ps);
+                translator = new NuSMVTranslator().setNoinvar(commandLine.hasOption("noinvar"));
             }
 
-            ps.close();
+            snl2FlParser.parse().translate(translator);
 
-        } catch (ParseException | IOException | JSONException e) {
+            outStream.close();
+
+        } catch (ParseException | IOException | Snl2FlException e) {
             System.err.println("Error: " + e.getMessage());
         }
-    }
-
-    private static LTLTranslator buildLTLTranslator(String infile) throws IOException, JSONException {
-        RequirementsGrammarLexer lexer = new RequirementsGrammarLexer(new ANTLRFileStream(infile));
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        RequirementsGrammarParser parser = new RequirementsGrammarParser(tokens);
-        ParseTreeWalker walker = new ParseTreeWalker();
-        RequirementsBuilder builder = new RequirementsBuilder();
-        walker.walk(builder, parser.file());
-        List<Requirement> requirements = builder.getRequirementList();
-        Map<String, VariableExpression> symbolTable = builder.getSymbolTable();
-
-        ArrayList<QualitativeRequirement> qualitativeRequirements = new ArrayList<>();
-        for(Requirement r : requirements) {
-            if (r instanceof QualitativeRequirement)
-                qualitativeRequirements.add((QualitativeRequirement)r);
-            else
-                System.out.println("Requirement "+requirements.indexOf(r)+" is not a qualitative requirement, it is skipped.");
-        }
-
-        System.out.println("Processing " + qualitativeRequirements.size() + "requirements...");
-
-        LTLContext context = new LTLContext(symbolTable, LTLTranslator.computeRangeMap(qualitativeRequirements),
-                Pattern.loadPatterns(Pattern.PATTERNS_FILE));
-
-        return new LTLTranslator(qualitativeRequirements, context);
     }
 
 }
