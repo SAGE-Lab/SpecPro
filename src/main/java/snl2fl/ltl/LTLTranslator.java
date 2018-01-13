@@ -74,16 +74,16 @@ public class LTLTranslator {
         List<Requirement> requirements = builder.getRequirementList();
         Map<String, VariableExpression> symbolTable = builder.getSymbolTable();
 
-        ArrayList<QualitativeRequirement> qualitativeRequirements = new ArrayList<>();
+        this.requirements = new ArrayList<>();
         for(Requirement r : requirements) {
             if (r instanceof QualitativeRequirement)
-                qualitativeRequirements.add((QualitativeRequirement)r);
+                this.requirements.add((QualitativeRequirement)r);
             else
                 System.err.println("Requirement "+requirements.indexOf(r)+" is not a qualitative requirement, it is skipped.");
         }
 
 
-        this.context = new LTLContext(symbolTable, LTLTranslator.computeRangeMap(qualitativeRequirements),
+        this.context = new LTLContext(symbolTable, LTLTranslator.computeRangeMap(this.requirements),
                 Pattern.loadPatterns(Pattern.PATTERNS_FILE));
         expressionVisitor = new LTLExpressionVisitor(context);
     }
