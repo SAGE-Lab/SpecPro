@@ -63,7 +63,7 @@ public class Main {
             CharStream inStream = new ANTLRFileStream(files[0]);
             OutputStream outStream = new FileOutputStream(files[1]);
 
-            Snl2FlParser snl2FlParser = new Snl2FlParser(inStream, outStream);
+            Snl2FlParser snl2FlParser = new Snl2FlParser();
             Snl2FlTranslator translator;
 
             if(commandLine.hasOption("a")) {
@@ -79,7 +79,7 @@ public class Main {
                 translator = new NuSMVTranslator().setNoinvar(commandLine.hasOption("noinvar"));
             }
 
-            snl2FlParser.parse().translate(translator);
+            snl2FlParser.parse(inStream).translate(translator, outStream);
 
             outStream.close();
 
