@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import snl2fl.fl.elements.Atom;
 import snl2fl.fl.elements.Formula;
 import snl2fl.ltl.LTLContext;
+import snl2fl.ltl.LTLToolTranslator;
 import snl2fl.ltl.LTLTranslator;
 import snl2fl.req.expressions.BooleanVariableExpression;
 import snl2fl.req.expressions.VariableExpression;
@@ -16,10 +17,7 @@ import snl2fl.req.expressions.VariableExpression;
  *
  * @author Simone Vuotto
  */
-public class NuSMVTranslator {
-    
-    /** The translator. */
-    private final LTLTranslator translator;
+public class NuSMVTranslator extends LTLToolTranslator {
 
     /** Property to indicate if the translation should not use INVAR statements*/
     private boolean noinvar;
@@ -29,13 +27,18 @@ public class NuSMVTranslator {
      *
      * @param translator the translator
      */
-    public NuSMVTranslator(LTLTranslator translator) {
-        this.translator = translator;
-    }
+    public NuSMVTranslator(LTLTranslator translator) { super(translator); }
+
+    /**
+     * Instantiates a new nu SMV translator.
+     *
+     */
+    public NuSMVTranslator() { }
 
 
-    public void setNoinvar(boolean noinvar) {
+    public NuSMVTranslator setNoinvar(boolean noinvar) {
         this.noinvar = noinvar;
+        return this;
     }
 
     public boolean isNoinvar() {

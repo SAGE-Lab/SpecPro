@@ -6,13 +6,14 @@ import snl2fl.fl.elements.Formula;
 import snl2fl.fl.elements.UnaryOperator;
 import snl2fl.req.expressions.*;
 import snl2fl.req.visitor.ContextBasedVisitor;
+import snl2fl.req.visitor.ExpressionVisitor;
 
 /**
  * The Class LTLExpressionVisitor.
  *
  * @author Simone Vuotto
  */
-public class LTLExpressionVisitor extends ContextBasedVisitor<LTLContext> implements snl2fl.req.visitor.ExpressionVisitor {
+public class LTLExpressionVisitor extends ContextBasedVisitor<LTLContext> implements ExpressionVisitor {
 
     /** The formula. */
     private Formula formula;

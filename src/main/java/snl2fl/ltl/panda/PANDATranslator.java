@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import snl2fl.fl.elements.Atom;
 import snl2fl.fl.elements.Formula;
 import snl2fl.ltl.LTLContext;
+import snl2fl.ltl.LTLToolTranslator;
 import snl2fl.ltl.LTLTranslator;
 import snl2fl.req.expressions.BooleanVariableExpression;
 import snl2fl.req.expressions.VariableExpression;
@@ -16,19 +17,20 @@ import snl2fl.req.expressions.VariableExpression;
  *
  * @author Massimo Narizzano
  */
-public class PANDATranslator {
-    
-    /** The translator. */
-    private final LTLTranslator translator;
+public class PANDATranslator extends LTLToolTranslator {
 
     /**
      * Instantiates a new nu SMV translator.
      *
      * @param translator the translator
      */
-    public PANDATranslator(LTLTranslator translator) {
-        this.translator = translator;
-    }
+    public PANDATranslator(LTLTranslator translator) { super(translator); }
+
+    /**
+     * Instantiates a new nu SMV translator.
+     *
+     */
+    public PANDATranslator() {  }
 
     /**
      * Translate a set of requirements with signals, into a LTL formula using the PANDA input syntax.

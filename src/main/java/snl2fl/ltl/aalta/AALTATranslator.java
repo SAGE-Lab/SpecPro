@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import snl2fl.fl.elements.Atom;
 import snl2fl.fl.elements.Formula;
 import snl2fl.ltl.LTLContext;
+import snl2fl.ltl.LTLToolTranslator;
 import snl2fl.ltl.LTLTranslator;
 import snl2fl.req.expressions.BooleanVariableExpression;
 import snl2fl.req.expressions.VariableExpression;
@@ -16,10 +17,7 @@ import snl2fl.req.expressions.VariableExpression;
  *
  * @author Massimo Narizzano
  */
-public class AALTATranslator {
-    
-    /** The translator. */
-    private final LTLTranslator translator;
+public class AALTATranslator extends LTLToolTranslator {
 
     /** Property to indicate if the translation should be negated*/
     private boolean negated;
@@ -31,15 +29,22 @@ public class AALTATranslator {
      * @param translator the translator
      */
     public AALTATranslator(LTLTranslator translator) {
-        this.translator = translator;
+        super(translator);
     }
+
+    /**
+     * Instantiates a new nu SMV translator.
+     *
+     */
+    public AALTATranslator() {  }
 
     public boolean isNegated() {
         return negated;
     }
 
-    public void setNegated(boolean negated) {
+    public AALTATranslator setNegated(boolean negated) {
         this.negated = negated;
+        return this;
     }
 
     /**

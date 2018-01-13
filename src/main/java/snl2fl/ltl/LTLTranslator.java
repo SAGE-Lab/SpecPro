@@ -1,5 +1,6 @@
 package snl2fl.ltl;
 
+import snl2fl.Snl2FlException;
 import snl2fl.req.expressions.CompareExpression.Operator;
 
 import org.json.JSONException;
@@ -11,6 +12,9 @@ import snl2fl.fl.elements.Formula;
 import snl2fl.fl.patterns.Pattern;
 import snl2fl.fl.patterns.PatternUnifier;
 import snl2fl.req.expressions.Expression;
+import snl2fl.req.expressions.VariableExpression;
+import snl2fl.req.parser.RequirementsBuilder;
+import snl2fl.req.requirements.Requirement;
 import snl2fl.req.requirements.qualitative.QualitativeRequirement;
 
 import java.io.IOException;
@@ -40,9 +44,47 @@ public class LTLTranslator {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    public LTLTranslator(List<QualitativeRequirement> requirements, LTLContext context) throws IOException, JSONException {
+    public LTLTranslator(List<QualitativeRequirement> requirements, LTLContext context) throws JSONException {
         this.requirements = requirements;
         this.context = context;
+        expressionVisitor = new LTLExpressionVisitor(context);
+    }
+
+    public LTLTranslator() {
+        this.requirements = new ArrayList<>();
+    }
+
+    /**
+     * Gets the context.
+     *
+     * @return the context
+     */
+    public LTLContext getContext() {
+        return context;
+    }
+
+
+    /**
+     * Set the context for translation
+     *
+     * @param builder the requirement builder containing the input parsed
+     * @throws IOException
+     */
+    public void setContext(RequirementsBuilder builder) throws IOException {
+        List<Requirement> requirements = builder.getRequirementList();
+        Map<String, VariableExpression> symbolTable = builder.getSymbolTable();
+
+        ArrayList<QualitativeRequirement> qualitativeRequirements = new ArrayList<>();
+        for(Requirement r : requirements) {
+            if (r instanceof QualitativeRequirement)
+                qualitativeRequirements.add((QualitativeRequirement)r);
+            else
+                System.err.println("Requirement "+requirements.indexOf(r)+" is not a qualitative requirement, it is skipped.");
+        }
+
+
+        this.context = new LTLContext(symbolTable, LTLTranslator.computeRangeMap(qualitativeRequirements),
+                Pattern.loadPatterns(Pattern.PATTERNS_FILE));
         expressionVisitor = new LTLExpressionVisitor(context);
     }
 
@@ -65,7 +107,7 @@ public class LTLTranslator {
                 formulae.add(patternUnifier.unify(pattern, scopeFormulae, bodyFormulae));
 
             } catch (RuntimeException e) {
-                throw new RuntimeException("Requirement " + requirements.indexOf(r) + ": " + e.getMessage());
+                throw new Snl2FlException("Requirement " + requirements.indexOf(r) + ": " + e.getMessage());
             }
         }
         return formulae;
@@ -124,15 +166,6 @@ public class LTLTranslator {
                 e.accept(rangeMapVisitor);
         }
         return rangeMapVisitor.getRangeMap();
-    }
-
-    /**
-     * Gets the context.
-     *
-     * @return the context
-     */
-    public LTLContext getContext() {
-        return context;
     }
 
 }
