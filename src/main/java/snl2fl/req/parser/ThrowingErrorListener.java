@@ -1,4 +1,4 @@
-package snl2fl.req.validator;
+package snl2fl.req.parser;
 
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
