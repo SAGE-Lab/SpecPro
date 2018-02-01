@@ -8,31 +8,53 @@
    
    It is used to formally verify the consistency of a set of requirements written in a human readable format.
 
-## How to compile
-   ### COMMAND LINE
+## Reference
+
+    @article{narizzano2017consistency,
+      title={Consistency of Property Specification Patterns with Boolean and Constrained Numerical Signals},
+      author={Narizzano, Massimo and Pulina, Luca and Tacchella, Armando and Vuotto, Simone},
+      journal={arXiv preprint arXiv:1712.04162},
+      year={2017}
+    }
+
+## Build and Run
+    
+   You can build a new distribution of the software simply running in the project dir the following command:
    
-    javac -classpath .:src/:lib/*:resources/ src/snl2fl/Main.java -d bin/
+      ./gradlew build
+      
+   It will automatically build a .zip and a .tar files in the `build/distribution` directory.
+   To run snl2fl simply decompress one of the two files and execute the command
+   
+      ./bin/snl2fl
+      
+   It will prompt the help message showing the list of available options.
+      
+   There are many way to run snl2fl and they differ for the kind of otuput generated.
+   There are 4 output provided: 
+    
+   * SMV with INVAR, generate a NuSMV problem with inequalities managed by INVAR
+    
+         ./bin/snl2fl --nusmv <inputfile> <outputfile>
+    
+   * SMV without INVAR generate a NuSMV problem with inequalities written into LTLSPEC 
+    
+         ./bin/snl2fl --nusmv --noinvar <inputfile> <outputfile> 
+    
+   * PANDA output, it writes the formula as a LTL, used by PANDA tool  
+    
+         ./bin/snl2fl --panda <inputfile> <outputfile> 
+    
+   * AALTA output, it writes the formula as a LTL, used by AALTA tool (add --negated option if you want the negated formula)
+    
+         ./bin/snl2fl --aalta <inputfile> <outputfile>
+
+   
+   Alternatively, you can run the application directly with gradle, substituting `argN` as needed.
+   
+      ./gradlew run -PappArgs="['arg1', 'args2', 'args3']" 
+   
      
-## How to run
-  There are many way to run snl2fl and they differ for the type of otuput provided.
-  There are 4 output provided: 
-
-  * SMV with INVAR, generate a NuSMV problem with inequalities managed by INVAR
-    
-        java -classpath .:bin/:lib/*:resources/ snl2fl.Main --nusmv <inputfile> <outputfile>
-
-  * SMV without INVAR generate a NuSMV problem with inequalities written into LTLSPEC 
-    
-        java -classpath .:bin/:lib/*:resources/ snl2fl.Main --nusmv --noinvar <inputfile> <outputfile> 
-
-  * PANDA output, it writes the formula as a LTL, used by PANDA tool  
-    
-        java -classpath .:bin/:lib/*:resources/ snl2fl.Main --panda <inputfile> <outputfile> 
-
-  * AALTA output, it writes the formula as a LTL, used by AALTA tool (add --negated option if you want the negated formula)
-    
-        java -classpath .:bin/:lib/*:resources/ snl2fl.Main --aalta <inputfile> <outputfile>
-  
 
 ## Build the grammars
 
@@ -51,11 +73,11 @@ Once you have installed ANTLR4, all you have to do is:
 
 2. Build FLGrammar:
 
-        antlr4 -o src/snl2fl/fl/parser -package snl2fl.fl.parser FLGrammar.g4
+        antlr4 -o src/main/java/snl2fl/fl/parser -package snl2fl.fl.parser FLGrammar.g4
 
 3. Build RequirementsGrammar:
         
-        antlr4 -o src/snl2fl/req/parser -package snl2fl.req.parser RequirementsGrammar.g4
+        antlr4 -o src/main/java/snl2fl/req/parser -package snl2fl.req.parser RequirementsGrammar.g4
 
 
 ## References
