@@ -1,0 +1,36 @@
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+group = 'it.unige'
+version = '0.1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+
+mainClassName = 'snl2fl.Main'
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile('commons-cli:commons-cli:1.4')
+    compile('org.json:json:20171018')
+    compile('org.apache.directory.studio:org.apache.commons.io:2.4')
+    compile('org.antlr:antlr4:4.5.3')
+    testCompile('org.junit.jupiter:junit-jupiter-api:5.0.2')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.0.2')
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
+
+run {
+    if (project.hasProperty("appArgs")) {
+        args Eval.me(appArgs)
+    }
+}
