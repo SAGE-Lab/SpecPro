@@ -2,29 +2,14 @@ package snl2fl;
 
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.apache.commons.cli.*;
-import org.json.JSONException;
 
-import snl2fl.fl.patterns.Pattern;
-import snl2fl.ltl.LTLContext;
-import snl2fl.ltl.LTLTranslator;
+import org.apache.commons.cli.*;
+
 import snl2fl.ltl.nusmv.NuSMVTranslator;
 import snl2fl.ltl.panda.PANDATranslator;
 import snl2fl.ltl.aalta.AALTATranslator;
 
-import snl2fl.req.expressions.VariableExpression;
-import snl2fl.req.parser.RequirementsBuilder;
-import snl2fl.req.parser.RequirementsGrammarLexer;
-import snl2fl.req.parser.RequirementsGrammarParser;
-import snl2fl.req.requirements.Requirement;
-import snl2fl.req.requirements.qualitative.QualitativeRequirement;
-
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The Class Main.

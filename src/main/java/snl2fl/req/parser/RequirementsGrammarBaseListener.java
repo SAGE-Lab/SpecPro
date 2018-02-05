@@ -383,6 +383,30 @@ public class RequirementsGrammarBaseListener implements RequirementsGrammarListe
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNever(RequirementsGrammarParser.NeverContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNumber(RequirementsGrammarParser.NumberContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNumber(RequirementsGrammarParser.NumberContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPositiveInt(RequirementsGrammarParser.PositiveIntContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPositiveInt(RequirementsGrammarParser.PositiveIntContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

@@ -12,7 +12,7 @@ qualitative: absence | universality | existence | boundedExistence | precedence 
 absence: never expr 'holds' ;
 universality: always expr 'holds' ;
 existence: expr 'eventually' 'holds' ; 
-boundedExistence: 'transitions' 'to' 'states' 'in' 'which' expr 'holds' 'occur' 'at' 'most' POSITIVE_INT 'times' ;
+boundedExistence: 'transitions' 'to' 'states' 'in' 'which' expr 'holds' 'occur' 'at' 'most' positiveInt 'times' ;
 precedence: always 'if' expr 'holds' ',' 'then' expr 'previously' 'held' ;
 precedenceChain12: always 'if' expr 'holds' 'and' 'is' 'succeeded' 'by' expr ',' 'then' expr 'previously' 'held' ;
 precedenceChain21: always 'if' expr 'holds' ',' 'then' expr 'previously' 'held' 'and' 'was' 'preceded' 'by' expr ;
@@ -32,23 +32,25 @@ invariant: always 'if' expr 'holds' ',' 'then' expr 'holds' 'as' 'well' ;
 
 expr
     : '(' expr ')'                                                          #BracketExpression
-    | (ID | NUMBER) ( '=' | '>' | '>=' | '<' | '<=' | '!=') (ID | NUMBER)   #CompareExpression
+    | (ID | number) ( '=' | '>' | '>=' | '<' | '<=' | '!=') (ID | number)   #CompareExpression
     | expr ('and' | 'or' | 'xor') expr                                      #BooleanExpression
     | 'not' expr                                                            #UnaryExpression
     | ID                                                                    #IDExpression
     ;
 
-time : NUMBER TIME_UNIT;
+time : number TIME_UNIT;
 always: 'it' 'is' 'always' 'the' 'case' 'that' ;
 never: 'it' 'is' 'never' 'the' 'case' 'that' ;
+number: POSITIVE_INT | FLOAT;
+positiveInt: POSITIVE_INT;
 
-
-NUMBER: '-'? ('.' DIGIT+ | DIGIT+ ('.' DIGIT*)? );
-POSITIVE_INT: [1-9] DIGIT* ;
+POSITIVE_INT: NONZERODIGIT (DIGIT)*;
+FLOAT: '-'? ('.' DIGIT+ | DIGIT+ ('.' DIGIT*)? );
 TIME_UNIT: ('s' | 'm' | 'h');
 ID: LETTER (LETTER | DIGIT | '_')*;
 WS: [ \t\r\n]+ -> skip ;
 LINE_COMMENT : '#' .*? '\r'? '\n' -> skip ; // Match "#" stuff '\n'
 
+fragment NONZERODIGIT: [1-9];
 fragment DIGIT : [0-9] ; 
 fragment LETTER : [a-zA-Z] ;

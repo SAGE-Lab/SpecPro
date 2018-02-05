@@ -327,4 +327,24 @@ public interface RequirementsGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNever(RequirementsGrammarParser.NeverContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RequirementsGrammarParser#number}.
+	 * @param ctx the parse tree
+	 */
+	void enterNumber(RequirementsGrammarParser.NumberContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RequirementsGrammarParser#number}.
+	 * @param ctx the parse tree
+	 */
+	void exitNumber(RequirementsGrammarParser.NumberContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RequirementsGrammarParser#positiveInt}.
+	 * @param ctx the parse tree
+	 */
+	void enterPositiveInt(RequirementsGrammarParser.PositiveIntContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RequirementsGrammarParser#positiveInt}.
+	 * @param ctx the parse tree
+	 */
+	void exitPositiveInt(RequirementsGrammarParser.PositiveIntContext ctx);
 }

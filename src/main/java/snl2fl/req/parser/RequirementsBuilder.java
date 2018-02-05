@@ -23,7 +23,7 @@ import java.util.Map;
 public class RequirementsBuilder extends RequirementsGrammarBaseListener {
     
     /**  maps nodes to Expressions with Map<ParseTree,Expression>. */
-    private ParseTreeProperty<Object> values = new ParseTreeProperty<Object>();
+    private ParseTreeProperty<Object> values = new ParseTreeProperty<>();
     
     /**  Symbol Table  *. */
     private Map<String, VariableExpression> symbolTable = new HashMap<>();
@@ -78,7 +78,7 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
 
     @Override
     public void exitTime(RequirementsGrammarParser.TimeContext ctx) {
-        Time t = new Time(Float.parseFloat(ctx.NUMBER().getText()), ctx.TIME_UNIT().getText());
+        Time t = new Time(Float.parseFloat(ctx.number().getText()), ctx.TIME_UNIT().getText());
         setValue(ctx, t);
     }
 
@@ -145,7 +145,7 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
      */
     @Override
     public void exitBoundedExistence(RequirementsGrammarParser.BoundedExistenceContext ctx) {
-        Requirement r = new BoundedExistenceRequirement(this.scope, getExpression(ctx.expr()), Integer.parseInt(ctx.POSITIVE_INT().getText()));
+        Requirement r = new BoundedExistenceRequirement(this.scope, getExpression(ctx.expr()), Integer.parseInt(ctx.positiveInt().getText()));
         requirementList.add(r);
     }
 
@@ -293,7 +293,7 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
         int index = 0;
         for(TerminalNode id : ctx.ID())
             operands[index++] = getFloatVariable(id.getText());
-        for(TerminalNode numb : ctx.NUMBER())
+        for(RequirementsGrammarParser.NumberContext numb : ctx.number())
             operands[index++] = new NumberExpression(Float.parseFloat(numb.getText()));
         CompareExpression expression = new CompareExpression(operands[0], operands[1], operator);
         setValue(ctx, expression);
