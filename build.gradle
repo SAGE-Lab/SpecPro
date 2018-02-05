@@ -34,3 +34,8 @@ run {
         args Eval.me(appArgs)
     }
 }
+
+applicationDistribution.from("$projectDir") {
+    into ''
+    include 'README.md', 'LICENSE'
+}
