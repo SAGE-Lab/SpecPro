@@ -6,9 +6,13 @@
    It is a transalator from a structured language (Patterns [1][2][3]) to many formal languages, 
    such as LTL (Linear Temporal Logic).
    
-   It is used to formally verify the consistency of a set of requirements written in a human readable format.
+   The current implementation enables the translation of a set of qualitative requirements in 
+   LTL formulae for NuSMV, AALTA and PANDA model checkers.
+   The output can be used to formally verify the consistency of the requirements.
 
-## Reference
+## Attribution
+
+   snl2fl is open source software released under the [LGPLv3 license](LICENSE). If you use it, please acknowledge it by citing:
 
     @article{narizzano2017consistency,
       title={Consistency of Property Specification Patterns with Boolean and Constrained Numerical Signals},
