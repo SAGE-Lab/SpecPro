@@ -10,11 +10,13 @@
 
 ## Reference
 
-    @article{narizzano2017consistency,
-      title={Consistency of Property Specification Patterns with Boolean and Constrained Numerical Signals},
+    @inproceedings{narizzano2018consistency,
+      title={Consistency of property specification patterns with boolean and constrained numerical signals},
       author={Narizzano, Massimo and Pulina, Luca and Tacchella, Armando and Vuotto, Simone},
-      journal={arXiv preprint arXiv:1712.04162},
-      year={2017}
+      booktitle={NASA Formal Methods Symposium},
+      pages={383--398},
+      year={2018},
+      organization={Springer}
     }
 
 ## Build and Run
