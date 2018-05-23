@@ -38,6 +38,26 @@ public interface RequirementsGrammarListener extends ParseTreeListener {
 	 */
 	void exitScope(RequirementsGrammarParser.ScopeContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link RequirementsGrammarParser#reqID}.
+	 * @param ctx the parse tree
+	 */
+	void enterReqID(RequirementsGrammarParser.ReqIDContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RequirementsGrammarParser#reqID}.
+	 * @param ctx the parse tree
+	 */
+	void exitReqID(RequirementsGrammarParser.ReqIDContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RequirementsGrammarParser#rId}.
+	 * @param ctx the parse tree
+	 */
+	void enterRId(RequirementsGrammarParser.RIdContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RequirementsGrammarParser#rId}.
+	 * @param ctx the parse tree
+	 */
+	void exitRId(RequirementsGrammarParser.RIdContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link RequirementsGrammarParser#specification}.
 	 * @param ctx the parse tree
 	 */

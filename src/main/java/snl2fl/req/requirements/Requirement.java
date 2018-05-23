@@ -1,5 +1,6 @@
 package snl2fl.req.requirements;
 
+import java.util.Collections;
 import java.util.List;
 
 import snl2fl.req.expressions.Expression;
@@ -10,6 +11,9 @@ import snl2fl.req.expressions.Expression;
  * @author Simone Vuotto
  */
 public abstract class Requirement {
+
+    /** The requirement ID */
+    private String reqId;
     
     /** The scope. */
     private final Scope scope;
@@ -24,8 +28,29 @@ public abstract class Requirement {
      * @param expressions the expressions
      */
     public Requirement(Scope scope, List<Expression> expressions){
-        this.scope = scope;
+        this.reqId = null;
+        if(scope == null)
+            this.scope = new Scope(Scope.Type.GLOBALLY, Collections.emptyList());
+        else
+            this.scope = scope;
         this.expressions = expressions;
+    }
+
+
+    /**
+     * Gets the requirement id
+     *
+     * @return the reqId
+     */
+    public String getReqId() { return reqId; }
+
+    /**
+     * Sets the requirements id
+     *
+     * @param reqId the new requirement id
+     */
+    public void setReqId(String reqId) {
+        this.reqId = reqId;
     }
 
     /**

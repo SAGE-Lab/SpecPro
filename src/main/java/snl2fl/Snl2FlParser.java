@@ -1,18 +1,17 @@
 package snl2fl;
 
-import org.antlr.v4.runtime.ANTLRFileStream;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import snl2fl.req.parser.RequirementsBuilder;
 import snl2fl.req.parser.RequirementsGrammarLexer;
 import snl2fl.req.parser.RequirementsGrammarParser;
 import snl2fl.req.parser.ThrowingErrorListener;
+import snl2fl.req.requirements.Requirement;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 public class Snl2FlParser {
 
@@ -45,6 +44,19 @@ public class Snl2FlParser {
     }
 
     /**
+     * Returns the list of all parsed requirements
+     * @return
+     */
+    public List<Requirement> getRequirements() { return builder.getRequirementList(); }
+
+    /**
+     * Returns the requirement object in position `index`
+     * @param index The index of the requirement to retrieve
+     * @return the requirement in
+     */
+    public Requirement getRequirement(int index) { return builder.getRequirementList().get(index); }
+
+    /**
      * Parse the input file with the given path
      *
      * @param filePath The path of the file
@@ -53,7 +65,7 @@ public class Snl2FlParser {
      * @throws IOException
      */
     public Snl2FlParser parseFile(String filePath) throws Snl2FlException, IOException {
-        return parse(new ANTLRFileStream(filePath));
+        return parse(CharStreams.fromFileName(filePath));
     }
 
     /**
@@ -64,7 +76,7 @@ public class Snl2FlParser {
      * @throws Snl2FlException
      */
     public Snl2FlParser parseString(String text) throws Snl2FlException {
-        return parse(new ANTLRInputStream(text));
+        return parse(CharStreams.fromString(text));
     }
 
     /**

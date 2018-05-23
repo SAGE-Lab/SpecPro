@@ -37,6 +37,8 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
     /** The scope. */
     private Scope scope = null;
 
+    private String reqId = null;
+
     /**
      *  Getter Methods *.
      *
@@ -68,6 +70,21 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
     public void enterRequirement(RequirementsGrammarParser.RequirementContext ctx) {
         String requirement = ctx.start.getInputStream().getText(new Interval(ctx.start.getStartIndex(), ctx.stop.getStopIndex()));
         rawRequirementList.add(requirement);
+        scope = null;
+        reqId = null;
+    }
+
+    @Override
+    public void exitRequirement(RequirementsGrammarParser.RequirementContext ctx) {
+        if (reqId == null) {
+            reqId = "REQ" + String.valueOf(requirementList.size());
+        }
+        requirementList.get(requirementList.size() - 1).setReqId(reqId);
+    }
+
+    @Override
+    public void exitRId(RequirementsGrammarParser.RIdContext ctx) {
+        reqId = ctx.getText();
     }
 
     /**
@@ -337,7 +354,7 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
      * @param value the value
      */
 
-    public void setValue(ParseTree node, Object value) { values.put(node, value); }
+    private void setValue(ParseTree node, Object value) { values.put(node, value); }
 
     /**
      * Gets the expression.
@@ -345,7 +362,7 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
      * @param node the node
      * @return the expression
      */
-    public Expression getExpression(RequirementsGrammarParser.ExprContext node) { return (Expression) values.get(node); }
+    private Expression getExpression(RequirementsGrammarParser.ExprContext node) { return (Expression) values.get(node); }
 
     /**
      * Gets the expression list.
@@ -353,7 +370,7 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
      * @param exprContexts the expr contexts
      * @return the expression list
      */
-    public List<Expression> getExpressionList(List<RequirementsGrammarParser.ExprContext> exprContexts) {
+    private List<Expression> getExpressionList(List<RequirementsGrammarParser.ExprContext> exprContexts) {
         List<Expression> exprs = new ArrayList<>();
         for(RequirementsGrammarParser.ExprContext ctx : exprContexts)
             exprs.add(getExpression(ctx));
@@ -366,7 +383,7 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
      * @param node the node
      * @return the time
      */
-    public Time getTime(RequirementsGrammarParser.TimeContext node) { return (Time) values.get(node); }
+    private Time getTime(RequirementsGrammarParser.TimeContext node) { return (Time) values.get(node); }
 
     /**
      * Gets the requirement.
@@ -374,7 +391,7 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
      * @param node the node
      * @return the requirement
      */
-    public Requirement getRequirement(ParseTree node) { return (Requirement) values.get(node); }
+    private Requirement getRequirement(ParseTree node) { return (Requirement) values.get(node); }
 
     /**
      * Gets the boolean variable.
@@ -382,7 +399,7 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
      * @param id the id
      * @return the boolean variable
      */
-    public BooleanVariableExpression getBooleanVariable(String id){
+    private BooleanVariableExpression getBooleanVariable(String id){
         VariableExpression var = symbolTable.get(id);
         if(var == null) {
             var = new BooleanVariableExpression(id);
@@ -399,7 +416,7 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
      * @param id the id
      * @return the float variable
      */
-    public FloatVariableExpression getFloatVariable(String id){
+    private FloatVariableExpression getFloatVariable(String id){
         VariableExpression var = symbolTable.get(id);
         if(var == null) {
             var = new FloatVariableExpression(id);
