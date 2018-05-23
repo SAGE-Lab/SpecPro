@@ -1,0 +1,75 @@
+MODULE main
+VAR
+
+	F : boolean;
+	I0 : boolean;
+	H : boolean;
+	I1 : boolean;
+	J : boolean;
+	K : boolean;
+	L : boolean;
+	M : boolean;
+	N : boolean;
+	P : boolean;
+	R : boolean;
+	S : boolean;
+	T : boolean;
+	U : boolean;
+	V : boolean;
+	W : boolean;
+	X : boolean;
+	Y : boolean;
+	_lower_A0 : boolean; -- A < 12.0
+	_equal_A0 : boolean; -- A = 12.0
+	_lower_A1 : boolean; -- A < 14.0
+	_equal_A1 : boolean; -- A = 14.0
+	_lower_A2 : boolean; -- A < 19.0
+	_equal_A2 : boolean; -- A = 19.0
+	_lower_B0 : boolean; -- B < 12.0
+	_equal_B0 : boolean; -- B = 12.0
+	_lower_C0 : boolean; -- C < 10.0
+	_equal_C0 : boolean; -- C = 10.0
+	_lower_C1 : boolean; -- C < 16.0
+	_equal_C1 : boolean; -- C = 16.0
+	_lower_D0 : boolean; -- D < 12.0
+	_equal_D0 : boolean; -- D = 12.0
+	_lower_D1 : boolean; -- D < 16.0
+	_equal_D1 : boolean; -- D = 16.0
+	_lower_G0 : boolean; -- G < 16.0
+	_equal_G0 : boolean; -- G = 16.0
+	_lower_I0 : boolean; -- I < 17.0
+	_equal_I0 : boolean; -- I = 17.0
+
+INVAR (! _lower_A0) | (! _equal_A0);
+INVAR (! _lower_A0) | (! _lower_A1);
+INVAR (! _lower_A0) | (! _equal_A1);
+INVAR (! _lower_A0) | (! _lower_A2);
+INVAR (! _lower_A0) | (! _equal_A2);
+INVAR (! _equal_A0) | (! _lower_A1);
+INVAR (! _equal_A0) | (! _equal_A1);
+INVAR (! _equal_A0) | (! _lower_A2);
+INVAR (! _equal_A0) | (! _equal_A2);
+INVAR (! _lower_A1) | (! _equal_A1);
+INVAR (! _lower_A1) | (! _lower_A2);
+INVAR (! _lower_A1) | (! _equal_A2);
+INVAR (! _equal_A1) | (! _lower_A2);
+INVAR (! _equal_A1) | (! _equal_A2);
+INVAR (! _lower_A2) | (! _equal_A2);
+INVAR (! _lower_B0) | (! _equal_B0);
+INVAR (! _lower_C0) | (! _equal_C0);
+INVAR (! _lower_C0) | (! _lower_C1);
+INVAR (! _lower_C0) | (! _equal_C1);
+INVAR (! _equal_C0) | (! _lower_C1);
+INVAR (! _equal_C0) | (! _equal_C1);
+INVAR (! _lower_C1) | (! _equal_C1);
+INVAR (! _lower_D0) | (! _equal_D0);
+INVAR (! _lower_D0) | (! _lower_D1);
+INVAR (! _lower_D0) | (! _equal_D1);
+INVAR (! _equal_D0) | (! _lower_D1);
+INVAR (! _equal_D0) | (! _equal_D1);
+INVAR (! _lower_D1) | (! _equal_D1);
+INVAR (! _lower_G0) | (! _equal_G0);
+INVAR (! _lower_I0) | (! _equal_I0);
+
+-- Negated Formula
+LTLSPEC !((G(( J -> ( V -> ((! _lower_C0) U ((( U & (! _lower_C0)) & (!( I0 &  K))) & (X(((! _lower_C0) & (!( I0 &  K))) U  _equal_G0)))))) U ( _lower_C0 | (G( V -> (( U & (!( I0 &  K))) & (X((!( I0 &  K)) U  _equal_G0)))))))) & (G(( L -> (( X |  S) -> ((! _lower_B0) U (((( M &  Y) & (! _lower_B0)) & (!( W &  Y))) & (X(((! _lower_B0) & (!( W &  Y))) U ((! _lower_D0) & (! _equal_D0)))))))) U ( _lower_B0 | (G(( X |  S) -> ((( M &  Y) & (!( W &  Y))) & (X((!( W &  Y)) U ((! _lower_D0) & (! _equal_D0)))))))))) & (G(( _equal_A0 -> (((! _lower_I0) & (! _equal_I0)) -> ((!((! _lower_I0) & (! _equal_I0))) U ((( H & (!((! _lower_I0) & (! _equal_I0)))) & (!( _lower_C0 |  _equal_C0))) & (X(((!((! _lower_I0) & (! _equal_I0))) & (!( _lower_C0 |  _equal_C0))) U  _equal_D1)))))) U (((! _lower_I0) & (! _equal_I0)) | (G(((! _lower_I0) & (! _equal_I0)) -> (( H & (!( _lower_C0 |  _equal_C0))) & (X((!( _lower_C0 |  _equal_C0)) U  _equal_D1)))))))) & (G(( _equal_A0 & (! F)) -> ((G H) | ( H U  F)))) & (G(( W & (! X)) -> ((G(! P)) | ((! P) U  X)))) & (G(( _lower_B0 -> ((( R &  U) & (X((! _lower_B0) U  S))) -> (X((! _lower_B0) U ( S & (F V)))))) U ( _lower_B0 | (G((( R &  U) & (X((! _lower_B0) U  S))) -> (X((! _lower_B0) U ( S & (F V))))))))) & (G(((( _lower_A0 |  _equal_A0) |  _lower_A1) & (! _lower_B0)) -> ((G(! V)) | ((! V) U  _lower_B0)))) & (G(((((! _lower_C0) & (! _equal_C0)) & (! _lower_C1)) -> ((( Y &  R) & (X((! N) U  _lower_B0))) -> (X((! N) U ( _lower_B0 & (F V)))))) U ( N | (G((( Y &  R) & (X((! N) U  _lower_B0))) -> (X((! N) U ( _lower_B0 & (F V))))))))) & (G((( K &  M) & (!( K &  M))) -> ((!( K &  M)) U ( J & (!( K &  M)))))) & (G(( I1 &  K) -> ((!((((((( _lower_A0 |  _equal_A0) |  _lower_A1) |  _equal_A1) |  _lower_A2) |  _equal_A2) & (! T)) & (X((! T) U (((! _lower_D0) & (! _equal_D0)) & (! T)))))) U (( T | ( X |  S)) | (G(!(((((( _lower_A0 |  _equal_A0) |  _lower_A1) |  _equal_A1) |  _lower_A2) |  _equal_A2) & (X(F((! _lower_D0) & (! _equal_D0))))))))))));

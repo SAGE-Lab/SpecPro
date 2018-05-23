@@ -1,0 +1,41 @@
+MODULE main
+VAR
+
+	_lower_S30 : boolean; -- S3 < 20.0
+	_equal_S30 : boolean; -- S3 = 20.0
+	_lower_S10 : boolean; -- S1 < 10.0
+	_equal_S10 : boolean; -- S1 = 10.0
+	_lower_S11 : boolean; -- S1 < 20.0
+	_equal_S11 : boolean; -- S1 = 20.0
+	_lower_S12 : boolean; -- S1 < 30.0
+	_equal_S12 : boolean; -- S1 = 30.0
+	_lower_S21 : boolean; -- S2 < 10.0
+	_equal_S21 : boolean; -- S2 = 10.0
+	_lower_S20 : boolean; -- S2 < 20.0
+	_equal_S20 : boolean; -- S2 = 20.0
+
+INVAR (! _lower_S30) | (! _equal_S30);
+INVAR (! _lower_S10) | (! _equal_S10);
+INVAR (! _lower_S10) | (! _lower_S11);
+INVAR (! _lower_S10) | (! _equal_S11);
+INVAR (! _lower_S10) | (! _lower_S12);
+INVAR (! _lower_S10) | (! _equal_S12);
+INVAR (! _equal_S10) | (! _lower_S11);
+INVAR (! _equal_S10) | (! _equal_S11);
+INVAR (! _equal_S10) | (! _lower_S12);
+INVAR (! _equal_S10) | (! _equal_S12);
+INVAR (! _lower_S11) | (! _equal_S11);
+INVAR (! _lower_S11) | (! _lower_S12);
+INVAR (! _lower_S11) | (! _equal_S12);
+INVAR (! _equal_S11) | (! _lower_S12);
+INVAR (! _equal_S11) | (! _equal_S12);
+INVAR (! _lower_S12) | (! _equal_S12);
+INVAR (! _lower_S21) | (! _equal_S21);
+INVAR (! _lower_S21) | (! _lower_S20);
+INVAR (! _lower_S21) | (! _equal_S20);
+INVAR (! _equal_S21) | (! _lower_S20);
+INVAR (! _equal_S21) | (! _equal_S20);
+INVAR (! _lower_S20) | (! _equal_S20);
+
+-- Negated Formula
+LTLSPEC !((G(((! _lower_S10) & (! _equal_S10)) -> (F(( _lower_S30 & (!((((! _lower_S21) & (! _equal_S21)) & (! _lower_S20)) & (! _equal_S20)))) & (X((!((((! _lower_S21) & (! _equal_S21)) & (! _lower_S20)) & (! _equal_S20))) U  _lower_S10)))))) & (((F _lower_S21) -> ((( _lower_S10 |  _equal_S10) |  _lower_S11) -> ((! _lower_S21) U ((( _lower_S30 & (! _lower_S21)) & (!((((! _lower_S21) & (! _equal_S21)) & (! _lower_S20)) & (! _equal_S20)))) & (X(((! _lower_S21) & (!((((! _lower_S21) & (! _equal_S21)) & (! _lower_S20)) & (! _equal_S20)))) U  _lower_S10)))))) U  _lower_S21) & (G( _equal_S21 -> (G((((((! _lower_S10) & (! _equal_S10)) & (! _lower_S11)) & (! _equal_S11)) & (! _lower_S12)) -> (( _lower_S30 & (!((((! _lower_S21) & (! _equal_S21)) & (! _lower_S20)) & (! _equal_S20)))) & (X((!((((! _lower_S21) & (! _equal_S21)) & (! _lower_S20)) & (! _equal_S20))) U  _lower_S10))))))) & (G((((( _lower_S21 |  _equal_S21) |  _lower_S20) & (F(! _lower_S21))) -> (((((! _lower_S10) & (! _equal_S10)) & (! _lower_S11)) & (! _equal_S11)) -> ((!(! _lower_S21)) U ((( _lower_S30 & (!(! _lower_S21))) & (!((((! _lower_S21) & (! _equal_S21)) & (! _lower_S20)) & (! _equal_S20)))) & (X(((!(! _lower_S21)) & (!((((! _lower_S21) & (! _equal_S21)) & (! _lower_S20)) & (! _equal_S20)))) U  _lower_S10)))))) U (! _lower_S21))) & (G(((( _lower_S21 |  _equal_S21) |  _lower_S20) -> (((! _lower_S10) & (! _equal_S10)) -> ((!(! _lower_S21)) U ((( _lower_S30 & (!(! _lower_S21))) & (!((((! _lower_S21) & (! _equal_S21)) & (! _lower_S20)) & (! _equal_S20)))) & (X(((!(! _lower_S21)) & (!((((! _lower_S21) & (! _equal_S21)) & (! _lower_S20)) & (! _equal_S20)))) U  _lower_S10)))))) U ((! _lower_S21) | (G(((! _lower_S10) & (! _equal_S10)) -> (( _lower_S30 & (!((((! _lower_S21) & (! _equal_S21)) & (! _lower_S20)) & (! _equal_S20)))) & (X((!((((! _lower_S21) & (! _equal_S21)) & (! _lower_S20)) & (! _equal_S20))) U  _lower_S10)))))))));
