@@ -1,4 +1,4 @@
-// Generated from FLGrammar.g4 by ANTLR 4.5.3
+// Generated from FLGrammar.g4 by ANTLR 4.7.1
 package snl2fl.fl.parser;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class FLGrammarParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.7.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -224,6 +224,7 @@ public class FLGrammarParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(14);
+			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__0:
 				{
@@ -251,7 +252,10 @@ public class FLGrammarParser extends Parser {
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5))) != 0)) ) {
 				_errHandler.recoverInline(this);
-				} else {
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
 					consume();
 				}
 				setState(12);
@@ -292,7 +296,10 @@ public class FLGrammarParser extends Parser {
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__6) | (1L << T__7) | (1L << T__8))) != 0)) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						setState(18);
@@ -309,7 +316,10 @@ public class FLGrammarParser extends Parser {
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__9) | (1L << T__10) | (1L << T__11) | (1L << T__12))) != 0)) ) {
 						_errHandler.recoverInline(this);
-						} else {
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
 							consume();
 						}
 						setState(21);
@@ -354,15 +364,15 @@ public class FLGrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\21\36\4\2\t\2\4\3"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\21\36\4\2\t\2\4\3"+
 		"\t\3\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3\21\n\3\3\3\3\3\3\3\3"+
 		"\3\3\3\3\3\7\3\31\n\3\f\3\16\3\34\13\3\3\3\2\3\4\4\2\4\2\5\3\2\5\b\3\2"+
-		"\t\13\3\2\f\17\37\2\6\3\2\2\2\4\20\3\2\2\2\6\7\5\4\3\2\7\3\3\2\2\2\b\t"+
-		"\b\3\1\2\t\n\7\3\2\2\n\13\5\4\3\2\13\f\7\4\2\2\f\21\3\2\2\2\r\16\t\2\2"+
-		"\2\16\21\5\4\3\6\17\21\7\21\2\2\20\b\3\2\2\2\20\r\3\2\2\2\20\17\3\2\2"+
-		"\2\21\32\3\2\2\2\22\23\f\5\2\2\23\24\t\3\2\2\24\31\5\4\3\6\25\26\f\4\2"+
-		"\2\26\27\t\4\2\2\27\31\5\4\3\5\30\22\3\2\2\2\30\25\3\2\2\2\31\34\3\2\2"+
-		"\2\32\30\3\2\2\2\32\33\3\2\2\2\33\5\3\2\2\2\34\32\3\2\2\2\5\20\30\32";
+		"\t\13\3\2\f\17\2\37\2\6\3\2\2\2\4\20\3\2\2\2\6\7\5\4\3\2\7\3\3\2\2\2\b"+
+		"\t\b\3\1\2\t\n\7\3\2\2\n\13\5\4\3\2\13\f\7\4\2\2\f\21\3\2\2\2\r\16\t\2"+
+		"\2\2\16\21\5\4\3\6\17\21\7\21\2\2\20\b\3\2\2\2\20\r\3\2\2\2\20\17\3\2"+
+		"\2\2\21\32\3\2\2\2\22\23\f\5\2\2\23\24\t\3\2\2\24\31\5\4\3\6\25\26\f\4"+
+		"\2\2\26\27\t\4\2\2\27\31\5\4\3\5\30\22\3\2\2\2\30\25\3\2\2\2\31\34\3\2"+
+		"\2\2\32\30\3\2\2\2\32\33\3\2\2\2\33\5\3\2\2\2\34\32\3\2\2\2\5\20\30\32";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
