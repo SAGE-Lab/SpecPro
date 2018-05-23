@@ -1,2 +1,0 @@
-After Y, it is always the case that not X holds.
-Before not X, it is always the case that not (X and Y) holds.
