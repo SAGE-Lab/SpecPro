@@ -10,6 +10,7 @@ import snl2fl.req.parser.ThrowingErrorListener;
 import snl2fl.req.requirements.Requirement;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -18,10 +19,13 @@ public class Snl2FlParser {
     private RequirementsBuilder builder;
     private boolean parsed;
 
+
+
     public Snl2FlParser() {
         builder = new RequirementsBuilder();
         parsed = false;
     }
+
 
     /**
      * Reset the internal state of the parser
@@ -34,6 +38,7 @@ public class Snl2FlParser {
         return this;
     }
 
+
     /**
      * Return the builder used for parsing and translation
      *
@@ -43,11 +48,13 @@ public class Snl2FlParser {
         return builder;
     }
 
+
     /**
      * Returns the list of all parsed requirements
-     * @return
+     * @return the list of requirements
      */
     public List<Requirement> getRequirements() { return builder.getRequirementList(); }
+
 
     /**
      * Returns the requirement object in position `index`
@@ -56,11 +63,12 @@ public class Snl2FlParser {
      */
     public Requirement getRequirement(int index) { return builder.getRequirementList().get(index); }
 
+
     /**
      * Parse the input file with the given path
      *
      * @param filePath The path of the file
-     * @return this
+     * @return a reference to the parser object
      * @throws Snl2FlException
      * @throws IOException
      */
@@ -68,16 +76,31 @@ public class Snl2FlParser {
         return parse(CharStreams.fromFileName(filePath));
     }
 
+
     /**
      * Parse an input string
      *
      * @param text The string to parse
-     * @return this
+     * @return a reference to the parser object
      * @throws Snl2FlException
      */
     public Snl2FlParser parseString(String text) throws Snl2FlException {
         return parse(CharStreams.fromString(text));
     }
+
+
+    /**
+     * Parse the input stream
+     *
+     * @param stream The stream to parse
+     * @return a reference to the parser object
+     * @throws Snl2FlException
+     * @throws IOException
+     */
+    public Snl2FlParser parseStream(InputStream stream) throws Snl2FlException, IOException {
+        return parse(CharStreams.fromStream(stream));
+    }
+
 
     /**
      * Parse a generic char stream

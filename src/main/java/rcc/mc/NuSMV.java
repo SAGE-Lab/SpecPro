@@ -1,39 +1,37 @@
 package rcc.mc;
 
+import snl2fl.ltl.nusmv.NuSMVTranslator;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NuSMV extends ModelChecker {
 
-    final String commandName = "/home/simone/Tools/NuSMV-2.6.0-Linux/bin/NuSMV";
-
     public NuSMV(long timeout) {
-        super(timeout);
+        super(timeout, new NuSMVTranslator());
     }
 
     @Override
     protected String[] getCommand(String filePath) {
-        return new String[]{commandName, filePath};
+        return new String[]{"nusmv", filePath};
     }
 
     @Override
-    protected Response parseOutput(String output, String error) {
+    protected Result parseOutput(String output, String error) {
 
 
         Pattern regex = Pattern.compile("-- specification .* is (?<res>(true|false))");
 
         Matcher matcher = regex.matcher(output);
-        if(!matcher.find())
-            return new Response("[ERROR] no response found\n"+error, Response.ResponseState.FAIL);
+        if(!matcher.find()) {
+            message = "[ERROR] no response found\n"+error;
+            return Result.FAIL;
+        }
+        else {
+            message = output;
+        }
 
         String res = matcher.group("res");
-
-        Response.ResponseState state;
-        if(res.equals("false"))
-            state = Response.ResponseState.CONSISTENT;
-        else
-            state = Response.ResponseState.INCONSISTENT;
-
-        return new Response(output, state);
+        return res.equals("false") ? Result.SAT : Result.UNSAT;
     }
 }

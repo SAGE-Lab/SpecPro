@@ -1,6 +1,7 @@
 package rcc.mc;
 
 import org.apache.commons.io.IOUtils;
+import snl2fl.Snl2FlTranslator;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -8,14 +9,24 @@ import java.util.function.Consumer;
 
 public abstract class ModelChecker {
 
-    private Thread thread;
-    private final long timeout;
-
-    public ModelChecker(long timeout) {
-        this.timeout = timeout;
+    public enum Result {
+        SAT,
+        UNSAT,
+        FAIL
     }
 
-    public Response run(String filePath) {
+    private Thread thread;
+    private final long timeout;
+    private Snl2FlTranslator translator;
+    protected String message;
+
+    public ModelChecker(long timeout, Snl2FlTranslator translator) {
+        this.timeout = timeout;
+        this.translator = translator;
+    }
+
+    public Result run(String filePath) {
+        this.message = null;
         Runtime rt = Runtime.getRuntime();
         Process process = null;
         String[] command = getCommand(filePath);
@@ -32,17 +43,29 @@ public abstract class ModelChecker {
         } catch (IOException | InterruptedException e) {
             if(process != null)
                 process.destroy();
-            return new Response(e.getMessage(), Response.ResponseState.FAIL);
+                this.message = e.getMessage();
+            return Result.FAIL;
         }
     }
 
-    public void runAsync(String filePath, Consumer<Response> consumer) {
+    public void runAsync(String filePath, Consumer<Result> consumer) {
         thread = new Thread(() -> consumer.accept(run(filePath)));
-
         thread.start();
+    }
+
+    public String getMessage() {
+      return message;
     }
 
     protected abstract String[] getCommand(String filePath);
 
-    protected abstract Response parseOutput(String output, String error);
+    protected abstract Result parseOutput(String output, String error);
+
+    public Snl2FlTranslator getTranslator() {
+        return translator;
+    }
+
+    public void setTranslator(Snl2FlTranslator translator) {
+        this.translator = translator;
+    }
 }
