@@ -30,9 +30,6 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
     
     /** The requirement list. */
     private ArrayList<Requirement> requirementList = new ArrayList<>();
-
-    /** The list of raw requirements. **/
-    private ArrayList<String> rawRequirementList = new ArrayList<>();
     
     /** The scope. */
     private Scope scope = null;
@@ -49,15 +46,6 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
     }
 
     /**
-     *  Gets the list of raw requirements.
-     *
-     * @return the raw requirement list
-     */
-    public List<String> getRawRequirements() {
-        return rawRequirementList;
-    }
-
-    /**
      * Gets the symbol table.
      *
      * @return the symbol table
@@ -68,8 +56,6 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
 
     @Override
     public void enterRequirement(RequirementsGrammarParser.RequirementContext ctx) {
-        String requirement = ctx.start.getInputStream().getText(new Interval(ctx.start.getStartIndex(), ctx.stop.getStopIndex()));
-        rawRequirementList.add(requirement);
         scope = null;
         reqId = null;
     }
@@ -80,6 +66,9 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
             reqId = "REQ" + String.valueOf(requirementList.size());
         }
         requirementList.get(requirementList.size() - 1).setReqId(reqId);
+        String text = ctx.start.getInputStream().getText(new Interval(ctx.start.getStartIndex(), ctx.stop.getStopIndex()));
+        requirementList.get(requirementList.size() - 1).setText(text);
+
     }
 
     @Override
