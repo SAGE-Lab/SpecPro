@@ -13,7 +13,7 @@ public class NuSMV extends ModelChecker {
 
     @Override
     protected String[] getCommand(String filePath) {
-        return new String[]{"nusmv", filePath};
+        return new String[]{this.execPath, filePath};
     }
 
     @Override
