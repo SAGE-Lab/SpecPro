@@ -90,8 +90,8 @@ public interface QualitativeRequirementVisitor {
     /**
      * Visit constrained chain 12 requirement.
      *
-     * @param requriement the requriement
+     * @param requirement the requriement
      */
-    void visitConstrainedChain12Requirement(ConstrainedChain12Requriement requriement);
+    void visitConstrainedChain12Requirement(ConstrainedChain12Requirement requirement);
 
 }

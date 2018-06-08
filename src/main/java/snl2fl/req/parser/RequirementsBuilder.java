@@ -214,7 +214,7 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
      */
     @Override
     public void exitConstrainedChain12(RequirementsGrammarParser.ConstrainedChain12Context ctx) {
-        Requirement r = new ConstrainedChain12Requriement(scope, getExpressionList(ctx.expr()));
+        Requirement r = new ConstrainedChain12Requirement(scope, getExpressionList(ctx.expr()));
         requirementList.add(r);
     }
 

@@ -7,11 +7,11 @@ import snl2fl.req.requirements.Scope;
 import snl2fl.req.visitor.QualitativeRequirementVisitor;
 
 /**
- * The Class ConstrainedChain12Requriement.
+ * The Class ConstrainedChain12Requirement.
  *
  * @author Simone Vuotto
  */
-public class ConstrainedChain12Requriement extends QualitativeRequirement {
+public class ConstrainedChain12Requirement extends QualitativeRequirement {
 
     /**
      * Instantiates a new constrained chain 12 requriement.
@@ -19,7 +19,7 @@ public class ConstrainedChain12Requriement extends QualitativeRequirement {
      * @param scope the scope
      * @param expressions the expressions
      */
-    public ConstrainedChain12Requriement(Scope scope, List<Expression> expressions) {
+    public ConstrainedChain12Requirement(Scope scope, List<Expression> expressions) {
         super(scope, expressions);
     }
 
