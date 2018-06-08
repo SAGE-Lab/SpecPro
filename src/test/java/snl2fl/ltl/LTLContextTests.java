@@ -12,7 +12,7 @@ import java.util.TreeMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class LTLContextTest {
+public class LTLContextTests {
 
     @Test
     public void testGetPattern() {

@@ -1,0 +1,4 @@
+Globally, it is never the case that S < 20 holds.
+Globally, it is never the case that S > 10 holds.
+After Q, R eventually holds.
+Before S > 10, it is always the case that R holds.
