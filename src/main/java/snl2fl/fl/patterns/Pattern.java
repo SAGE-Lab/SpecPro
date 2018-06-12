@@ -1,6 +1,6 @@
 package snl2fl.fl.patterns;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.IOUtils;
@@ -93,7 +93,7 @@ public class Pattern {
                 String scope = (String) keys.next();
                 String textRequirement = scope + ", "+body;
                 //Parse the requirement
-                RequirementsGrammarLexer lexer = new RequirementsGrammarLexer(new ANTLRInputStream(textRequirement));
+                RequirementsGrammarLexer lexer = new RequirementsGrammarLexer(CharStreams.fromString(textRequirement));
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 RequirementsGrammarParser parser = new RequirementsGrammarParser(tokens);
 
@@ -105,7 +105,7 @@ public class Pattern {
 
                 // Parse the formula
                 String textFormula = formulae.getString(scope);
-                FLGrammarLexer flLexer = new FLGrammarLexer(new ANTLRInputStream(textFormula));
+                FLGrammarLexer flLexer = new FLGrammarLexer(CharStreams.fromString(textFormula));
                 CommonTokenStream flTokens = new CommonTokenStream(flLexer);
                 FLGrammarParser flParser = new FLGrammarParser(flTokens);
                 FLBuilder flBuilder = new FLBuilder();
