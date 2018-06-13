@@ -1,14 +1,10 @@
 
-# snl2fl
+# SpecPro
 
-## Introduction
-   **snl2fl** stands for Structured Natural Language To Formal Language.
-   It is a transalator from a structured language (Patterns [1][2][3]) to many formal languages, 
-   such as LTL (Linear Temporal Logic).
-   
-   The current implementation enables the translation of a set of qualitative requirements in 
-   LTL formulae for NuSMV, AALTA and PANDA model checkers.
-   The output can be used to formally verify the consistency of the requirements.
+SpecPro is a rework and extension of [snl2fl](https://github.com/SAGE-Lab/snl2fl). 
+
+**N.B.: It is a work in progress, refer to the main repository for usage.**  
+
 
 ## Attribution
 
@@ -69,7 +65,7 @@ There are two grammars used in **snl2fl**:
 * [FLGrammar.g4](FLGrammar.g4): defines the formal formulae syntax
 * [RequirementsGrammar.g4](RequirementsGrammar.g4): defines the grammar for patterns
 
-The grammars are built using ANTLR4 [4], you need to download and install
+The grammars are built using [ANTLR4](http://www.antlr.org/), you need to download and install
 it in order to rebuild them. The installation guide is available
 [here](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md).
  
@@ -85,18 +81,3 @@ Once you have installed ANTLR4, all you have to do is:
         
         antlr4 -o src/main/java/snl2fl/req/parser -package snl2fl.req.parser RequirementsGrammar.g4
 
-
-## References
-
-   [1] Dwyer, M.B., Avrunin, G.S., Corbett, J.C.: Patterns in property
-   specifications for finite-state verification. In: Software
-   Engineering, 1999. Proceedings of the 1999 International Conference
-   on, pp. 411–420. IEEE (1999)
-
-   [2] http://patterns.projects.cs.ksu.edu/
-
-   [3] Konrad, S., Cheng, B.H.: Real-time specification patterns. In:
-   Software engineering, 2005. icse 2005.  proceedings. 27th
-   international conference on, pp. 372–381. IEEE (2005)
-   
-   [4] http://www.antlr.org/
