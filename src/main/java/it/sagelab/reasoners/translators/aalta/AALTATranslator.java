@@ -50,9 +50,9 @@ public class AALTATranslator extends LTLToolTranslator {
     /**
      * Translate a set of psp with signals, into a LTL formula using the AALTA input syntax.
      * The final formula is composed by two formulas :
-     *  - \phi_A : derived by the aritmetic constraint
+     *  - \phi_A : derived by the arithmetic constraint
      *  - \phi_R : i.e. the translation of the psp into LTL
-     *  Finally the formula cheched is the  \phi_A \and \not\phi_R.
+     *  Finally the formula checked is the  \phi_A \and \not\phi_R.
      * 
      * @param stream The stream on which the LTL formula is written
      */
@@ -61,7 +61,7 @@ public class AALTATranslator extends LTLToolTranslator {
         
         List<Formula> ltlFormulae = translator.translate();
         List<Formula> invariants = translator.getInvariants();
-        // Print the arithmetics constraints (\phi_A)
+        // Print the arithmetic constraints (\phi_A)
         stream.print("G(");
         for(int i=0; i < invariants.size(); i++) {
         	Formula inv = invariants.get(i);

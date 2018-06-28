@@ -89,11 +89,7 @@ public class RangeMapVisitor implements ExpressionVisitor {
      */
     private void add(FloatVariableExpression var, NumberExpression exp) {
 
-        TreeMap<Float, Atom[]> treeMap = rangeMap.get(var.getName());
-        if(treeMap == null) {
-            treeMap = new TreeMap<>();
-            rangeMap.put(var.getName(), treeMap);
-        }
+        TreeMap<Float, Atom[]> treeMap = rangeMap.computeIfAbsent(var.getName(), k -> new TreeMap<>());
         if(!treeMap.containsKey(exp.floatValue())) {
             Atom [] atoms = new Atom[2];
             atoms[0] = new Atom("_lower_"+var.getName()+treeMap.size());

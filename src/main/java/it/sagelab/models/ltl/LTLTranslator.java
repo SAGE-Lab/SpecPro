@@ -41,7 +41,6 @@ public class LTLTranslator {
      *
      * @param requirements the psp
      * @param context the context
-     * @throws IOException Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
     public LTLTranslator(List<QualitativeRequirement> requirements, LTLContext context) throws JSONException {

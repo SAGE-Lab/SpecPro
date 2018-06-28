@@ -1,6 +1,6 @@
 package it.sagelab.models.psp.qualitative;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import it.sagelab.models.psp.Scope;
 import it.sagelab.fe.snl2fl.visitor.QualitativeRequirementVisitor;
@@ -24,7 +24,7 @@ public class BoundedExistenceRequirement extends QualitativeRequirement {
      * @param nTimes the n times
      */
     public BoundedExistenceRequirement(Scope scope, Expression expr, int nTimes) {
-        super(scope, Arrays.asList(expr));
+        super(scope, Collections.singletonList(expr));
         this.nTimes = nTimes;
     }
 

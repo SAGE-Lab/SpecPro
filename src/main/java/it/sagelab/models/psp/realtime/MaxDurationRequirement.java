@@ -1,6 +1,6 @@
 package it.sagelab.models.psp.realtime;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import it.sagelab.models.psp.Scope;
 import it.sagelab.models.psp.Time;
@@ -22,7 +22,7 @@ public class MaxDurationRequirement extends RealTimeRequirement {
      * @param t the t
      */
     public MaxDurationRequirement(Scope scope, Expression expr, Time t) {
-        super(scope, Arrays.asList(expr), t);
+        super(scope, Collections.singletonList(expr), t);
     }
 
     /* (non-Javadoc)

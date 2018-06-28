@@ -63,7 +63,7 @@ public class PatternSimilarity {
 
     private TokenType getTokenType(int index, List<String> tokens) {
         final Set<String> binaryOps = new HashSet<>(Arrays.asList("and", "or", "xor", ">", ">=", "<", "<="));
-        final Set<String> unaryOps = new HashSet<>(Arrays.asList("not"));
+        final Set<String> unaryOps = new HashSet<>(Collections.singletonList("not"));
 
         if(index >= tokens.size() || index < 0)
             return TokenType.NONE;

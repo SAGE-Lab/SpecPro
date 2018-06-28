@@ -1,6 +1,6 @@
 package it.sagelab.models.psp.qualitative;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import it.sagelab.models.psp.Scope;
 import it.sagelab.fe.snl2fl.visitor.QualitativeRequirementVisitor;
@@ -20,7 +20,7 @@ public class ExistenceRequirement extends QualitativeRequirement {
      * @param expr the expr
      */
     public ExistenceRequirement(Scope scope, Expression expr) {
-        super(scope, Arrays.asList(expr));
+        super(scope, Collections.singletonList(expr));
     }
 
     /* (non-Javadoc)

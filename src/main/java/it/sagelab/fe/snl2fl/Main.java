@@ -1,8 +1,5 @@
 package it.sagelab.fe.snl2fl;
 
-import org.antlr.v4.runtime.ANTLRFileStream;
-import org.antlr.v4.runtime.CharStream;
-
 import org.apache.commons.cli.*;
 
 import it.sagelab.reasoners.translators.nusmv.NuSMVTranslator;
@@ -45,9 +42,6 @@ public class Main {
                 System.exit(0);
             }
 
-            CharStream inStream = new ANTLRFileStream(files[0]);
-            OutputStream outStream = new FileOutputStream(files[1]);
-
             Snl2FlParser snl2FlParser = new Snl2FlParser();
             Snl2FlTranslator translator;
 
@@ -64,7 +58,8 @@ public class Main {
                 translator = new NuSMVTranslator().setNoinvar(commandLine.hasOption("noinvar"));
             }
 
-            snl2FlParser.parse(inStream).translate(translator, outStream);
+            OutputStream outStream = new FileOutputStream(files[1]);
+            snl2FlParser.parseFile(files[0]).translate(translator, outStream);
 
             outStream.close();
 

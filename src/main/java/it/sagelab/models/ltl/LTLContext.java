@@ -97,26 +97,25 @@ public class LTLContext {
     		 f = getEqualAtom(varName, threshold);
     	 } else {
     		 Atom[] variables = getAtoms(varName,threshold,operator);
-    		 for (int i = 0; i < variables.length; i++) {
-    			 Atom a = variables[i];
-    			 if (f == null){
-    				 if ((operator == Operator.GREATER) || 
-    					 (operator == Operator.GREATER_EQUAL)) {
-    					 f = new UnaryOperator(a, UnaryOperator.Operator.NOT);
-    				 } else {
-    					 f = a;
-    				 }
-    			 } else {
-    				 if ((operator == Operator.GREATER) || 
-       					 (operator == Operator.GREATER_EQUAL)) {	
-    					 f = new BinaryOperator(f, new UnaryOperator(a, UnaryOperator.Operator.NOT),
-    	                                        BinaryOperator.Operator.AND);
-    				 } else {
-    					 // TODO: thrown exception if operator is not LOWER or LOWER_EQUAL
-    					 f = new BinaryOperator(f,a, BinaryOperator.Operator.OR);
-    				 }
-    			 }
-    		 }	
+             for (Atom a : variables) {
+                 if (f == null) {
+                     if ((operator == Operator.GREATER) ||
+                             (operator == Operator.GREATER_EQUAL)) {
+                         f = new UnaryOperator(a, UnaryOperator.Operator.NOT);
+                     } else {
+                         f = a;
+                     }
+                 } else {
+                     if ((operator == Operator.GREATER) ||
+                             (operator == Operator.GREATER_EQUAL)) {
+                         f = new BinaryOperator(f, new UnaryOperator(a, UnaryOperator.Operator.NOT),
+                                 BinaryOperator.Operator.AND);
+                     } else {
+                         // TODO: thrown exception if operator is not LOWER or LOWER_EQUAL
+                         f = new BinaryOperator(f, a, BinaryOperator.Operator.OR);
+                     }
+                 }
+             }
     	 }
     	 return f;
     }	
@@ -140,7 +139,7 @@ public class LTLContext {
     	//obtain an Iterator for Collection
     	Iterator<Atom[]> itr = c.iterator();
     	//iterate through TreeMap values iterator
-    	ArrayList<Atom> vars = new ArrayList<Atom>();
+    	ArrayList<Atom> vars = new ArrayList<>();
     	while(itr.hasNext()) {
     		Atom[] a = itr.next();
     		vars.add(a[0]);
@@ -150,7 +149,7 @@ public class LTLContext {
 	    		vars.add(a[1]);	
 	    	}
     	}
-    	return vars.toArray(new Atom[vars.size()]);
+    	return vars.toArray(new Atom[0]);
     }
     /**
      * Gets the equal atom.
