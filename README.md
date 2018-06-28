@@ -8,7 +8,7 @@ SpecPro is a rework and extension of [snl2fl](https://github.com/SAGE-Lab/snl2fl
 
 ## Attribution
 
-   snl2fl is open source software released under the [LGPLv3 license](LICENSE). If you use it, please acknowledge it by citing:
+   SpecPro is open source software released under the [LGPLv3 license](LICENSE). If you use it, please acknowledge it by citing:
 
     @inproceedings{narizzano2018consistency,
       title={Consistency of property specification patterns with boolean and constrained numerical signals},
@@ -25,31 +25,31 @@ SpecPro is a rework and extension of [snl2fl](https://github.com/SAGE-Lab/snl2fl
    
       ./gradlew build
       
-   It will automatically build a .zip and a .tar files in the `build/distribution` directory.
-   To run snl2fl simply decompress one of the two files and execute the command
+   It will automatically build a .zip and a .tar files in the `build/distributions` directory.
+   To run SpecPro simply decompress one of the two files and execute the command
    
-      ./bin/snl2fl
+      ./bin/SpecPro
       
    It will prompt the help message showing the list of available options.
       
-   There are many way to run snl2fl and they differ for the kind of otuput generated.
+   There are many way to run SpecPro and they differ for the kind of output generated.
    There are 4 output provided: 
     
    * SMV with INVAR, generate a NuSMV problem with inequalities managed by INVAR
     
-         ./bin/snl2fl --nusmv <inputfile> <outputfile>
+         ./bin/SpecPro --nusmv <inputfile> <outputfile>
     
    * SMV without INVAR generate a NuSMV problem with inequalities written into LTLSPEC 
     
-         ./bin/snl2fl --nusmv --noinvar <inputfile> <outputfile> 
+         ./bin/SpecPro --nusmv --noinvar <inputfile> <outputfile> 
     
    * PANDA output, it writes the formula as a LTL, used by PANDA tool  
     
-         ./bin/snl2fl --panda <inputfile> <outputfile> 
+         ./bin/SpecPro --panda <inputfile> <outputfile> 
     
    * AALTA output, it writes the formula as a LTL, used by AALTA tool (add --negated option if you want the negated formula)
     
-         ./bin/snl2fl --aalta <inputfile> <outputfile>
+         ./bin/SpecPro --aalta <inputfile> <outputfile>
 
    
    Alternatively, you can run the application directly with gradle, substituting `argN` as needed.
@@ -60,7 +60,7 @@ SpecPro is a rework and extension of [snl2fl](https://github.com/SAGE-Lab/snl2fl
 
 ## Build the grammars
 
-There are two grammars used in **snl2fl**: 
+There are two grammars used in **SpecPro**: 
 
 * [FLGrammar.g4](FLGrammar.g4): defines the formal formulae syntax
 * [RequirementsGrammar.g4](RequirementsGrammar.g4): defines the grammar for patterns
@@ -71,13 +71,13 @@ it in order to rebuild them. The installation guide is available
  
 Once you have installed ANTLR4, all you have to do is:
 
-1. Open a terminal and move to the snl2fl root directory
+1. Open a terminal and move to the it.sagelab.it.sagelab.fe.snl2fl root directory
 
 2. Build FLGrammar:
 
-        antlr4 -o src/main/java/snl2fl/fl/parser -package snl2fl.fl.parser FLGrammar.g4
+        antlr4 -o src/main/java/it/sagelab/fe/ltl/parser -package it.sagelab.fe.ltl.parser FLGrammar.g4
 
 3. Build RequirementsGrammar:
         
-        antlr4 -o src/main/java/snl2fl/req/parser -package snl2fl.req.parser RequirementsGrammar.g4
+        antlr4 -o src/main/java/it/sagelab/fe/snl2fl/parser -package it.sagelab.fe.snl2fl.parser RequirementsGrammar.g4
 
