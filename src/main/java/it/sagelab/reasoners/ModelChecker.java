@@ -38,6 +38,9 @@ public abstract class ModelChecker {
 
             process.waitFor(timeout, TimeUnit.SECONDS);
 
+            if(process.isAlive())
+                throw new InterruptedException("Timeout exceeded");
+
             String output = IOUtils.toString(process.getInputStream());
             String errorMessage = IOUtils.toString(process.getErrorStream());
 
@@ -45,7 +48,7 @@ public abstract class ModelChecker {
 
         } catch (IOException | InterruptedException e) {
             if(process != null)
-                process.destroy();
+                process.destroyForcibly();
                 this.message = e.getMessage();
             return Result.FAIL;
         }
