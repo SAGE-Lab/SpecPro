@@ -1,9 +1,9 @@
-package it.sagelab.models.ltl;
+package it.sagelab.models.translators;
 
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import it.sagelab.models.ltl.elements.Atom;
+import it.sagelab.models.ltl.Atom;
 import it.sagelab.models.psp.expressions.*;
 import it.sagelab.fe.snl2fl.visitor.ExpressionVisitor;
 
@@ -26,26 +26,17 @@ public class RangeMapVisitor implements ExpressionVisitor {
         return rangeMap;
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.visitor.ExpressionVisitor#visitBooleanExpression(it.sagelab.it.sagelab.fe.snl2fl.req.expressions.BooleanExpression)
-     */
     @Override
     public void visitBooleanExpression(BooleanExpression exp) {
         exp.getLeftExp().accept(this);
         exp.getRightExp().accept(this);
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.visitor.ExpressionVisitor#visitUnaryExpression(it.sagelab.it.sagelab.fe.snl2fl.req.expressions.UnaryExpression)
-     */
     @Override
     public void visitUnaryExpression(UnaryExpression exp) {
         exp.getExp().accept(this);
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.visitor.ExpressionVisitor#visitCompareExpression(it.sagelab.it.sagelab.fe.snl2fl.req.expressions.CompareExpression)
-     */
     @Override
     public void visitCompareExpression(CompareExpression exp) {
         if(exp.getLeftExp() instanceof FloatVariableExpression && exp.getRightExp() instanceof FloatVariableExpression)
@@ -57,32 +48,23 @@ public class RangeMapVisitor implements ExpressionVisitor {
 
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.visitor.ExpressionVisitor#visitBooleanVariableExpression(it.sagelab.it.sagelab.fe.snl2fl.req.expressions.BooleanVariableExpression)
-     */
     @Override
     public void visitBooleanVariableExpression(BooleanVariableExpression exp) {
 
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.visitor.ExpressionVisitor#visitNumberExpression(it.sagelab.it.sagelab.fe.snl2fl.req.expressions.NumberExpression)
-     */
     @Override
     public void visitNumberExpression(NumberExpression exp) {
 
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.visitor.ExpressionVisitor#visitFloatVariableExpression(it.sagelab.it.sagelab.fe.snl2fl.req.expressions.FloatVariableExpression)
-     */
     @Override
     public void visitFloatVariableExpression(FloatVariableExpression exp) {
 
     }
 
     /**
-     * Adds the.
+     * Adds the var and threshold to the rangeMap.
      *
      * @param var the var
      * @param exp the exp

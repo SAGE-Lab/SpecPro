@@ -13,61 +13,58 @@ import it.sagelab.models.psp.qualitative.*;
 import it.sagelab.models.psp.realtime.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Simone Vuotto
  */
 public class RequirementsBuilder extends RequirementsGrammarBaseListener {
+
+    /** The context */
+    private Context context = new Context();
+
+    /*********************************************
+     *  Private attributes
+     *********************************************/
     
     /**  maps nodes to Expressions with Map<ParseTree,Expression>. */
     private ParseTreeProperty<Object> values = new ParseTreeProperty<>();
-    
-    /**  Symbol Table  *. */
-    private Map<String, VariableExpression> symbolTable = new HashMap<>();
-    
-    /** The requirement list. */
-    private ArrayList<Requirement> requirementList = new ArrayList<>();
     
     /** The scope. */
     private Scope scope = null;
 
     private String reqId = null;
 
-    /**
-     *  Getter Methods *.
-     *
-     * @return the requirement list
-     */
-    public List<Requirement> getRequirementList() {
-        return requirementList;
+    private Requirement req = null;
+
+    /*********************************************
+     *  Getters
+     *********************************************/
+
+    public Context getContext() {
+        return context;
     }
 
-    /**
-     * Gets the symbol table.
-     *
-     * @return the symbol table
-     */
-    public Map<String, VariableExpression> getSymbolTable() {
-        return symbolTable;
-    }
+    /*********************************************
+     *  Requirement Listeners
+     *********************************************/
 
     @Override
     public void enterRequirement(RequirementsGrammarParser.RequirementContext ctx) {
         scope = null;
         reqId = null;
+        req = null;
     }
 
     @Override
     public void exitRequirement(RequirementsGrammarParser.RequirementContext ctx) {
         if (reqId == null) {
-            reqId = "REQ" + String.valueOf(requirementList.size());
+            reqId = "REQ" + String.valueOf(context.getRequirementList().size() + 1);
         }
-        requirementList.get(requirementList.size() - 1).setReqId(reqId);
+        req.setReqId(reqId);
         String text = ctx.start.getInputStream().getText(new Interval(ctx.start.getStartIndex(), ctx.stop.getStopIndex()));
-        requirementList.get(requirementList.size() - 1).setText(text);
+        req.setText(text);
+        context.addRequirement(req);
 
     }
 
@@ -76,21 +73,12 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
         reqId = ctx.getText();
     }
 
-    /**
-     *  Time and Scope Listeners *.
-     *
-     * @param ctx the ctx
-     */
-
     @Override
     public void exitTime(RequirementsGrammarParser.TimeContext ctx) {
         Time t = new Time(Float.parseFloat(ctx.number().getText()), ctx.TIME_UNIT().getText());
         setValue(ctx, t);
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitScope(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.ScopeContext)
-     */
     @Override
     public void exitScope(RequirementsGrammarParser.ScopeContext ctx) {
         List<Expression> expressions = getExpressionList(ctx.expr());
@@ -116,198 +104,121 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
         this.scope = new Scope(type, expressions);
     }
 
-    /**
-     *  Qualitative Requirement Listeners *.
-     *
-     * @param ctx the ctx
-     */
+    /*********************************************
+     *  Qualitative Requirement Listeners
+     *********************************************/
 
     @Override
     public void exitAbsence(RequirementsGrammarParser.AbsenceContext ctx) {
-        Requirement r = new AbsenceRequirement(this.scope, getExpression(ctx.expr()));
-        requirementList.add(r);
+        req = new AbsenceRequirement(this.scope, getExpression(ctx.expr()));
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitUniversality(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.UniversalityContext)
-     */
     @Override
     public void exitUniversality(RequirementsGrammarParser.UniversalityContext ctx) {
-        Requirement r = new UniversalityRequirement(this.scope, getExpression(ctx.expr()));
-        requirementList.add(r);
+        req = new UniversalityRequirement(this.scope, getExpression(ctx.expr()));
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitExistence(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.ExistenceContext)
-     */
     @Override
     public void exitExistence(RequirementsGrammarParser.ExistenceContext ctx) {
-        Requirement r = new ExistenceRequirement(this.scope, getExpression(ctx.expr()));
-        requirementList.add(r);
+        req = new ExistenceRequirement(this.scope, getExpression(ctx.expr()));
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitBoundedExistence(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.BoundedExistenceContext)
-     */
     @Override
     public void exitBoundedExistence(RequirementsGrammarParser.BoundedExistenceContext ctx) {
-        Requirement r = new BoundedExistenceRequirement(this.scope, getExpression(ctx.expr()), Integer.parseInt(ctx.positiveInt().getText()));
-        requirementList.add(r);
+        req = new BoundedExistenceRequirement(this.scope, getExpression(ctx.expr()), Integer.parseInt(ctx.positiveInt().getText()));
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitPrecedence(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.PrecedenceContext)
-     */
     @Override
     public void exitPrecedence(RequirementsGrammarParser.PrecedenceContext ctx){
-        Requirement r = new PrecedenceRequirement(scope, getExpressionList(ctx.expr()));
-        requirementList.add(r);
+        req = new PrecedenceRequirement(scope, getExpressionList(ctx.expr()));
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitPrecedenceChain12(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.PrecedenceChain12Context)
-     */
     @Override
     public void exitPrecedenceChain12(RequirementsGrammarParser.PrecedenceChain12Context ctx) {
-        Requirement r = new PrecedenceChain12Requirement(scope, getExpressionList(ctx.expr()));
-        requirementList.add(r);
+        req = new PrecedenceChain12Requirement(scope, getExpressionList(ctx.expr()));
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitPrecedenceChain21(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.PrecedenceChain21Context)
-     */
     @Override
     public void exitPrecedenceChain21(RequirementsGrammarParser.PrecedenceChain21Context ctx) {
-        Requirement r = new PrecedenceChain21Requirement(scope, getExpressionList(ctx.expr()));
-        requirementList.add(r);
+        req = new PrecedenceChain21Requirement(scope, getExpressionList(ctx.expr()));
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitResponse(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.ResponseContext)
-     */
     @Override
     public void exitResponse(RequirementsGrammarParser.ResponseContext ctx) {
-        Requirement r = new ResponseRequirement(scope, getExpressionList(ctx.expr()));
-        requirementList.add(r);
+        req = new ResponseRequirement(scope, getExpressionList(ctx.expr()));
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitResponseChain12(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.ResponseChain12Context)
-     */
     @Override
     public void exitResponseChain12(RequirementsGrammarParser.ResponseChain12Context ctx) {
-        Requirement r = new ResponseChain12Requirement(scope, getExpressionList(ctx.expr()));
-        requirementList.add(r);
+        req = new ResponseChain12Requirement(scope, getExpressionList(ctx.expr()));
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitResponseChain21(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.ResponseChain21Context)
-     */
     @Override
     public void exitResponseChain21(RequirementsGrammarParser.ResponseChain21Context ctx) {
-        Requirement r = new ResponseChain21Requirement(scope, getExpressionList(ctx.expr()));
-        requirementList.add(r);
+        req = new ResponseChain21Requirement(scope, getExpressionList(ctx.expr()));
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitConstrainedChain12(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.ConstrainedChain12Context)
-     */
     @Override
     public void exitConstrainedChain12(RequirementsGrammarParser.ConstrainedChain12Context ctx) {
-        Requirement r = new ConstrainedChain12Requirement(scope, getExpressionList(ctx.expr()));
-        requirementList.add(r);
+        req = new ConstrainedChain12Requirement(scope, getExpressionList(ctx.expr()));
     }
-
-    /**
-     *  Real Time Requirement Listeners *.
-     *
-     * @param ctx the ctx
-     */
-
-    @Override
-    public void exitMinDuration(RequirementsGrammarParser.MinDurationContext ctx) {
-        Requirement r = new MinDurationRequirement(scope, getExpression(ctx.expr()), getTime(ctx.time()));
-        requirementList.add(r);
-    }
-
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitMaxDuration(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.MaxDurationContext)
-     */
-    @Override
-    public void exitMaxDuration(RequirementsGrammarParser.MaxDurationContext ctx) {
-        Requirement r = new MaxDurationRequirement(scope, getExpression(ctx.expr()), getTime(ctx.time()));
-        requirementList.add(r);
-    }
-
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitBoundedRecurrence(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.BoundedRecurrenceContext)
-     */
-    @Override
-    public void exitBoundedRecurrence(RequirementsGrammarParser.BoundedRecurrenceContext ctx) {
-        Requirement r = new BoundedRecurrenceRequirement(scope, getExpression(ctx.expr()), getTime(ctx.time()));
-        requirementList.add(r);
-    }
-
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitBoundedResponse(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.BoundedResponseContext)
-     */
-    @Override
-    public void exitBoundedResponse(RequirementsGrammarParser.BoundedResponseContext ctx) {
-        Requirement r = new BoundedResponseRequirement(scope, getExpressionList(ctx.expr()), getTime(ctx.time()));
-        requirementList.add(r);
-    }
-
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitBoundedInvariance(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.BoundedInvarianceContext)
-     */
-    @Override
-    public void exitBoundedInvariance(RequirementsGrammarParser.BoundedInvarianceContext ctx) {
-        Requirement r = new BoundedInvarianceRequirement(scope, getExpressionList(ctx.expr()), getTime(ctx.time()));
-        requirementList.add(r);
-    }
-
-    /**
-     *  Invariant Requirement Listener *.
-     *
-     * @param ctx the ctx
-     */
 
     @Override
     public void exitInvariant(RequirementsGrammarParser.InvariantContext ctx) {
-        Requirement r = new InvariantRequirement(scope, getExpressionList(ctx.expr()));
-        requirementList.add(r);
+        req = new InvariantRequirement(scope, getExpressionList(ctx.expr()));
     }
 
-    /**
-     *  Expression Listeners *.
-     *
-     * @param ctx the ctx
-     */
+    /*********************************************
+     *  Real Time Requirement Listeners
+     *********************************************/
+
+    @Override
+    public void exitMinDuration(RequirementsGrammarParser.MinDurationContext ctx) {
+        req = new MinDurationRequirement(scope, getExpression(ctx.expr()), getTime(ctx.time()));
+    }
+
+    @Override
+    public void exitMaxDuration(RequirementsGrammarParser.MaxDurationContext ctx) {
+        req = new MaxDurationRequirement(scope, getExpression(ctx.expr()), getTime(ctx.time()));
+    }
+
+    @Override
+    public void exitBoundedRecurrence(RequirementsGrammarParser.BoundedRecurrenceContext ctx) {
+        req = new BoundedRecurrenceRequirement(scope, getExpression(ctx.expr()), getTime(ctx.time()));
+    }
+
+    @Override
+    public void exitBoundedResponse(RequirementsGrammarParser.BoundedResponseContext ctx) {
+        req = new BoundedResponseRequirement(scope, getExpressionList(ctx.expr()), getTime(ctx.time()));
+    }
+
+    @Override
+    public void exitBoundedInvariance(RequirementsGrammarParser.BoundedInvarianceContext ctx) {
+        req = new BoundedInvarianceRequirement(scope, getExpressionList(ctx.expr()), getTime(ctx.time()));
+    }
+
+    /*********************************************
+     *  Expressions Listeners
+     *********************************************/
 
     @Override
     public void exitBracketExpression(RequirementsGrammarParser.BracketExpressionContext ctx){
         setValue(ctx, getExpression(ctx.expr()));
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitCompareExpression(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.CompareExpressionContext)
-     */
     @Override
     public void exitCompareExpression(RequirementsGrammarParser.CompareExpressionContext ctx) {
         CompareExpression.Operator operator = CompareExpression.getOperator(ctx.getChild(1).getText());
         Expression [] operands = new Expression[2];
         int index = 0;
         for(TerminalNode id : ctx.ID())
-            operands[index++] = getFloatVariable(id.getText());
+            operands[index++] = context.addFloatVariable(id.getText());
         for(RequirementsGrammarParser.NumberContext numb : ctx.number())
             operands[index++] = new NumberExpression(Float.parseFloat(numb.getText()));
         CompareExpression expression = new CompareExpression(operands[0], operands[1], operator);
         setValue(ctx, expression);
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitBooleanExpression(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.BooleanExpressionContext)
-     */
     @Override
     public void exitBooleanExpression(RequirementsGrammarParser.BooleanExpressionContext ctx) {
         BooleanExpression.Operator operator = BooleanExpression.getOperator(ctx.getChild(1).getText());
@@ -317,9 +228,6 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
         setValue(ctx, expression);
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitUnaryExpression(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.UnaryExpressionContext)
-     */
     @Override
     public void exitUnaryExpression(RequirementsGrammarParser.UnaryExpressionContext ctx) {
         UnaryExpression.Operator operator = UnaryExpression.getOperator(ctx.getChild(0).getText());
@@ -328,20 +236,14 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
         setValue(ctx, expression);
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarBaseListener#exitIDExpression(it.sagelab.it.sagelab.fe.snl2fl.req.parser.RequirementsGrammarParser.IDExpressionContext)
-     */
     @Override
     public void exitIDExpression(RequirementsGrammarParser.IDExpressionContext ctx) {
-        setValue(ctx, getBooleanVariable(ctx.ID().getText()));
+        setValue(ctx, context.addBooleanVariable(ctx.ID().getText()));
     }
 
-    /**
-     *  Util methods *.
-     *
-     * @param node the node
-     * @param value the value
-     */
+    /*********************************************
+     *  Util Methods
+     *********************************************/
 
     private void setValue(ParseTree node, Object value) { values.put(node, value); }
 
@@ -382,38 +284,6 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
      */
     private Requirement getRequirement(ParseTree node) { return (Requirement) values.get(node); }
 
-    /**
-     * Gets the boolean variable.
-     *
-     * @param id the id
-     * @return the boolean variable
-     */
-    private BooleanVariableExpression getBooleanVariable(String id){
-        VariableExpression var = symbolTable.get(id);
-        if(var == null) {
-            var = new BooleanVariableExpression(id);
-            symbolTable.put(id, var);
-        } else if(!(var instanceof BooleanVariableExpression)) {
-            throw new IllegalArgumentException("Type conflict for variable " + var.getName());
-        }
-        return (BooleanVariableExpression) var;
-    }
 
-    /**
-     * Gets the float variable.
-     *
-     * @param id the id
-     * @return the float variable
-     */
-    private FloatVariableExpression getFloatVariable(String id){
-        VariableExpression var = symbolTable.get(id);
-        if(var == null) {
-            var = new FloatVariableExpression(id);
-            symbolTable.put(id, var);
-        } else if(!(var instanceof FloatVariableExpression)) {
-            throw new IllegalArgumentException("Type conflict for variable " + var.getName());
-        }
-        return (FloatVariableExpression) var;
-    }
 
 }

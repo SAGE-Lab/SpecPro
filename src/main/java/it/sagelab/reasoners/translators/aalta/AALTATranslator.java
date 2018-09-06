@@ -1,16 +1,15 @@
 package it.sagelab.reasoners.translators.aalta;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import it.sagelab.models.ltl.elements.Atom;
-import it.sagelab.models.ltl.elements.Formula;
-import it.sagelab.models.ltl.LTLContext;
+import it.sagelab.models.translators.PSP2LTL;
+import it.sagelab.models.ltl.Formula;
 import it.sagelab.reasoners.translators.LTLToolTranslator;
-import it.sagelab.models.ltl.LTLTranslator;
-import it.sagelab.models.psp.expressions.BooleanVariableExpression;
-import it.sagelab.models.psp.expressions.VariableExpression;
 
 /**
  * The Class AALTATranslator.
@@ -19,33 +18,22 @@ import it.sagelab.models.psp.expressions.VariableExpression;
  */
 public class AALTATranslator extends LTLToolTranslator {
 
-    /** Property to indicate if the translation should be negated*/
-    private boolean negated;
-
+    private static final Set<String> forbiddenVarNames = Stream.of("X", "N", "U", "R", "V", "G", "F", "true", "false", "TRUE", "FALSE").collect(Collectors.toSet());
 
     /**
-     * Instantiates a new nu SMV translator.
+     * Instantiates a new nu SMV psp2ltl.
      *
-     * @param translator the translator
+     * @param translator the psp2ltl
      */
-    public AALTATranslator(LTLTranslator translator) {
-        super(translator);
+    public AALTATranslator(PSP2LTL translator) {
+        super(translator, forbiddenVarNames);
     }
 
     /**
-     * Instantiates a new nu SMV translator.
+     * Instantiates a new nu SMV psp2ltl.
      *
      */
-    public AALTATranslator() {  }
-
-    public boolean isNegated() {
-        return negated;
-    }
-
-    public AALTATranslator setNegated(boolean negated) {
-        this.negated = negated;
-        return this;
-    }
+    public AALTATranslator() { super(forbiddenVarNames); }
 
     /**
      * Translate a set of psp with signals, into a LTL formula using the AALTA input syntax.
@@ -56,58 +44,19 @@ public class AALTATranslator extends LTLToolTranslator {
      * 
      * @param stream The stream on which the LTL formula is written
      */
-    public void translate(PrintStream stream) {
+    public void translate(PrintStream stream) throws IOException {
     	LTLAALTAVisitor visitor = new LTLAALTAVisitor(stream);
         
-        List<Formula> ltlFormulae = translator.translate();
-        List<Formula> invariants = translator.getInvariants();
+        List<Formula> ltlFormulae = psp2ltl.translate();
+        List<Formula> invariants = psp2ltl.getInvariants();
         // Print the arithmetic constraints (\phi_A)
         stream.print("G(");
-        for(int i=0; i < invariants.size(); i++) {
-        	Formula inv = invariants.get(i);
-        	stream.print("(");
-            inv.accept(visitor);
-            stream.print(")");
-            if(i < invariants.size() - 1)
-                stream.print(" & ");
-        }
+        this.printFormulaeInConjunction(stream, visitor, invariants);
         stream.print(")");
         // Print the psp constraints (\phi_R)
-        if(this.negated) {
-        	stream.print(" & ~(");
-        } else {
-        	stream.print(" & (");
-        }
-        for(int i=0; i < ltlFormulae.size(); ++i) {
-            Formula formula = ltlFormulae.get(i);
-            stream.print("(");
-            formula.accept(visitor);
-            stream.print(")");
-            if(i < ltlFormulae.size() - 1)
-                stream.print(" & ");
-        }
+        stream.print(" & (");
+        this.printFormulaeInConjunction(stream, visitor, ltlFormulae);
         stream.print(")");
-    }
-
-    /**
-     * Prints the variables.
-     *
-     * @param stream the stream
-     */
-    public void printVariables(PrintStream stream) {
-        stream.println("VAR\n");
-        LTLContext context = translator.getContext();
-        // Print boolean variables
-        for(VariableExpression ve : context.getSymbolTable().values())
-            if(ve instanceof BooleanVariableExpression)
-                stream.println("\t"+ve.getName()+" : boolean;");
-        // Print range variables encoded with atoms
-        for(TreeMap<Float, Atom[]> t : context.getRangeMap().values())
-            for(Atom[] a : t.values()) {
-                stream.println("\t"+a[0].getName()+" : boolean;");
-                stream.println("\t"+a[1].getName()+" : boolean;");
-
-            }
     }
 
 

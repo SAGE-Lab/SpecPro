@@ -1,4 +1,4 @@
-package it.sagelab.models.ltl.elements;
+package it.sagelab.models.ltl;
 
 import it.sagelab.fe.ltl.visitor.FormulaVisitor;
 

@@ -31,7 +31,6 @@ public class Main {
         options.addOptionGroup(group);
 
         options.addOption(null, "noinvar", false, "translate without INVAR statemens (only for NuSMV)");
-        options.addOption(null, "negated", false, "translate with negated notation (only for Aalta)");
 
         try {
             CommandLine commandLine = commandLineParser.parse( options, args );
@@ -47,7 +46,7 @@ public class Main {
 
             if(commandLine.hasOption("a")) {
                 System.out.println("Translating into AALTA syntax");
-                translator = new AALTATranslator().setNegated(commandLine.hasOption("negated"));
+                translator = new AALTATranslator();
             }
             else if(commandLine.hasOption("p")) {
                 System.out.println("Translating into PANDA syntax");

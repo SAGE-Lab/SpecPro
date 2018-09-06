@@ -9,7 +9,7 @@ package it.sagelab.models.psp.expressions;
 abstract public class VariableExpression extends Expression{
     
     /** The name. */
-    protected final String name;
+    protected String name;
 
     /**
      * Instantiates a new variable expression.
@@ -26,7 +26,11 @@ abstract public class VariableExpression extends Expression{
      * @return the name
      */
     public String getName(){ return name; }
-    
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */

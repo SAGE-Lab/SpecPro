@@ -1,9 +1,9 @@
 package it.sagelab.fe.ltl.parser;
 
-import it.sagelab.models.ltl.elements.Atom;
-import it.sagelab.models.ltl.elements.BinaryOperator;
-import it.sagelab.models.ltl.elements.Formula;
-import it.sagelab.models.ltl.elements.UnaryOperator;
+import it.sagelab.models.ltl.Atom;
+import it.sagelab.models.ltl.BinaryOperator;
+import it.sagelab.models.ltl.Formula;
+import it.sagelab.models.ltl.UnaryOperator;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
 /**
@@ -14,10 +14,10 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty;
 public class FLBuilder extends FLGrammarBaseListener {
     
     /**  maps nodes to Expressions with Map<ParseTree,Expression>. */
-    ParseTreeProperty<Formula> values = new ParseTreeProperty<>();
+    private ParseTreeProperty<Formula> values = new ParseTreeProperty<>();
     
     /** The root. */
-    Formula root = null;
+    private Formula root = null;
 
     /**
      * Gets the formula.

@@ -53,7 +53,7 @@ public class Snl2FlParser {
      * Returns the list of all parsed psp
      * @return the list of psp
      */
-    public List<Requirement> getRequirements() { return builder.getRequirementList(); }
+    public List<Requirement> getRequirements() { return builder.getContext().getRequirementList(); }
 
 
     /**
@@ -61,7 +61,7 @@ public class Snl2FlParser {
      * @param index The index of the requirement to retrieve
      * @return the requirement in
      */
-    public Requirement getRequirement(int index) { return builder.getRequirementList().get(index); }
+    public Requirement getRequirement(int index) { return builder.getContext().getRequirementList().get(index); }
 
 
     /**
@@ -133,9 +133,9 @@ public class Snl2FlParser {
     }
 
     /**
-     * Translated the parsed content with the given translator and output the result in outStream
+     * Translated the parsed content with the given psp2ltl and output the result in outStream
      *
-     * @param translator The translator to use
+     * @param translator The psp2ltl to use
      * @param outStream The output stream
      * @return this
      * @throws Snl2FlException

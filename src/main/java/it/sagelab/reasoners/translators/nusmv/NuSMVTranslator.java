@@ -1,16 +1,17 @@
 package it.sagelab.reasoners.translators.nusmv;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import it.sagelab.models.ltl.elements.Atom;
-import it.sagelab.models.ltl.elements.Formula;
-import it.sagelab.models.ltl.LTLContext;
-import it.sagelab.models.psp.expressions.BooleanVariableExpression;
-import it.sagelab.models.psp.expressions.VariableExpression;
+import it.sagelab.models.translators.PSP2LTL;
+import it.sagelab.models.ltl.Atom;
+import it.sagelab.models.ltl.Formula;
 import it.sagelab.reasoners.translators.LTLToolTranslator;
-import it.sagelab.models.ltl.LTLTranslator;
 
 /**
  * The Class NuSMVTranslator.
@@ -19,21 +20,30 @@ import it.sagelab.models.ltl.LTLTranslator;
  */
 public class NuSMVTranslator extends LTLToolTranslator {
 
+    private static final Set<String> forbiddenVarNames = Stream.of("MODULE", "DEFINE", "MDEFINE", "CONSTANTS", "VAR", "IVAR", "FROZENVAR",
+            "INIT", "TRANS", "INVAR", "SPEC", "CTLSPEC", "LTLSPEC", "PSLSPEC", "COMPUTE", "NAME", "INVARSPEC", "FAIRNESS",
+            "JUSTICE", "COMPASSION", "ISA", "ASSIGN", "CONSTRAINT", "SIMPWFF", "CTLWFF", "LTLWFF", "PSLWFF", "COMPWFF",
+            "IN", "MIN", "MAX", "MIRROR", "PRED", "PREDICATES", "process", "array", "of", "boolean", "integer", "real",
+            "word", "word1", "bool", "signed", "unsigned", "extend", "resize", "sizeof", "uwconst", "swconst", "EX", "AX",
+            "EF", "AF", "EG", "AG", "E", "F", "O", "G", "H", "X", "Y", "Z", "A", "U", "S", "V", "T", "BU", "EBF", "ABF",
+            "EBG", "ABG", "case", "esac", "mod", "next", "init", "union", "in", "xor", "xnor", "self", "TRUE", "FALSE",
+            "count").collect(Collectors.toSet());
+
     /** Property to indicate if the translation should not use INVAR statements*/
     private boolean noinvar;
 
     /**
-     * Instantiates a new nu SMV translator.
+     * Instantiates a new nu SMV psp2ltl.
      *
-     * @param translator the translator
+     * @param translator the psp2ltl
      */
-    public NuSMVTranslator(LTLTranslator translator) { super(translator); }
+    public NuSMVTranslator(PSP2LTL translator) { super(translator, forbiddenVarNames); }
 
     /**
-     * Instantiates a new nu SMV translator.
+     * Instantiates a new nu SMV psp2ltl.
      *
      */
-    public NuSMVTranslator() { }
+    public NuSMVTranslator() { super(forbiddenVarNames); }
 
 
     public NuSMVTranslator setNoinvar(boolean noinvar) {
@@ -54,12 +64,15 @@ public class NuSMVTranslator extends LTLToolTranslator {
      *
      * @param stream the stream
      */
-    public void translate(PrintStream stream) {
+    public void translate(PrintStream stream) throws IOException {
+        LTLNuSMVVisitor visitor = new LTLNuSMVVisitor(stream);
+        List<Formula> invariants = psp2ltl.getInvariants();
+        List<Formula> ltlFormulae = psp2ltl.translate();
+
         stream.println("MODULE main");
         this.printVariables(stream);
         stream.println();
-        LTLNuSMVVisitor visitor = new LTLNuSMVVisitor(stream);
-        List<Formula> invariants = translator.getInvariants();
+
 
         if (!noinvar) {
         	// Writing the translation constraining the Universal model
@@ -71,10 +84,9 @@ public class NuSMVTranslator extends LTLToolTranslator {
 
         	// Print the negation of the formula representing the psp
         	stream.println();
-        	List<Formula> ltlFormulae = translator.translate();
         	stream.println("-- Negated Formula");
         	stream.print("LTLSPEC !(");
-        	this.printFormulae(stream, visitor, ltlFormulae);
+        	this.printFormulaeInConjunction(stream, visitor, ltlFormulae);
         	stream.println(");");
         	      
         } else {
@@ -82,34 +94,15 @@ public class NuSMVTranslator extends LTLToolTranslator {
         	stream.println("-- Negated Formula");
         	stream.print("LTLSPEC ");
         	stream.print("!G(");
-            this.printFormulae(stream, visitor, invariants);
+            this.printFormulaeInConjunction(stream, visitor, invariants);
         	stream.print(")");
-        	
-        	List<Formula> ltlFormulae = translator.translate();
+
         	// Print the psp constraints (\phi_R)
         	stream.print(" | !(");
-            this.printFormulae(stream, visitor, ltlFormulae);
+            this.printFormulaeInConjunction(stream, visitor, ltlFormulae);
         	stream.println(");");
         }
         
-    }
-
-    /**
-     * Prints the list of formulae.
-     * @param stream the stream
-     * @param visitor the visitor to print the formulae
-     * @param ltlFormulae the list of formulae
-     */
-    private void printFormulae(PrintStream stream, LTLNuSMVVisitor visitor, List<Formula> ltlFormulae) {
-
-        for(int i=0; i < ltlFormulae.size(); ++i) {
-            Formula formula = ltlFormulae.get(i);
-            stream.print("(");
-            formula.accept(visitor);
-            stream.print(")");
-            if(i < ltlFormulae.size() - 1)
-                stream.print(" & ");
-        }
     }
 
     /**
@@ -119,14 +112,12 @@ public class NuSMVTranslator extends LTLToolTranslator {
      */
     private void printVariables(PrintStream stream) {
         stream.println("VAR\n");
-        LTLContext context = translator.getContext();
         // Print boolean variables
-        for(VariableExpression ve : context.getSymbolTable().values())
-            if(ve instanceof BooleanVariableExpression)
-                stream.println("\t"+ve.getName()+" : boolean;");
+        for(String varName : psp2ltl.getBooleanAtoms().keySet())
+            stream.println("\t" + varName + " : boolean;");
         // Print range variables encoded with atoms
-        for(String name: context.getRangeMap().keySet()) {
-        	TreeMap<Float, Atom[]> t = context.getRangeMap().get(name);
+        for(String name: psp2ltl.getRangeMap().keySet()) {
+        	TreeMap<Float, Atom[]> t = psp2ltl.getRangeMap().get(name);
         	for(Float a_key : t.keySet()) {
         		Atom[] a = t.get(a_key);
         		stream.println("\t"+a[0].getName()+" : boolean; -- " + name + " < " + a_key);

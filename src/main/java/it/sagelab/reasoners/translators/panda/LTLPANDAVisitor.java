@@ -2,10 +2,10 @@ package it.sagelab.reasoners.translators.panda;
 
 import java.io.PrintStream;
 
-import it.sagelab.models.ltl.elements.Atom;
-import it.sagelab.models.ltl.elements.BinaryOperator;
-import it.sagelab.models.ltl.elements.Formula;
-import it.sagelab.models.ltl.elements.UnaryOperator;
+import it.sagelab.models.ltl.Atom;
+import it.sagelab.models.ltl.BinaryOperator;
+import it.sagelab.models.ltl.Formula;
+import it.sagelab.models.ltl.UnaryOperator;
 import it.sagelab.fe.ltl.visitor.FormulaVisitor;
 import it.sagelab.fe.snl2fl.visitor.ContextBasedVisitor;
 

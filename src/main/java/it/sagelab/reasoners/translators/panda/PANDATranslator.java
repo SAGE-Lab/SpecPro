@@ -1,16 +1,15 @@
 package it.sagelab.reasoners.translators.panda;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import it.sagelab.models.ltl.elements.Atom;
-import it.sagelab.models.ltl.elements.Formula;
-import it.sagelab.models.ltl.LTLContext;
+import it.sagelab.models.translators.PSP2LTL;
+import it.sagelab.models.ltl.Formula;
 import it.sagelab.reasoners.translators.LTLToolTranslator;
-import it.sagelab.models.ltl.LTLTranslator;
-import it.sagelab.models.psp.expressions.BooleanVariableExpression;
-import it.sagelab.models.psp.expressions.VariableExpression;
 
 /**
  * The Class PANDATranslator.
@@ -19,18 +18,21 @@ import it.sagelab.models.psp.expressions.VariableExpression;
  */
 public class PANDATranslator extends LTLToolTranslator {
 
-    /**
-     * Instantiates a new nu SMV translator.
-     *
-     * @param translator the translator
-     */
-    public PANDATranslator(LTLTranslator translator) { super(translator); }
+    private static final Set<String> forbiddenVarNames = Stream.of("X", "N", "U", "R", "V", "G", "F", "true", "false", "TRUE", "FALSE").collect(Collectors.toSet());
+
 
     /**
-     * Instantiates a new nu SMV translator.
+     * Instantiates a new nu SMV psp2ltl.
+     *
+     * @param translator the psp2ltl
+     */
+    public PANDATranslator(PSP2LTL translator) { super(translator, forbiddenVarNames); }
+
+    /**
+     * Instantiates a new nu SMV psp2ltl.
      *
      */
-    public PANDATranslator() {  }
+    public PANDATranslator() { super(forbiddenVarNames); }
 
     /**
      * Translate a set of psp with signals, into a LTL formula using the PANDA input syntax.
@@ -42,62 +44,20 @@ public class PANDATranslator extends LTLToolTranslator {
      * 
      * @param stream The stream on which the LTL formula is written
      */
-    public void translate(PrintStream stream) {
+    public void translate(PrintStream stream) throws IOException {
     	LTLPANDAVisitor visitor = new LTLPANDAVisitor(stream);
         
-        List<Formula> ltlFormulae = translator.translate();
-        List<Formula> invariants = translator.getInvariants();
-        // Since PANDA tool negate the input formula we add the negation
-        // at the begin of the formula.
-        stream.print("~(");
+        List<Formula> ltlFormulae = psp2ltl.translate();
+        List<Formula> invariants = psp2ltl.getInvariants();
         
         // Print the arithmetics constraints (\phi_A)
-        stream.print("~G(");
-        for(int i=0; i < invariants.size(); i++) {
-        	Formula inv = invariants.get(i);
-        	stream.print("(");
-            inv.accept(visitor);
-            stream.print(")");
-            if(i < invariants.size() - 1)
-                stream.print(" & ");
-        }
+        stream.print("G(");
+        this.printFormulaeInConjunction(stream, visitor, invariants);
         stream.print(")");
         // Print the psp constraints (\phi_R)
-        stream.print(" | ~(");
-        for(int i=0; i < ltlFormulae.size(); ++i) {
-            Formula formula = ltlFormulae.get(i);
-            stream.print("(");
-            formula.accept(visitor);
-            stream.print(")");
-            if(i < ltlFormulae.size() - 1)
-                stream.print(" & ");
-        }
-        stream.print(")");
-
-        // END of the formula
+        stream.print(" & (");
+        this.printFormulaeInConjunction(stream, visitor, ltlFormulae);
         stream.print(")");
     }
-
-    /**
-     * Prints the variables.
-     *
-     * @param stream the stream
-     */
-    public void printVariables(PrintStream stream) {
-        stream.println("VAR\n");
-        LTLContext context = translator.getContext();
-        // Print boolean variables
-        for(VariableExpression ve : context.getSymbolTable().values())
-            if(ve instanceof BooleanVariableExpression)
-                stream.println("\t"+ve.getName()+" : boolean;");
-        // Print range variables encoded with atoms
-        for(TreeMap<Float, Atom[]> t : context.getRangeMap().values())
-            for(Atom[] a : t.values()) {
-                stream.println("\t"+a[0].getName()+" : boolean;");
-                stream.println("\t"+a[1].getName()+" : boolean;");
-
-            }
-    }
-
 
 }

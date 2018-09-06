@@ -2,10 +2,10 @@ package it.sagelab.reasoners.translators.nusmv;
 
 import java.io.PrintStream;
 
-import it.sagelab.models.ltl.elements.Atom;
-import it.sagelab.models.ltl.elements.BinaryOperator;
-import it.sagelab.models.ltl.elements.Formula;
-import it.sagelab.models.ltl.elements.UnaryOperator;
+import it.sagelab.models.ltl.Atom;
+import it.sagelab.models.ltl.BinaryOperator;
+import it.sagelab.models.ltl.Formula;
+import it.sagelab.models.ltl.UnaryOperator;
 import it.sagelab.fe.ltl.visitor.FormulaVisitor;
 import it.sagelab.fe.snl2fl.visitor.ContextBasedVisitor;
 
@@ -29,9 +29,6 @@ public class LTLNuSMVVisitor extends ContextBasedVisitor<PrintStream> implements
 
     }
 
-    /* (non-Javadoc)
-     * @see FormulaVisitor#visitUnaryOperator(UnaryOperator)
-     */
     @Override
     public void visitUnaryOperator(UnaryOperator op) {
         switch(op.getOperator()){
@@ -54,9 +51,6 @@ public class LTLNuSMVVisitor extends ContextBasedVisitor<PrintStream> implements
         }
     }
 
-    /* (non-Javadoc)
-     * @see FormulaVisitor#visitBinaryOperator(BinaryOperator)
-     */
     @Override
     public void visitBinaryOperator(BinaryOperator op) {
         switch(op.getOperator()){
@@ -100,19 +94,11 @@ public class LTLNuSMVVisitor extends ContextBasedVisitor<PrintStream> implements
         }
     }
 
-    /* (non-Javadoc)
-     * @see FormulaVisitor#visitAtom(Atom)
-     */
     @Override
     public void visitAtom(Atom at) {
         print(at.getName());
     }
 
-    /**
-     * Prints the.
-     *
-     * @param f the f
-     */
     private void print(Formula f) {
         if(f instanceof Atom) {
             print(" ");
@@ -124,11 +110,6 @@ public class LTLNuSMVVisitor extends ContextBasedVisitor<PrintStream> implements
         }
     }
 
-    /**
-     * Prints the.
-     *
-     * @param s the s
-     */
     private void print(String s) {
         getContext().print(s);
     }

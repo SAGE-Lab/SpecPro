@@ -7,7 +7,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import it.sagelab.models.ltl.elements.Formula;
+import it.sagelab.models.ltl.Formula;
 import it.sagelab.fe.ltl.parser.FLBuilder;
 import it.sagelab.fe.ltl.parser.FLGrammarLexer;
 import it.sagelab.fe.ltl.parser.FLGrammarParser;
@@ -100,7 +100,7 @@ public class Pattern {
 
                 RequirementsBuilder builder = new RequirementsBuilder();
                 walker.walk(builder, parser.file());
-                List<Requirement> requirements = builder.getRequirementList();
+                List<Requirement> requirements = builder.getContext().getRequirementList();
                 Requirement requirement = requirements.get(0);
 
                 // Parse the formula

@@ -1,7 +1,7 @@
 /*
  * 
  */
-package it.sagelab.models.ltl.elements;
+package it.sagelab.models.ltl;
 
 import it.sagelab.fe.ltl.visitor.FormulaVisitor;
 
@@ -13,7 +13,7 @@ import it.sagelab.fe.ltl.visitor.FormulaVisitor;
 public class Atom extends Formula {
     
     /** The name. */
-    final String name;
+    private final String name;
 
     /**
      * Instantiates a new atom.
@@ -31,17 +31,11 @@ public class Atom extends Formula {
      */
     public String getName() { return name; }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return name;
     }
 
-    /* (non-Javadoc)
-     * @see Formula#accept(FormulaVisitor)
-     */
     @Override
     public void accept(FormulaVisitor visitor) {
         visitor.visitAtom(this);
