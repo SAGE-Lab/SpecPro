@@ -1,0 +1,7 @@
+[ID=R1] It is always the case that if A holds, then B holds as well.
+[ID=R2] It is always the case that if B holds, then C holds as well.
+[ID=R3] It is always the case that if C holds, then D holds as well.
+[ID=R4] It is always the case that if D holds, then E holds as well.
+[ID=R5] It is always the case that if E holds, then F holds as well.
+[ID=R6] It is always the case that if F holds, then G holds as well.
+[ID=R7] It is always the case that if G holds, then not A holds as well.

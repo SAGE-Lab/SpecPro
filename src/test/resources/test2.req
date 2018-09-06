@@ -1,2 +1,4 @@
 Globally, it is always the case that if (B < 11) holds, then (H > 15) eventually holds and is succeeded by J, where K does not hold between (H > 15) and J .
-After B > 10, it is always the case that if P holds, then K previously held.
+After H > 15, it is always the case that K holds.
+Globally,  B < 11 eventually holds.
+Globally, it is never the case that J and K holds.

@@ -1,23 +1,15 @@
 MODULE main
 VAR
 
-	P : boolean;
 	J : boolean;
 	K : boolean;
-	_lower_B1 : boolean; -- B < 10.0
-	_equal_B1 : boolean; -- B = 10.0
 	_lower_B0 : boolean; -- B < 11.0
 	_equal_B0 : boolean; -- B = 11.0
 	_lower_H0 : boolean; -- H < 15.0
 	_equal_H0 : boolean; -- H = 15.0
 
-INVAR (! _lower_B1) | (! _equal_B1);
-INVAR (! _lower_B1) | (! _lower_B0);
-INVAR (! _lower_B1) | (! _equal_B0);
-INVAR (! _equal_B1) | (! _lower_B0);
-INVAR (! _equal_B1) | (! _equal_B0);
 INVAR (! _lower_B0) | (! _equal_B0);
 INVAR (! _lower_H0) | (! _equal_H0);
 
 -- Negated Formula
-LTLSPEC !((G((( _lower_B1 |  _equal_B1) |  _lower_B0) -> (F((((! _lower_H0) & (! _equal_H0)) & (! K)) & (X((! K) U  J)))))) & ((G(!((! _lower_B1) & (! _equal_B1)))) | (F(((! _lower_B1) & (! _equal_B1)) & ((G(! P)) | ((! P) U  K))))));
+LTLSPEC !((G( _lower_B0 -> (F((((! _lower_H0) & (! _equal_H0)) & (! K)) & (X((! K) U  J)))))) & (G(((! _lower_H0) & (! _equal_H0)) -> (G K))) & (F _lower_B0) & (G(!( J &  K))));

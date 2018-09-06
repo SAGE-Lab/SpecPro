@@ -1,40 +1,6 @@
-Globally, it is always the case that if Q or Y holds, then M eventually holds and is succeeded by C >= 17, where W does not hold between M and C >= 17 .
-Globally, it is always the case that if J holds, then S eventually holds and is succeeded by D > 11, where R and U does not hold between S and D > 11 .
-Between F <= 13 and K or Y, it is always the case that if G > 17 holds, then K or Y eventually holds and is succeeded by K and M, where B < 12 does not hold between K or Y and K and M .
-Globally, it is always the case that if P holds, then I or T eventually holds and is succeeded by A <= 19, where K or Y does not hold between I or T and A <= 19 .
-Before U, it is always the case that if I or T holds, then V eventually holds and is succeeded by W or Y, where N does not hold between V and W or Y .
-Between M and Y and M, it is always the case that if C >= 17 holds, then X and Q eventually holds.
-After V, it is always the case that if A <= 19 holds, then A <= 17 eventually holds.
-Globally, it is always the case that if X or S holds, then S and W eventually holds and is succeeded by X and T .
-Between D > 11 and V, it is always the case that if J holds, then R previously held and was preceded by A < 14 .
-Before W or Y, it is always the case that if I and K holds and is succeeded by A <= 19, then D > 11 previously held.
-After P or V, it is never the case that B < 12 holds.
-Globally, it is always the case that if U holds and is succeeded by A < 14, then N eventually holds after A < 14 .
-Before C >= 16, it is always the case that if C > 17 holds and is succeeded by S and W, then V and M previously held.
-After J, it is always the case that if V holds, then V and M previously held and was preceded by V and R .
-Between K or Y and C < 10, it is always the case that D > 11 holds.
-Globally, it is always the case that X holds.
-Globally, it is always the case that if C > 11 holds and is succeeded by G = 16, then U eventually holds after G = 16 .
-Between L and C > 17, S and W eventually holds.
-Between D > 12 and W and Y, it is always the case that if V holds, then A = 16 previously held.
-Before A <= 17, it is always the case that if V holds, then V eventually holds.
-Before J, J eventually holds.
-Before V and M, J eventually holds.
-After A = 16, it is always the case that J holds.
-Before K and M, it is always the case that if K and O holds and is succeeded by A < 14, then G > 17 eventually holds after A < 14 .
-Globally, it is always the case that if A <= 19 holds, then C > 11 eventually holds and is succeeded by V .
-After J, it is always the case that if X and Q holds and is succeeded by D > 12, then S previously held.
-Between D = 14 and J, it is always the case that if Q or Y holds, then C > 17 eventually holds and is succeeded by J .
-Between A < 14 and F <= 13, it is always the case that if J holds, then B < 12 eventually holds.
-Before M, U eventually holds.
-Globally, it is always the case that V holds.
-Between K and M and D > 12, it is always the case that if D > 11 holds, then G = 16 eventually holds.
-Globally, it is always the case that if V and R holds and is succeeded by R, then K and O previously held.
-After R, it is always the case that if F <= 13 holds, then M eventually holds.
-Globally, it is always the case that if C > 11 holds, then C >= 17 previously held and was preceded by J .
-After P, I and K eventually holds.
-Between P and V and M, it is always the case that if B = 14 holds, then S and W previously held and was preceded by V .
-Globally, it is always the case that if M holds and is succeeded by A = 16, then X or S previously held.
-Before V, it is always the case that if A <= 19 holds, then I or T previously held.
-Before C < 10, it is always the case that if F <= 13 holds and is succeeded by I or T, then R and U previously held.
-Between X or S and L, it is always the case that if K or Y holds and is succeeded by J, then I or T previously held.
+# Test precedence chain 2-1
+Globally, it is always the case that if  S1 > 10 holds, then S3 < 20 previously held and was preceded by S4 >= 10 .
+Before S2 < 10, it is always the case that if  S1 < 20 holds, then S3 < 20 previously held and was preceded by S4 >= 20 .
+After S2 = 10, it is always the case that if  S1 >= 30 holds, then S3 < 20 previously held and was preceded by S4 <= 10 .
+Between S2<20 and S2 >= 10, it is always the case that if  S1 > 20 holds, then S3 < 20 previously held and was preceded by S4 = 10 .
+After S2<20 until S2 >= 10, it is always the case that if  S1 > 10 holds, then S3 < 20 previously held and was preceded by S4 = 10 .

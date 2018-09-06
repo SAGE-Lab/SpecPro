@@ -1,0 +1,1 @@
+G(((~ _lower_S0) | (~ _equal_S0)) & ((~ _lower_T0) | (~ _equal_T0))) & ((G((~ _lower_S0) & (~ _equal_S0))) & (F _X) & (G((~ _X) | (G((~((~ _lower_S0) & (~ _equal_S0))) | (F _lower_T0))))) & (G((~ _X) | (G(~ _lower_T0)))))

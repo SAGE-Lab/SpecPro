@@ -93,8 +93,6 @@ public class Snl2FlParserTests {
         File inputFile = new File(getClass().getResource("/" + inputFileName).getFile());
         new Snl2FlParser().parseFile(inputFile.getAbsolutePath()).translate(translator, stream);
 
-        System.out.println(stream.toString());
-
         File outputFile = new File(getClass().getResource("/" + outputFileName).getFile());
         assertEquals(FileUtils.readFileToString(outputFile), stream.toString());
 

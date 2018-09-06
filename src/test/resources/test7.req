@@ -1,4 +1,6 @@
-Globally, it is never the case that S < 20 holds.
-Globally, it is never the case that S > 10 holds.
-After Q, R eventually holds.
-Before S > 10, it is always the case that R holds.
+# Test response chain 1-2
+Globally, it is always the case that if  S1 > 10 holds, then S3 < 20 eventually holds and is succeeded by S4 < 10 .
+Before S2 < 10, it is always the case that if  S1 < 20 holds, then S3 < 20 eventually holds and is succeeded by S4 < 20 .
+After S2 = 10, it is always the case that if  S1 >= 30 holds, then S3 < 20 eventually holds and is succeeded by S4 <= 10 .
+Between S2<20 and S2 >= 10, it is always the case that if  S1 > 20 holds, then S3 < 20 eventually holds and is succeeded by S4 > 10 .
+After S2<20 until S2 >= 10, it is always the case that if  S1 > 10 holds, then S3 < 20 eventually holds and is succeeded by S4 >= 10 .

@@ -1,5 +1,0 @@
-Globally, it is always the case that S1 > 10 holds.
-Before S2 < 10, it is always the case that S1 < 20 holds.
-After S2 = 10, it is always the case that S1 >= 30 holds.
-Between S2<20 and S2 >= 10, it is always the case that S1 > 20 holds.
-After S2<20 until S2 >= 10, it is always the case that S1 > 10 holds.

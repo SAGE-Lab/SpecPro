@@ -1,6 +1,0 @@
-# |3 	|
-# ---------------------------------------------
-# Questi sono requisiti con un after/until. Non vengono rifonosciuti correttamente, sembra che siano stati aggiunto sucessivamente alla grammatica e quindi non compilati. Ricompilare con Antlr[TODO Narizzano]
-# |ERRORE| Pattern class it.unige.pat2fl.req.requirements.qualitative.AbsenceRequirement_AFTER_UNTIL not found!
-# ---------------------------------------------
-After J until C < 10, it is always the case that if V holds, then U eventually holds and is succeeded by G = 16, where I and K does not hold between U and G = 16 .

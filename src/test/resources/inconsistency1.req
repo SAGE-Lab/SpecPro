@@ -1,0 +1,5 @@
+It is always the case that A holds.
+It is always the case that B and C holds.
+It is never the case that A holds.
+It is always the case that A and B holds.
+It is never the case that C holds.

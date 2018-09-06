@@ -1,5 +1,0 @@
-Globally,  S1 > 10 eventually holds.
-Before S2 < 10,  S1 < 20 eventually holds.
-After S2 = 10,  S1 >= 30 eventually holds.
-Between S2<20 and S2 >= 10,  S1 > 20 eventually holds.
-After S2<20 until S2 >= 10,  S1 > 10 eventually holds.

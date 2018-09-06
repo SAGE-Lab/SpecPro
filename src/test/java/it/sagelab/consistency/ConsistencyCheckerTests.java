@@ -16,7 +16,7 @@ public class ConsistencyCheckerTests {
 
 
     @ParameterizedTest
-    @ValueSource(strings = {"test1.req", "test2.req", "test3.req", "test4.req", "test5.req", "test6.req"})
+    @ValueSource(strings = {"test1.req", "test3.req", "test4.req", "test5.req", "test6.req", "test7.req", "test8.req"})
     public void testConsistencyWithNuSMV(String filePath) throws IOException {
         ModelChecker mc = new NuSMV(60);
         Snl2FlParser parser = new Snl2FlParser();
@@ -30,7 +30,7 @@ public class ConsistencyCheckerTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"test7.req"})
+    @ValueSource(strings = {"test2.req", "test9.req", "inconsistency1.req", "inconsistency2.req"})
     public void testInconsistencyWithNuSMV(String filePath) throws IOException {
         ModelChecker mc = new NuSMV(60);
         Snl2FlParser parser = new Snl2FlParser();

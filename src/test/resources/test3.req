@@ -1,10 +1,6 @@
-After J until C < 10, it is always the case that if V holds, then U eventually holds and is succeeded by G = 16, where I0 and K does not hold between U and G = 16 .
-After L until B < 12, it is always the case that if X or S holds, then M and Y eventually holds and is succeeded by D > 12, where W and Y does not hold between M and Y and D > 12 .
-After A = 12 until I > 17, it is always the case that if I > 17 holds, then H eventually holds and is succeeded by D = 16, where C <= 10 does not hold between H and D = 16 .
-After A = 12 until F, it is always the case that H holds.
-After W until X, it is never the case that P holds.
-After B < 12 until B < 12, it is always the case that if V holds and is succeeded by R and U, then S eventually holds after R and U .
-After A < 14 until B < 12, it is never the case that V holds.
-After C >= 16 until N, it is always the case that if V holds and is succeeded by Y and R, then B < 12 eventually holds after Y and R .
-After K and M until K and M, J eventually holds.
-After I1 and K until T, it is always the case that if A <= 19 holds and is succeeded by D > 12, then X or S previously held.
+# Test precedence chain 1-2
+Globally, it is always the case that if  S1 > 10 holds and is succeeded by S2 > 10, then S3 < 20 previously held.
+Before S2 < 10, it is always the case that if  S1 < 20 holds and is succeeded by S2 > 10, then S3 < 20 previously held.
+After S2 = 10, it is always the case that if  S1 >= 30 holds and is succeeded by S2 > 10, then S3 < 20 previously held.
+Between S2<20 and S2 >= 10, it is always the case that if  S1 > 20 holds and is succeeded by S2 > 10, then S3 < 20 previously held.
+After S2<20 until S2 >= 10, it is always the case that if  S1 > 10 holds and is succeeded by S2 > 10, then S3 < 20 previously held.

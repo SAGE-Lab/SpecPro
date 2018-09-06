@@ -1,5 +1,0 @@
-# ---------------------------------------------
-# Questo è boundedExistencePattern ma la grammatica risulta avere un problema.[TODO Narizzano]
-# |ERRORE| mismatched input '30' expecting POSITIVE_INT
-# ---------------------------------------------
-Globally, transitions to states in which G holds occur at most 30 times.

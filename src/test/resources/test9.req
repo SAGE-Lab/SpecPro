@@ -1,0 +1,4 @@
+Globally, it is always the case that S > 10 holds.
+Globally, X eventually holds.
+After X, it is always the case that if  S > 10 holds, then T < 20 eventually holds.
+After X, it is never the case that T < 20 holds.
