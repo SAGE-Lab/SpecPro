@@ -5,3 +5,4 @@
 [ID=R5] It is always the case that if E holds, then F holds as well.
 [ID=R6] It is always the case that if F holds, then G holds as well.
 [ID=R7] It is always the case that if G holds, then not A holds as well.
+[ID=R8] A eventually holds.
