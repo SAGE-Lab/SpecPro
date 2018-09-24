@@ -51,13 +51,17 @@ public class PANDATranslator extends LTLToolTranslator {
         List<Formula> invariants = psp2ltl.getInvariants();
         
         // Print the arithmetics constraints (\phi_A)
-        stream.print("G(");
-        this.printFormulaeInConjunction(stream, visitor, invariants);
-        stream.print(")");
-        // Print the psp constraints (\phi_R)
-        stream.print(" & (");
-        this.printFormulaeInConjunction(stream, visitor, ltlFormulae);
-        stream.print(")");
+        if(invariants.size() > 0) {
+            stream.print("G(");
+            this.printFormulaeInConjunction(stream, visitor, invariants);
+            stream.print(")");
+            // Print the psp constraints (\phi_R)
+            stream.print(" & (");
+            this.printFormulaeInConjunction(stream, visitor, ltlFormulae);
+            stream.print(")");
+        } else {
+            this.printFormulaeInConjunction(stream, visitor, ltlFormulae);
+        }
     }
 
 }

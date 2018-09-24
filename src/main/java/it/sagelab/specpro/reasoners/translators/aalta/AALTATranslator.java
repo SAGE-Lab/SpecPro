@@ -50,13 +50,17 @@ public class AALTATranslator extends LTLToolTranslator {
         List<Formula> ltlFormulae = psp2ltl.translate();
         List<Formula> invariants = psp2ltl.getInvariants();
         // Print the arithmetic constraints (\phi_A)
-        stream.print("G(");
-        this.printFormulaeInConjunction(stream, visitor, invariants);
-        stream.print(")");
-        // Print the psp constraints (\phi_R)
-        stream.print(" & (");
-        this.printFormulaeInConjunction(stream, visitor, ltlFormulae);
-        stream.print(")");
+        if(invariants.size() > 0) {
+            stream.print("G(");
+            this.printFormulaeInConjunction(stream, visitor, invariants);
+            stream.print(")");
+            // Print the psp constraints (\phi_R)
+            stream.print(" & (");
+            this.printFormulaeInConjunction(stream, visitor, ltlFormulae);
+            stream.print(")");
+        } else {
+            this.printFormulaeInConjunction(stream, visitor, ltlFormulae);
+        }
     }
 
 

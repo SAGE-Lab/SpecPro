@@ -28,8 +28,8 @@ public class InconsistencyFinderTests {
 
         List<Requirement> requirementList = incFinder.run();
 
-        for(Requirement r : requirementList)
-            System.out.println(r.getText());
+//        for(Requirement r : requirementList)
+//            System.out.println(r.getText());
 
     }
 
