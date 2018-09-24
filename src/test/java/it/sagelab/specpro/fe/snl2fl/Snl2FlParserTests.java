@@ -92,7 +92,7 @@ public class Snl2FlParserTests {
     private void translateAndCheck(Snl2FlTranslator translator, String inputFileName, String outputFileName) throws IOException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         File inputFile = new File(getClass().getResource("/" + inputFileName).getFile());
-        new Snl2FlParser().parseFile(inputFile.getAbsolutePath()).translate(translator, stream);
+        new Snl2FlParser().parseFile(inputFile.getAbsolutePath()).translate(translator, new PrintStream(stream));
 
         File outputFile = new File(getClass().getResource("/" + outputFileName).getFile());
         assertEquals(FileUtils.readFileToString(outputFile), stream.toString());

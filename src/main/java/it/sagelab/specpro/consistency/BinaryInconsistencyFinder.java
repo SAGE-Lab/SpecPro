@@ -8,12 +8,10 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class BinaryInconsistencyFinder {
-
-    private ConsistencyChecker cc;
+public class BinaryInconsistencyFinder extends InconsistencyFinder{
 
     public BinaryInconsistencyFinder(ConsistencyChecker cc) {
-        this.cc = cc;
+        super(cc);
     }
 
     public List<Requirement> run() {
@@ -53,15 +51,12 @@ public class BinaryInconsistencyFinder {
     }
 
     protected boolean isConsistent(List<Requirement> requirements, List<Requirement> inconsitentRequirements) {
-        int n = requirements == null ? 0 : requirements.size();
-        n += inconsitentRequirements == null ? 0 : inconsitentRequirements.size();
-        System.out.println("isConsistent " + n);
         cc.getParser().getRequirements().clear();
         if(requirements != null)
             cc.getParser().getRequirements().addAll(requirements);
         if(inconsitentRequirements != null)
             cc.getParser().getRequirements().addAll(inconsitentRequirements);
-        System.out.println("reqs: " + cc.getParser().getRequirements().stream().map(Requirement::getReqId).collect(toList()));
+        // System.out.println("reqs: " + cc.getParser().getRequirements().stream().map(Requirement::getReqId).collect(toList()));
 
         ConsistencyChecker.Result result = cc.run();
         return result == ConsistencyChecker.Result.CONSISTENT;

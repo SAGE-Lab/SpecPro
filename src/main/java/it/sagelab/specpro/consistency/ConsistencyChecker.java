@@ -5,6 +5,7 @@ import it.sagelab.specpro.reasoners.ModelChecker;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -54,9 +55,9 @@ public class ConsistencyChecker {
     public Result run() {
 
         try {
-            FileOutputStream fos = new FileOutputStream(outputFilePath);
-            parser.translate(mc.getTranslator(), fos);
-            fos.close();
+            PrintStream stream = new PrintStream(new FileOutputStream(outputFilePath));
+            parser.translate(mc.getTranslator(), stream);
+            stream.close();
             ModelChecker.Result res = mc.run(outputFilePath);
 
             switch(res) {

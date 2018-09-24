@@ -10,11 +10,13 @@ public class NuSMV extends ModelChecker {
     public NuSMV(long timeout) {
         super(timeout, new NuSMVTranslator());
         this.execPath = System.getenv("SPECPRO_NUSMV");
-
     }
 
     @Override
     protected String[] getCommand(String filePath) {
+        if(execPath == null) {
+            throw new IllegalArgumentException("Environment varibale SPECPRO_NUSMV not defined.");
+        }
         return new String[]{this.execPath, filePath};
     }
 

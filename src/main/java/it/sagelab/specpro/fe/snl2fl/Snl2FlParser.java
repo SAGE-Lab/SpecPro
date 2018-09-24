@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.List;
 
 public class Snl2FlParser {
@@ -140,7 +140,7 @@ public class Snl2FlParser {
      * @return this
      * @throws Snl2FlException
      */
-    public Snl2FlParser translate(Snl2FlTranslator translator, OutputStream outStream) throws Snl2FlException {
+    public Snl2FlParser translate(Snl2FlTranslator translator, PrintStream outStream) throws Snl2FlException {
         if(!parsed)
             throw  new Snl2FlException("No input parsed, nothing to translate!");
 
