@@ -4,7 +4,9 @@ import it.sagelab.specpro.models.psp.Requirement;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
@@ -32,6 +34,10 @@ public class LinearInconsistencyFinder extends InconsistencyFinder {
 
         String outputFilePath = cc.getOutputFilePath();
         cc.setOutputFilePath(outputFilePath + ".tmp");
+
+        long seed = System.currentTimeMillis();
+        System.out.println("seed: " + seed);
+        Collections.shuffle(cc.getParser().getRequirements(), new Random(seed));
 
         int reqSize = cc.getParser().getRequirements().size();
         int i = 0;

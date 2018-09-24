@@ -122,9 +122,15 @@ public class Main {
                    System.exit(-1);
                 }
                 List<Requirement> reqs = muc.run();
-                outStream.println("# MUC of " + reqs.size() + " elements found: ");
-                for(Requirement r : reqs) {
-                    outStream.println(r.getText());
+                if(reqs == null) {
+                    outStream.println("Fail occured during model checking call.");
+                    outStream.println(mc.getMessage());
+                }
+                else {
+                    outStream.println("# MUC of " + reqs.size() + " elements found: ");
+                    for (Requirement r : reqs) {
+                        outStream.println(r.getText());
+                    }
                 }
 
             } else if(commandLine.hasOption("c")) {

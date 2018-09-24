@@ -5,13 +5,19 @@ import it.sagelab.specpro.models.psp.Requirement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import static java.util.stream.Collectors.toList;
 
 public class BinaryInconsistencyFinder extends InconsistencyFinder{
 
+    private Random random;
+
     public BinaryInconsistencyFinder(ConsistencyChecker cc) {
         super(cc);
+        long seed = System.currentTimeMillis();
+        System.out.println("seed: " + seed);
+        random = new Random(seed);
     }
 
     public List<Requirement> run() {
@@ -64,7 +70,8 @@ public class BinaryInconsistencyFinder extends InconsistencyFinder{
     }
 
     protected List<Requirement>[] split(List<Requirement> requirements) {
-        Collections.shuffle(requirements);
+
+        Collections.shuffle(requirements, random);
         int m = requirements.size() / 2;
         List<Requirement> r1 = requirements.subList(0, m);
         List<Requirement> r2 = requirements.subList(m, requirements.size());
