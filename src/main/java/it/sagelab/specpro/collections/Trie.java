@@ -16,6 +16,7 @@ import java.util.function.BiFunction;
 public class Trie <K> implements Iterable<List<K>> {
 
     TrieNode<K> root;
+    private int nSequences = 0;
 
     public Trie() {
         root = new TrieNode<>(null, false);
@@ -32,6 +33,9 @@ public class Trie <K> implements Iterable<List<K>> {
         for(K element: path) {
             t = t.add(element, false);
         }
+
+        if(!t.isLeaf)
+            ++nSequences;
 
         t.isLeaf = true;
     }
@@ -58,6 +62,13 @@ public class Trie <K> implements Iterable<List<K>> {
         return t!= null && t.isLeaf;
     }
 
+    /**
+     *
+     * @return the number of sequences in the Trie
+     */
+    public int numberOfSequences() {
+        return nSequences;
+    }
 
 
     @Override
