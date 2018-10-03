@@ -30,6 +30,8 @@ dependencies {
     compile('org.apache.directory.studio:org.apache.commons.io:2.4')
     compile('org.antlr:antlr4:4.7')
     compile('edu.stanford.nlp:stanford-corenlp:3.9.1')
+    compile('org.jgrapht:jgrapht-core:1.2.0')
+    compile('org.jgrapht:jgrapht-io:1.2.0')
     testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
     testCompile('org.junit.jupiter:junit-jupiter-params:5.2.0')
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
