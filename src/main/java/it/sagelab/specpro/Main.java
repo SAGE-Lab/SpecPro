@@ -53,6 +53,7 @@ public class Main {
 
         options.addOption(null, "noinvar", false, "translate without INVAR statemens (only for NuSMV)");
         options.addOption(null, "timeout", true, "The timeout for the model checker call in seconds");
+        options.addOption(null, "singleFormulas", false, "The requirements are translated as single formulas");
 
         options.addRequiredOption("i", "input", true, "Input file [required]");
         options.addOption("o", "output", true, "Output file");
@@ -69,6 +70,7 @@ public class Main {
         }
         else {
             NuSMVTranslator translator = new NuSMVTranslator().setNoinvar(commandLine.hasOption("noinvar"));
+            translator.setSingleFormulas(commandLine.hasOption("singleFormulas"));
             NuSMV mc = new NuSMV(timeout);
             mc.setTranslator(translator);
             return mc;

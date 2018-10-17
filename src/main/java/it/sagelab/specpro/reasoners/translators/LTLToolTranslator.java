@@ -9,7 +9,6 @@ import it.sagelab.specpro.fe.snl2fl.parser.RequirementsBuilder;
 import it.sagelab.specpro.models.ltl.Formula;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +20,9 @@ public abstract class LTLToolTranslator implements Snl2FlTranslator {
 
     /** The intermediate ltl psp2ltl. */
     final protected PSP2LTL psp2ltl;
+
+    /** If true, print single formulas on multiple lines */
+    protected boolean singleFormulas = false;
 
     public LTLToolTranslator(Set<String> forbiddenVarNames) {
         psp2ltl = new PSP2LTL();
@@ -36,9 +38,15 @@ public abstract class LTLToolTranslator implements Snl2FlTranslator {
         return psp2ltl;
     }
 
+    public void setSingleFormulas(boolean singleFormulas) {
+        this.singleFormulas = singleFormulas;
+    }
+
     public abstract void translate(PrintStream stream) throws IOException;
 
-    public void translate(RequirementsBuilder builder, OutputStream stream) throws IOException {
+    public void translateSingleFormulas(PrintStream stream) throws  IOException { }
+
+    public void translate(RequirementsBuilder builder, PrintStream stream) throws IOException {
 
         Map<String, VariableExpression> symbolTable = builder.getContext().getSymbolTable();
         for(String varName: forbiddenVarNames) {
@@ -50,8 +58,10 @@ public abstract class LTLToolTranslator implements Snl2FlTranslator {
         }
 
         psp2ltl.setContext(builder);
-
-        translate(new PrintStream(stream));
+        if(singleFormulas)
+            translateSingleFormulas(stream);
+        else
+            translate(stream);
     }
 
     /**

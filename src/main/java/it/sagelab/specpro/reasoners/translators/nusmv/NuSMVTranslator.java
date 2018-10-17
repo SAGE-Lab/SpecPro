@@ -105,6 +105,30 @@ public class NuSMVTranslator extends LTLToolTranslator {
         
     }
 
+    public void translateSingleFormulas(PrintStream stream) throws IOException {
+        LTLNuSMVVisitor visitor = new LTLNuSMVVisitor(stream);
+        List<Formula> invariants = psp2ltl.getInvariants();
+        List<Formula> ltlFormulae = psp2ltl.translate();
+
+        stream.println("MODULE main");
+        this.printVariables(stream);
+        stream.println();
+
+        for(Formula inv : invariants) {
+            stream.print("INVAR ");
+            inv.accept(visitor);
+            stream.println(";");
+        }
+        stream.println();
+
+        for(Formula f: ltlFormulae) {
+            stream.print("LTLSPEC ");
+            f.accept(visitor);
+            stream.println();
+        }
+    }
+
+
     /**
      * Prints the variables.
      *
