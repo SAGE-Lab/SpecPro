@@ -1,25 +1,29 @@
 package it.sagelab.specpro.atg.alg;
 
 import it.sagelab.specpro.collections.Trie;
+import it.sagelab.specpro.models.ba.BuchiAutomata;
 import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.Vertex;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
-import org.jgrapht.Graph;
 
 import java.util.ArrayList;
 
 public abstract class PathsFinder {
 
     private PathsBuilder pathsBuilder;
-    protected Graph<Vertex, Edge> graph;
+    protected BuchiAutomata graph;
     protected Vertex[] initStates;
     protected ArrayList<Edge> path;
 
 
-    public PathsFinder(Graph<Vertex, Edge> graph) {
+    public PathsFinder(BuchiAutomata graph) {
+       this(graph, new PathsBuilder());
+    }
+
+    public PathsFinder(BuchiAutomata graph, PathsBuilder pathsBuilder) {
         this.graph = graph;
-        this.pathsBuilder = new PathsBuilder();
-        initStates = graph.vertexSet().stream().filter(v -> v.getId().equals("I")).toArray(n-> new Vertex[n]);
+        this.pathsBuilder = pathsBuilder;
+        initStates = graph.getInitStates();
         path = new ArrayList<>();
     }
 

@@ -43,11 +43,6 @@ public class SpotTranslator extends LTLToolTranslator implements FormulaVisitor 
             stream.print(" & ");
         }
         this.printFormulaeInConjunction(stream, this, ltlFormulae);
-
-//        for(Formula f: ltlFormulae) {
-//            f.accept(this);
-//        }
-
     }
 
     @Override

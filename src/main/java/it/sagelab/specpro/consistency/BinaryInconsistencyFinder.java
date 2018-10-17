@@ -70,7 +70,6 @@ public class BinaryInconsistencyFinder extends InconsistencyFinder{
     }
 
     protected List<Requirement>[] split(List<Requirement> requirements) {
-
         Collections.shuffle(requirements, random);
         int m = requirements.size() / 2;
         List<Requirement> r1 = requirements.subList(0, m);

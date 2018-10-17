@@ -24,7 +24,12 @@ public class PathsBuilder {
     }
 
     public void reset() {
-        currentPathAssignments = new ArrayList<>();
+        trie = new Trie<>();
+    }
+
+    public List<Assignment> getEdgeAssignments(Edge e) {
+        edgesCache.computeIfAbsent(e, edge -> generateAssignments(edge.getLabel()));
+        return edgesCache.get(e);
     }
 
     public void addEdge(Edge e) {
@@ -37,11 +42,13 @@ public class PathsBuilder {
         ArrayList<Path> paths = new ArrayList<>();
         paths.add(new Path());
         generateAllConditionsPaths(paths, 0);
+        //generateAllCombinationsPaths(paths, 0);
+
 
         for(Path p: paths) {
             trie.insert(p.get());
         }
-        reset();
+        currentPathAssignments = new ArrayList<>();
     }
 
     public Trie<Assignment> getTrie() {
@@ -53,6 +60,32 @@ public class PathsBuilder {
      * Private Methods
      *
      ***************************************************/
+
+    private void generateAllCombinationsPaths(ArrayList<Path> paths, int index) {
+        if(index >= currentPathAssignments.size())
+            return;
+        List<Assignment> assignments = currentPathAssignments.get(index);
+
+        if(assignments != null && assignments.size() > 0) {
+            ArrayList<Path> newPaths = new ArrayList<>();
+
+            for (int i = 1; i < assignments.size(); ++i) {
+                for (int j = 0; j < paths.size(); ++j) {
+                    Path p = paths.get(j).clone();
+                    p.append(assignments.get(i));
+                    newPaths.add(p);
+                }
+            }
+
+            for (int j = 0; j < paths.size(); ++j) {
+                paths.get(j).append(assignments.get(0));
+            }
+
+            paths.addAll(newPaths);
+        }
+        generateAllCombinationsPaths(paths, index + 1);
+
+    }
 
     private void generateAllConditionsPaths(ArrayList<Path> paths, int index) {
         if(index >= currentPathAssignments.size())
@@ -120,7 +153,8 @@ public class PathsBuilder {
         String name = builder.toString();
         atoms.computeIfAbsent(name, n -> new Atom(n));
         Atom atom = atoms.get(name);
-        a.add(atom, value);
+        if(!atom.getName().equals("1"))
+            a.add(atom, value);
         return index;
     }
 

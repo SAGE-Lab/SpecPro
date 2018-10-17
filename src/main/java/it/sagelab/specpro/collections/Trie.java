@@ -62,6 +62,16 @@ public class Trie <K> implements Iterable<List<K>> {
         return t!= null && t.isLeaf;
     }
 
+
+    public void remove(List<K> path) {
+        TrieNode<K> t = find(path);
+        if(t != null && t.isLeaf) {
+            --nSequences;
+            t.isLeaf = false;
+            prune(root);
+        }
+    }
+
     /**
      *
      * @return the number of sequences in the Trie
@@ -90,7 +100,7 @@ public class Trie <K> implements Iterable<List<K>> {
      */
     public Trie<K> andJoin(Trie<K> t, BiFunction<K, K, K> joinFunction) {
         Trie<K> trie = new Trie<>();
-        andJoin(trie.root, this.root, t.root, joinFunction);
+        trie.nSequences = andJoin(trie.root, this.root, t.root, joinFunction);
         // After join some nodes may be redundant, they are removed with pruning
         prune(trie.root);
         return trie;
@@ -114,21 +124,27 @@ public class Trie <K> implements Iterable<List<K>> {
         return t;
     }
 
-    private void andJoin(TrieNode<K> root, TrieNode<K> n1, TrieNode<K> n2, BiFunction<K, K, K> joinFunction) {
+    private int andJoin(TrieNode<K> root, TrieNode<K> n1, TrieNode<K> n2, BiFunction<K, K, K> joinFunction) {
 
         if(n1 == null || n2 == null) {
-            return;
+            return 0;
         }
+
+        int nSequences = 0;
 
         for(Map.Entry<K, TrieNode<K>> e1: n1.children.entrySet()) {
             for(Map.Entry<K, TrieNode<K>> e2: n2.children.entrySet()) {
                 K newKey = joinFunction.apply(e1.getKey(), e2.getKey());
                 if(newKey != null) {
                     TrieNode<K> newNode = root.add(newKey, e1.getValue().isLeaf && e2.getValue().isLeaf);
-                    andJoin(newNode, e1.getValue(), e2.getValue(), joinFunction);
+                    if(newNode.isLeaf)
+                        ++nSequences;
+                    nSequences += andJoin(newNode, e1.getValue(), e2.getValue(), joinFunction);
                 }
             }
         }
+
+        return nSequences;
     }
 
     private void prune(TrieNode<K> root) {

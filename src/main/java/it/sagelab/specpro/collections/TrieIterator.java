@@ -4,7 +4,7 @@ import java.util.*;
 
 public class TrieIterator <K> implements Iterator<List<K>> {
 
-    Trie trie;
+    Trie<K> trie;
     LinkedList<K> list;
     Deque<Iterator<Map.Entry<K, TrieNode<K>>>> stack;
 
@@ -13,7 +13,6 @@ public class TrieIterator <K> implements Iterator<List<K>> {
         stack.push(trie.root.children.entrySet().iterator());
         list = new LinkedList<>();
     }
-
 
     @Override
     public boolean hasNext() {

@@ -7,28 +7,66 @@ import java.util.Map;
 
 public class Assignment {
 
-    final private HashMap<Atom, Boolean> assignment;
+    final private HashMap<Atom, Boolean> assignmentsMap;
 
     public Assignment() {
-        assignment = new HashMap<>();
+        assignmentsMap = new HashMap<>();
+    }
+
+    public Assignment(HashMap<Atom, Boolean> assignment) {
+        this.assignmentsMap = assignment;
     }
 
     public void add(Atom a, boolean value) {
-        if(assignment.containsKey(a)) {
-            if(assignment.get(a) != value)
+        if(assignmentsMap.containsKey(a)) {
+            if(assignmentsMap.get(a) != value)
                 throw new IllegalArgumentException("Atom " + a.getName() + " has already a different value");
         } else {
-            assignment.put(a, value);
+            assignmentsMap.put(a, value);
         }
     }
 
-    public Map<Atom, Boolean> getAssignment() {
-        return assignment;
+    public Map<Atom, Boolean> getAssignments() {
+        return assignmentsMap;
+    }
+
+    public Assignment combine(Assignment assignment) {
+        Assignment newAss = new Assignment((HashMap) this.assignmentsMap.clone());
+
+        try {
+            for(Map.Entry<Atom, Boolean> entry : assignment.getAssignments().entrySet()) {
+                newAss.add(entry.getKey(), entry.getValue());
+            }
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+
+        return newAss;
+    }
+
+    public boolean contains(Assignment assignment) {
+        for(Map.Entry<Atom, Boolean> entry : assignment.getAssignments().entrySet()) {
+            Boolean v = this.assignmentsMap.get(entry.getKey());
+            if(!entry.getValue().equals(v))
+                return false;
+        }
+        return true;
+    }
+
+    public boolean isCompatible(Assignment assignment) {
+        for(Map.Entry<Atom, Boolean> entry : assignment.getAssignments().entrySet()) {
+            if(this.assignmentsMap.containsKey(entry.getKey())) {
+                if(!this.assignmentsMap.get(entry.getKey()).equals(entry.getValue())) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return assignment.hashCode();
+        return assignmentsMap.hashCode();
     }
 
     @Override
@@ -37,7 +75,7 @@ public class Assignment {
             return false;
         if(obj == this)
             return true;
-        return this.assignment.equals(((Assignment) obj).getAssignment());
+        return this.assignmentsMap.equals(((Assignment) obj).getAssignments());
     }
 
     @Override
@@ -45,11 +83,11 @@ public class Assignment {
         StringBuilder builder = new StringBuilder();
         builder.append("{");
         int counter = 0;
-        for(Map.Entry<Atom, Boolean> entry: assignment.entrySet()) {
+        for(Map.Entry<Atom, Boolean> entry: assignmentsMap.entrySet()) {
             if(entry.getValue() == false)
                 builder.append("!");
             builder.append(entry.getKey().getName());
-            if(++counter < assignment.size())
+            if(++counter < assignmentsMap.size())
                 builder.append(", ");
         }
         builder.append("}");
