@@ -1,10 +1,13 @@
 
 # SpecPro
+SpecPro is a library that checks a given specification and build artifacts that can help the user in the 
+design process of software or cyber-physical systems.
+
+Currently SpecPro supports a structured language based on the Property Specification Patterns (PSPs) defined in [1][2].
+The language also supports numerical constraints that are encoded in Linear Temporal Logic (LTL). 
+An example of accepted input can be found [here](https://github.com/SAGE-Lab/robot-arm-usecase). 
 
 SpecPro is a rework and extension of [snl2fl](https://github.com/SAGE-Lab/snl2fl). 
-
-**N.B.: It is a work in progress, refer to the main repository for usage.**  
-
 
 ## Attribution
 
@@ -21,41 +24,52 @@ SpecPro is a rework and extension of [snl2fl](https://github.com/SAGE-Lab/snl2fl
 
 ## Build and Run
     
-   You can build a new distribution of the software simply running in the project dir the following command:
+You can build a new distribution of the software simply running in the project dir the following command:
    
-      ./gradlew build
+    ./gradlew build
       
-   It will automatically build a .zip and a .tar files in the `build/distributions` directory.
-   To run SpecPro simply decompress one of the two files and execute the command
+It will automatically build a .zip and a .tar files in the `build/distributions` directory.
+To run SpecPro simply decompress one of the two files and execute the command
    
-      ./bin/SpecPro
+    ./bin/SpecPro
       
-   It will prompt the help message showing the list of available options.
+It will prompt the help message showing the list of available options.
+   
+Alternatively, you can run the application directly with gradle, substituting `argN` as needed.
       
-   There are many way to run SpecPro and they differ for the kind of output generated.
-   There are 4 output provided: 
-    
-   * SMV with INVAR, generate a NuSMV problem with inequalities managed by INVAR
-    
-         ./bin/SpecPro --nusmv <inputfile> <outputfile>
-    
-   * SMV without INVAR generate a NuSMV problem with inequalities written into LTLSPEC 
-    
-         ./bin/SpecPro --nusmv --noinvar <inputfile> <outputfile> 
-    
-   * PANDA output, it writes the formula as a LTL, used by PANDA tool  
-    
-         ./bin/SpecPro --panda <inputfile> <outputfile> 
-    
-   * AALTA output, it writes the formula as a LTL, used by AALTA tool (add --negated option if you want the negated formula)
-    
-         ./bin/SpecPro --aalta <inputfile> <outputfile>
+    ./gradlew run -PappArgs="['arg1', 'args2', 'args3']" 
+      
+   
+      
+There are many way to run SpecPro and they differ for the kind of output generated.
+   
+Using one of the following flags, it is possible to target one of three main model checker supported:
+   
+* `-n` or `--nusmv` (default option) to target NuSMV/NuXMV  
+   
+* `-a` or `--alta` to target Aalta
+   
+* `-p` or `--panda` to target Panda
+   
+For NuSMV, SpecPro also supports the `--noinvar` option: it encodes the inequality invariants directly into the LTLSPEC
+instead that as INVAR.
 
+SpecPro currently performs three main tasks:
+
+* `-t` (default) translate the requirement specification into the corresponding satisfiability checking problem
+
+* `-c` translate and perform the Consistency Checking of the input requirement specification. In order to use this 
+       option, the `SPECPRO_NUSMV` environment variable has to be set if NuSMV is the chosen model checker, and 
+       `SPECPRO_AALTA` if Aalta is the choosen one (Panda is currently not supported).
+       
+* `-m` to perform the Inconsistency Explanation (or equivalently MUC extraction) of the inconsistent specification.
+       `SPECPRO_NUSMV` or `SPECPRO_AALTA` has to be set as in the consistency checking task.
    
-   Alternatively, you can run the application directly with gradle, substituting `argN` as needed.
-   
-      ./gradlew run -PappArgs="['arg1', 'args2', 'args3']" 
-   
+ 
+An exampple is:
+    
+    ./bin/SpecPro --nusmv -t -i <inputfile> -o <outputfile>
+
      
 
 ## Build the grammars
@@ -81,3 +95,11 @@ Once you have installed ANTLR4, all you have to do is:
         
         antlr4 -o src/main/java/it/sagelab/fe/snl2fl/parser -package it.sagelab.fe.snl2fl.parser RequirementsGrammar.g4
 
+## References
+
+   [1] Dwyer, M.B., Avrunin, G.S., Corbett, J.C.: Patterns in property
+   specifications for finite-state verification. In: Software
+   Engineering, 1999. Proceedings of the 1999 International Conference
+   on, pp. 411–420. IEEE (1999)
+
+   [2] http://patterns.projects.cs.ksu.edu/
