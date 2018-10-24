@@ -14,6 +14,7 @@ public class PathsBuilder {
     private final HashMap<Edge, List<Assignment>> edgesCache;
     private Trie<Assignment> trie;
     private ArrayList<List<Assignment>> currentPathAssignments;
+    private boolean allCombinations;
 
 
     public PathsBuilder() {
@@ -21,6 +22,15 @@ public class PathsBuilder {
         edgesCache = new HashMap<>();
         trie = new Trie<>();
         currentPathAssignments = new ArrayList<>();
+        allCombinations = false;
+    }
+
+    public boolean isAllCombinations() {
+        return allCombinations;
+    }
+
+    public void setAllCombinations(boolean allCombinations) {
+        this.allCombinations = allCombinations;
     }
 
     public void reset() {

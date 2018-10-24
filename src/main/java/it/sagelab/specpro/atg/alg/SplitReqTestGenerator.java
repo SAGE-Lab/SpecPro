@@ -2,12 +2,10 @@ package it.sagelab.specpro.atg.alg;
 
 import it.sagelab.specpro.collections.ListUtils;
 import it.sagelab.specpro.fe.snl2fl.Snl2FlParser;
-import it.sagelab.specpro.models.ba.Edge;
-import it.sagelab.specpro.models.ba.Vertex;
+import it.sagelab.specpro.models.ba.BuchiAutomata;
 import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.reasoners.translators.spot.LTL2BA;
 import it.sagelab.specpro.reasoners.translators.spot.SpotTranslator;
-import org.jgrapht.Graph;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -16,14 +14,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SplitReqTestGenerator extends RequirementsTestGenerator {
+public class SplitReqTestGenerator extends PathsMultiplierTestGenerator {
+
+    private final int nSplits;
 
     public SplitReqTestGenerator(String filePath, int nSplits) throws IOException {
-        parseRequirements(filePath, nSplits);
-        generatePaths(4);
+        this.nSplits =nSplits;
+        parseRequirements(filePath);
     }
 
-    private void parseRequirements(String filePath, int nSplits) throws IOException {
+    @Override
+    protected void parseRequirements(String filePath) throws IOException {
         Snl2FlParser parser = new Snl2FlParser();
         parser.parseFile(filePath);
 
@@ -47,8 +48,8 @@ public class SplitReqTestGenerator extends RequirementsTestGenerator {
                 System.out.println(ltlFormula);
 
 
-                Graph<Vertex, Edge> graph = ltl2ba.translate(ltlFormula);
-                graphs.add(graph);
+                BuchiAutomata ba = ltl2ba.translate(ltlFormula);
+                graphs.add(ba);
             }
 
         }
