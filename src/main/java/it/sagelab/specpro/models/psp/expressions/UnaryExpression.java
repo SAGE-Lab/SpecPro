@@ -30,9 +30,6 @@ public class UnaryExpression extends Expression {
          */
         Operator(String op) { this.op = op; }
 
-        /* (non-Javadoc)
-         * @see java.lang.Enum#toString()
-         */
         @Override
         public String toString(){
             return op;
@@ -56,17 +53,6 @@ public class UnaryExpression extends Expression {
 
     public Operator getOperator() {
         return operator;
-    }
-
-    @Override
-    boolean value() {
-        switch (operator) {
-            case NOT:
-                return ! exp.value();
-            default:
-                return false;
-        }
-
     }
 
     @Override

@@ -75,9 +75,9 @@ Once you have installed ANTLR4, all you have to do is:
 
 2. Build FLGrammar:
 
-        antlr4 -o src/main/java/it/sagelab/fe/ltl/parser -package it.sagelab.fe.ltl.parser FLGrammar.g4
+        antlr4 -o src/main/java/it/sagelab/specpro/fe/ltl/parser -package it.sagelab.specpro.fe.ltl.parser FLGrammar.g4
 
 3. Build RequirementsGrammar:
         
-        antlr4 -o src/main/java/it/sagelab/fe/snl2fl/parser -package it.sagelab.fe.snl2fl.parser RequirementsGrammar.g4
+        antlr4 -o src/main/java/it/sagelab/specpro/fe/snl2fl/parser -package it.sagelab.specpro.fe.snl2fl.parser RequirementsGrammar.g4
 

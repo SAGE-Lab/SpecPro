@@ -1,7 +1,7 @@
 package it.sagelab.specpro.fe.snl2fl;
 
 import it.sagelab.specpro.models.psp.Requirement;
-import it.sagelab.specpro.models.psp.expressions.BooleanVariableExpression;
+import it.sagelab.specpro.models.psp.expressions.VariableExpression;
 import it.sagelab.specpro.reasoners.translators.aalta.AALTATranslator;
 import it.sagelab.specpro.reasoners.translators.nusmv.NuSMVTranslator;
 import org.apache.commons.io.FileUtils;
@@ -108,8 +108,9 @@ public class Snl2FlParserTests {
         Assertions.assertEquals(it.sagelab.specpro.models.psp.Scope.Type.GLOBALLY, r.getScope().getType());
         assertEquals(Collections.emptyList(), r.getScope().getExpressions());
         assertEquals(1, r.getExpressions().size());
-        assertTrue(r.getExpressions().get(0) instanceof BooleanVariableExpression);
-        assertEquals("X", ((BooleanVariableExpression) r.getExpressions().get(0)).getName());
+        assertTrue(r.getExpressions().get(0) instanceof VariableExpression);
+        assertEquals(((VariableExpression)r.getExpressions().get(0)).getType(), VariableExpression.Type.BOOLEAN);
+        assertEquals("X", ((VariableExpression) r.getExpressions().get(0)).getLabel());
     }
 
 }

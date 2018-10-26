@@ -2,7 +2,6 @@ package it.sagelab.specpro.reasoners.translators;
 
 import it.sagelab.specpro.fe.ltl.visitor.FormulaVisitor;
 import it.sagelab.specpro.fe.snl2fl.Snl2FlTranslator;
-import it.sagelab.specpro.models.psp.expressions.BooleanVariableExpression;
 import it.sagelab.specpro.models.psp.expressions.VariableExpression;
 import it.sagelab.specpro.models.translators.PSP2LTL;
 import it.sagelab.specpro.fe.snl2fl.parser.RequirementsBuilder;
@@ -42,10 +41,10 @@ public abstract class LTLToolTranslator implements Snl2FlTranslator {
 
         Map<String, VariableExpression> symbolTable = builder.getContext().getSymbolTable();
         for(String varName: forbiddenVarNames) {
-            if(symbolTable.containsKey(varName) && symbolTable.get(varName) instanceof BooleanVariableExpression) {
+            if(symbolTable.containsKey(varName) && symbolTable.get(varName).getType() == VariableExpression.Type.BOOLEAN) {
                 VariableExpression exp = symbolTable.remove(varName);
-                exp.setName("_" + exp.getName());
-                symbolTable.put(exp.getName(), exp);
+                exp.setLabel("_" + exp.getLabel());
+                symbolTable.put(exp.getLabel(), exp);
             }
         }
 

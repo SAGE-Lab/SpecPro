@@ -175,12 +175,12 @@ public class PSP2LTL implements ExpressionVisitor {
         String varName = null;
         if(exp.getLeftExp() instanceof NumberExpression)
             threshold =  ((NumberExpression)exp.getLeftExp()).floatValue();
-        if(exp.getLeftExp() instanceof FloatVariableExpression)
-            varName = ((FloatVariableExpression)exp.getLeftExp()).getName();
+        if(exp.getLeftExp() instanceof VariableExpression)
+            varName = ((VariableExpression)exp.getLeftExp()).getLabel();
         if(exp.getRightExp() instanceof NumberExpression)
             threshold =  ((NumberExpression)exp.getRightExp()).floatValue();
-        if(exp.getRightExp() instanceof FloatVariableExpression)
-            varName = ((FloatVariableExpression)exp.getRightExp()).getName();
+        if(exp.getRightExp() instanceof VariableExpression)
+            varName = ((VariableExpression)exp.getRightExp()).getLabel();
         if(threshold == null)
             throw new IllegalArgumentException("The case with two variables in a comparison expression is not handled.");
         if(varName == null)
@@ -190,16 +190,16 @@ public class PSP2LTL implements ExpressionVisitor {
     }
 
     @Override
-    public void visitBooleanVariableExpression(BooleanVariableExpression exp) {
-        booleanAtoms.putIfAbsent(exp.getName(), new Atom(exp.getName()));
-        formula = booleanAtoms.get(exp.getName());
+    public void visitVariableExpression(VariableExpression exp) {
+        if(exp.getType() == VariableExpression.Type.BOOLEAN) {
+            booleanAtoms.putIfAbsent(exp.getLabel(), new Atom(exp.getLabel()));
+            formula = booleanAtoms.get(exp.getLabel());
+        }
     }
 
     @Override
     public void visitNumberExpression(NumberExpression exp) {  }
 
-    @Override
-    public void visitFloatVariableExpression(FloatVariableExpression exp) {  }
 
     /*********************************************
      *  Util Methods

@@ -32,13 +32,6 @@ public interface ExpressionVisitor {
     void visitCompareExpression(CompareExpression exp);
 
     /**
-     * Visit boolean variable expression.
-     *
-     * @param exp the exp
-     */
-    void visitBooleanVariableExpression(BooleanVariableExpression exp);
-
-    /**
      * Visit number expression.
      *
      * @param exp the exp
@@ -46,9 +39,9 @@ public interface ExpressionVisitor {
     void visitNumberExpression(NumberExpression exp);
 
     /**
-     * Visit float variable expression.
+     * Visit variable expression.
      *
      * @param exp the exp
      */
-    void visitFloatVariableExpression(FloatVariableExpression exp);
+    void visitVariableExpression(VariableExpression exp);
 }

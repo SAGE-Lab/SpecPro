@@ -22,18 +22,7 @@ public class NumberExpression extends Expression{
         this.value = value;
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.expressions.Expression#value()
-     */
-    @Override
-    boolean value() {
-        return false;
-        //throw new Exception("Not a boolean expression");
-    }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.expressions.Expression#accept(it.sagelab.it.sagelab.fe.snl2fl.req.visitor.ExpressionVisitor)
-     */
     @Override
     public void accept(ExpressionVisitor visitor) {
         visitor.visitNumberExpression(this);
@@ -46,9 +35,6 @@ public class NumberExpression extends Expression{
      */
     public float floatValue(){ return  value; }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return String.valueOf(value);

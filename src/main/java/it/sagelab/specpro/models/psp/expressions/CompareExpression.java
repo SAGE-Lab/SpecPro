@@ -94,17 +94,6 @@ public class CompareExpression extends Expression {
         return operator;
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.expressions.Expression#value()
-     */
-    @Override
-    boolean value() {
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.expressions.Expression#accept(it.sagelab.it.sagelab.fe.snl2fl.req.visitor.ExpressionVisitor)
-     */
     @Override
     public void accept(ExpressionVisitor visitor) {
         visitor.visitCompareExpression(this);
@@ -123,9 +112,6 @@ public class CompareExpression extends Expression {
             throw new IllegalArgumentException("BinaryOperator " + operator + " not found");
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return leftExp + " " +operator + " " +rightExp;

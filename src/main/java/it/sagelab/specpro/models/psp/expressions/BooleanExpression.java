@@ -94,22 +94,6 @@ public class BooleanExpression extends Expression {
         return operator;
     }
 
-    /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.expressions.Expression#value()
-     */
-    boolean value() {
-        switch (operator) {
-            case AND:
-                return leftExp.value() && rightExp.value();
-            case OR:
-                return leftExp.value() || rightExp.value();
-            case XOR:
-                return leftExp.value() ^  rightExp.value();
-            default:
-                return false;
-        }
-    }
-
     /**
      * Gets the operator.
      *
@@ -123,9 +107,6 @@ public class BooleanExpression extends Expression {
         throw new IllegalArgumentException("BinaryOperator " + operator + " not found");
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString(){
         String op = null;

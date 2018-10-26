@@ -11,13 +11,6 @@ import it.sagelab.specpro.fe.snl2fl.visitor.ExpressionVisitor;
 abstract public class Expression {
 
     /**
-     * Value.
-     *
-     * @return true, if successful
-     */
-    abstract boolean value();
-
-    /**
      * Accept.
      *
      * @param visitor the visitor

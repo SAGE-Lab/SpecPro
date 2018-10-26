@@ -18,6 +18,26 @@ public interface RequirementsGrammarListener extends ParseTreeListener {
 	 */
 	void exitFile(RequirementsGrammarParser.FileContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link RequirementsGrammarParser#varDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarDeclaration(RequirementsGrammarParser.VarDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RequirementsGrammarParser#varDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarDeclaration(RequirementsGrammarParser.VarDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RequirementsGrammarParser#varType}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarType(RequirementsGrammarParser.VarTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RequirementsGrammarParser#varType}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarType(RequirementsGrammarParser.VarTypeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link RequirementsGrammarParser#requirement}.
 	 * @param ctx the parse tree
 	 */

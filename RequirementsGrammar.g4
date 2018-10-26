@@ -1,7 +1,9 @@
 grammar RequirementsGrammar;
 
-file: requirement+ ;
+file: (varDeclaration | requirement)+ ;
 
+varDeclaration: ID 'is' 'an' varType 'variable' '.';
+varType: 'input' | 'output';
 requirement: reqID? (scope ',')? specification '.' ;
 scope: 'Globally' | 'Before' expr | 'After' expr | 'Between' expr 'and' expr | 'After' expr 'until' expr ;
 

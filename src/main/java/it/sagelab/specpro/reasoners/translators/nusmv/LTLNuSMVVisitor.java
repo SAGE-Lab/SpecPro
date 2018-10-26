@@ -37,15 +37,15 @@ public class LTLNuSMVVisitor extends ContextBasedVisitor<PrintStream> implements
                 print(op.getChild());
                 break;
             case GLOBALLY:
-                print("G ");
+                print("G");
                 print(op.getChild());
                 break;
             case EVENTUALLY:
-                print("F ");
+                print("F");
                 print(op.getChild());
                 break;
             case NEXT:
-                print("X ");
+                print("X");
                 print(op.getChild());
                 break;
         }
@@ -101,6 +101,7 @@ public class LTLNuSMVVisitor extends ContextBasedVisitor<PrintStream> implements
 
     private void print(Formula f) {
         if(f instanceof Atom) {
+            print(" ");
             f.accept(this);
         } else {
             print("(");
