@@ -30,7 +30,13 @@ public class RequirementsTestGenerator {
     private Set<VariableExpression> inputVars;
 
     public RequirementsTestGenerator(String filePath) throws IOException {
-        parseRequirements(filePath);
+        Snl2FlParser parser = new Snl2FlParser();
+        parser.parseFile(filePath);
+        parseRequirements(parser);
+    }
+
+    public RequirementsTestGenerator(Snl2FlParser parser) throws IOException {
+        parseRequirements(parser);
     }
 
 
@@ -95,9 +101,7 @@ public class RequirementsTestGenerator {
         return explorer.generatePaths(ba);
     }
 
-    private void parseRequirements(String filePath) throws IOException {
-        Snl2FlParser parser = new Snl2FlParser();
-        parser.parseFile(filePath);
+    private void parseRequirements(Snl2FlParser parser) throws IOException {
 
         LTL2BA ltl2ba = new LTL2BA();
 

@@ -81,7 +81,7 @@ public class Main {
 //        }
 
         RequirementsTestGenerator rtg = new RequirementsTestGenerator(filePath);
-        for (int pathLenght = 5; pathLenght < 6; ++pathLenght) {
+        for (int pathLenght = 6; pathLenght < 8; ++pathLenght) {
             Trie<Assignment> result = rtg.generate(pathLenght);
 
             int count = 0;

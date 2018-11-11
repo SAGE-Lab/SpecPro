@@ -1,5 +1,6 @@
 package it.sagelab.specpro;
 
+import it.sagelab.specpro.atg.AutomaticTestGenerator;
 import it.sagelab.specpro.consistency.BinaryInconsistencyFinder;
 import it.sagelab.specpro.consistency.ConsistencyChecker;
 import it.sagelab.specpro.consistency.InconsistencyFinder;
@@ -18,6 +19,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The Class Main.
@@ -40,6 +43,8 @@ public class Main {
                 "The possible values are 'linear' or 'binary'."));
         actionGroup.addOption(new Option("t", "translate", false,
                 "Translate the input file in the corresponding consistency checking specification (dafault)"));
+        actionGroup.addOption(new Option("atg", "atg", true, "Generate a test suite for the " +
+                "give requirement specification. The length of the generated tests is in the given range (the syntax is [min, max])."));
         options.addOptionGroup(actionGroup);
 
 
@@ -118,7 +123,7 @@ public class Main {
                 } else if("binary".equals(value)) {
                     muc = new BinaryInconsistencyFinder(consistencyChecker);
                 } else {
-                   System.out.println("Value for option m not valid");
+                   System.err.println("Value for option m not valid");
                    System.exit(-1);
                 }
                 List<Requirement> reqs = muc.run();
@@ -140,6 +145,22 @@ public class Main {
                 if(result == ConsistencyChecker.Result.FAIL) {
                     System.out.println(mc.getMessage());
                 }
+            } else if(commandLine.hasOption("atg")) {
+                Pattern pattern = Pattern.compile("^\\[\\s*(\\d)+\\s*,\\s*(\\d)*\\s*\\]$");
+                Matcher matcher = pattern.matcher(commandLine.getOptionValue("atg").trim());
+                if(matcher.matches()) {
+                    int min = Integer.parseInt(matcher.group(1));
+                    int max = Integer.parseInt(matcher.group(2));
+
+                    AutomaticTestGenerator atg = new AutomaticTestGenerator(outStream, snl2FlParser, min, max);
+
+                    atg.run();
+
+                } else {
+                    System.err.println("Value for option atg not valid. It has to follow the pattern \"[min, max]\", where" +
+                            "min and max are positive integers and min <= max");
+                    System.exit(-1);
+                }
             } else {
                 // Translate
                 snl2FlParser.translate(mc.getTranslator(), outStream);
@@ -150,7 +171,7 @@ public class Main {
 
         } catch (ParseException | IOException | Snl2FlException e) {
             System.err.println("Error: " + e.getMessage());
-            System.out.println();
+            System.err.println();
             new HelpFormatter().printHelp( "SpecPro [OPTIONS] -i <infile> [-o <outfile>]", options);
         }
     }
