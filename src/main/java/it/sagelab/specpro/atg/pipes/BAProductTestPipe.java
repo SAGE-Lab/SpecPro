@@ -1,39 +1,42 @@
-package it.sagelab.specpro.atg.generators;
+package it.sagelab.specpro.atg.pipes;
 
-import it.sagelab.specpro.atg.paths.BAExplorer;
-import it.sagelab.specpro.atg.paths.LazySchapedAcceptanceCondition;
+import it.sagelab.specpro.models.ba.BAExplorer;
 import it.sagelab.specpro.collections.SequenceBuilder;
 import it.sagelab.specpro.collections.Trie;
-import it.sagelab.specpro.models.ba.BuchiAutomata;
+import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ba.Edge;
+import it.sagelab.specpro.models.ba.ac.LassoShapedAcceptanceCondition;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+public class BAProductTestPipe implements TestPipe {
 
-public class BATestGenerator {
-
-    private final List<BuchiAutomata> buchiAutomataList;
+    private final List<BuchiAutomaton> buchiAutomataList;
     private List<Assignment> test;
 
-    public BATestGenerator(List<BuchiAutomata> buchiAutomataList) {
+    public BAProductTestPipe(List<BuchiAutomaton> buchiAutomataList) {
         this.buchiAutomataList = buchiAutomataList;
     }
 
-    public List<Assignment> generate(List<Assignment> test) {
+    @Override
+    public List<Assignment> process(List<Assignment> test) {
+        if(test == null) {
+            return null;
+        }
         this.test = test;
+
         List<Trie<Edge>> inducedPaths = new ArrayList<>();
         List<List<Edge>> prefixes = new ArrayList<>();
 
         BAExplorer explorer = new BAExplorer();
         explorer.setLength(test.size());
-        explorer.addAcceptanceCondition(new LazySchapedAcceptanceCondition());
+        explorer.addAcceptanceCondition(new LassoShapedAcceptanceCondition());
 
-        for(BuchiAutomata ba: buchiAutomataList) {
+        for(BuchiAutomaton ba: buchiAutomataList) {
             Trie<Edge> edgeInducedPaths = explorer.findInducedPaths(ba, test);
             if(edgeInducedPaths.size() == 0) {
-                System.out.println("Impossible to find an induced path");
                 return null;
             }
             inducedPaths.add(edgeInducedPaths);
@@ -41,22 +44,18 @@ public class BATestGenerator {
         }
 
         Deque<Assignment> composedTest = findCompatibleEdges(inducedPaths, prefixes, test.size());
+
         if(composedTest != null) {
             ArrayList<Assignment> assignments = new ArrayList<>();
-            System.out.println("******************************************************************************");
-            System.out.println("New Path found: ");
 
             while (!composedTest.isEmpty()) {
-                Assignment a = composedTest.pop();
-                System.out.println(a);
-                assignments.add(a);
+                assignments.add(composedTest.pop());
             }
-            System.out.println("******************************************************************************");
 
             return assignments;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     private Deque<Assignment> findCompatibleEdges(List<Trie<Edge>> inducedPaths, List<List<Edge>> prefixes, int n) {
@@ -94,7 +93,6 @@ public class BATestGenerator {
     }
 
     private Assignment merge(List<Edge> edges, int n) {
-//        System.out.println("Merge " + n + " : " + edges);
         Assignment assignment = test.get(n);
         List<Set<Assignment>> assignments = new ArrayList<>();
         for(Edge e: edges) {
@@ -106,7 +104,6 @@ public class BATestGenerator {
     private Assignment merge(List<Set<Assignment>> assignments, Assignment ass) {
         Assignment mergedAss = new Assignment(ass);
         assignments = filter(assignments, mergedAss);
-//        System.out.println("Filtered successful? " + (assignments == null ? "No" : "Yes"));
         if(assignments == null)
             return null;
         if(assignments.size() == 0)
@@ -116,9 +113,7 @@ public class BATestGenerator {
         }
 
         Set<Assignment> firstSet = assignments.get(0);
-//        System.out.println("examining set " + firstSet);
         for(Assignment a: firstSet) {
-//            System.out.println("trying assignment " + a);
             Assignment mergedAss2 = merge(assignments.subList(1, assignments.size()), a);
             if(mergedAss2 != null)
                 return mergedAss.combine(mergedAss2);
@@ -128,18 +123,12 @@ public class BATestGenerator {
     }
 
     private List<Set<Assignment>> filter(List<Set<Assignment>> assignments, Assignment ass) {
-//        System.out.println("filter with ass = " + ass);
-//        assignments.forEach(a -> System.out.print(a.size() + " "));
-//        System.out.println();
         if(assignments.size() == 0)
             return assignments;
         assignments = assignments.parallelStream()
-                                 .map(item -> item.stream().filter(a -> a.isCompatible(ass)).collect(Collectors.toSet()))
-                                 .sorted(Comparator.comparingInt(Set::size))
-                                 .collect(Collectors.toList());
-//        assignments.forEach(a -> System.out.print(a.size() + " "));
-//        System.out.println();
-//        System.out.println("*********");
+                .map(item -> item.stream().filter(a -> a.isCompatible(ass)).collect(Collectors.toSet()))
+                .sorted(Comparator.comparingInt(Set::size))
+                .collect(Collectors.toList());
 
         if(assignments.get(0).size() == 0)
             return null;

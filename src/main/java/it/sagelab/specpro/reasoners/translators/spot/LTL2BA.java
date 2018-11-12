@@ -1,12 +1,10 @@
 package it.sagelab.specpro.reasoners.translators.spot;
 
-import it.sagelab.specpro.models.ba.BuchiAutomata;
+import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ba.DotBuilder;
 import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.Vertex;
 import org.apache.commons.io.IOUtils;
-import org.jgrapht.Graph;
-import org.jgrapht.graph.DirectedPseudograph;
 import org.jgrapht.io.DOTImporter;
 import org.jgrapht.io.ImportException;
 
@@ -26,8 +24,8 @@ public class LTL2BA {
         importer = new DOTImporter<>(db, db, db);
     }
 
-    public BuchiAutomata translate(String formula) {
-        BuchiAutomata g = new BuchiAutomata(db);
+    public BuchiAutomaton translate(String formula) {
+        BuchiAutomaton g = new BuchiAutomaton(db);
         Runtime rt = Runtime.getRuntime();
         Process process = null;
         String[] command = {"ltl2tgba", "-B", formula, "-d"};

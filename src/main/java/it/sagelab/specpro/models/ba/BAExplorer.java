@@ -1,9 +1,10 @@
-package it.sagelab.specpro.atg.paths;
+package it.sagelab.specpro.models.ba;
 
 import it.sagelab.specpro.collections.Trie;
-import it.sagelab.specpro.models.ba.BuchiAutomata;
+import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.Vertex;
+import it.sagelab.specpro.models.ba.ac.AcceptanceCondition;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 
 import java.util.HashSet;
@@ -15,7 +16,7 @@ public class BAExplorer {
     private Trie<Edge> paths;
     private Edge[] path;
     private int length;
-    private BuchiAutomata ba;
+    private BuchiAutomaton ba;
     private final Set<AcceptanceCondition> conditions;
 
     public BAExplorer()  {
@@ -42,7 +43,7 @@ public class BAExplorer {
         path = new Edge[length];
     }
 
-    public Trie<Edge> generatePaths(BuchiAutomata ba) {
+    public Trie<Edge> generatePaths(BuchiAutomaton ba) {
         paths = new Trie<>();
         this.ba = ba;
 
@@ -55,7 +56,7 @@ public class BAExplorer {
         return paths;
     }
 
-    public Trie<Edge> findInducedPaths(BuchiAutomata ba, List<Assignment> test) {
+    public Trie<Edge> findInducedPaths(BuchiAutomaton ba, List<Assignment> test) {
         paths = new Trie<>();
         this.ba = ba;
 
@@ -81,11 +82,6 @@ public class BAExplorer {
             if(!ac.accept(path))
                 return;
         }
-
-        for(AcceptanceCondition ac: conditions) {
-            ac.accepted(path);
-        }
-
         paths.insert(path);
     }
 

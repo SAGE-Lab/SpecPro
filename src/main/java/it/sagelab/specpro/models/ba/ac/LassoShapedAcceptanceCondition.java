@@ -1,9 +1,9 @@
-package it.sagelab.specpro.atg.paths;
+package it.sagelab.specpro.models.ba.ac;
 
 import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.Vertex;
 
-public class LazySchapedAcceptanceCondition implements AcceptanceCondition {
+public class LassoShapedAcceptanceCondition implements AcceptanceCondition {
 
     @Override
     public boolean accept(Edge[] path) {
@@ -22,8 +22,4 @@ public class LazySchapedAcceptanceCondition implements AcceptanceCondition {
         return false;
     }
 
-    @Override
-    public void accepted(Edge[] path) {
-
-    }
 }

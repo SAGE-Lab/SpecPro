@@ -1,17 +1,15 @@
 package it.sagelab.specpro.atg;
-
-import it.sagelab.specpro.atg.generators.RequirementsTestGenerator;
-import it.sagelab.specpro.collections.Trie;
-
-import it.sagelab.specpro.fe.snl2fl.parser.RequirementsGrammarParser;
+import it.sagelab.specpro.atg.coverage.ConditionCoverage;
+import it.sagelab.specpro.atg.coverage.StateCoverage;
+import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Main {
 
@@ -46,70 +44,13 @@ public class Main {
 
         String filePath = "robot.req";
 
-//        RequirementsTestGenerator rtg = new BARunnerTestGenerator(filePath);
-//        //RequirementsTestGenerator rtg = new RequirementsTestGenerator(filePath);
-//        //RequirementsTestGenerator rtg = new SplitReqTestGenerator(filePath, 10);
-//
-//        for(int pathLenght = 3; pathLenght < 5; ++pathLenght) {
-//            Trie<Assignment> result = rtg.generate(pathLenght, true);
-//
-//            int count = 0;
-//            int maxLength = 0;
-//
-//
-//            FileWriter fw = new FileWriter("tests_" + pathLenght + ".txt");
-//            PrintWriter printWriter = new PrintWriter(fw);
-//
-//            for(List<Assignment> p : result) {
-//                maxLength = p.size() > maxLength ? p.size() : maxLength;
-//                printWriter.println(p);
-//                ++count;
-//            }
-//
-//            printWriter.println("****************************************************************");
-//
-//            for(List<Assignment> p: result) {
-//                printPathAsFormula(p, printWriter);
-//            }
-//
-//            printWriter.close();
-//
-//            System.out.println("Number of Sequences: " + count);
-//            System.out.println("Max length: " + maxLength);
-//            System.out.println("****************************************************************");
-//            System.out.println("\n\n\n");
-//        }
+        AutomaticTestGenerator rtg = new AutomaticTestGenerator();
+        rtg.setCoverageCriterion(new StateCoverage());
+        rtg.parseRequirements(filePath);
+        //rtg.addFormula("G(!t -> (!p U t) | G!p)");
+        //rtg.addFormula("G(!r -> F p)");
+        Map<BuchiAutomaton, Set<TestSequence>> tests = rtg.generate();
 
-        RequirementsTestGenerator rtg = new RequirementsTestGenerator(filePath);
-        for (int pathLenght = 6; pathLenght < 8; ++pathLenght) {
-            Trie<Assignment> result = rtg.generate(pathLenght);
-
-            int count = 0;
-            int maxLength = 0;
-
-
-            FileWriter fw = new FileWriter("tests_" + pathLenght + ".txt");
-            PrintWriter printWriter = new PrintWriter(fw);
-
-            for(List<Assignment> p : result) {
-                maxLength = p.size() > maxLength ? p.size() : maxLength;
-                printWriter.println(p);
-                ++count;
-            }
-
-            printWriter.println("****************************************************************");
-
-            for(List<Assignment> p: result) {
-                printPathAsFormula(p, printWriter);
-            }
-
-            printWriter.close();
-
-            System.out.println("Number of Sequences: " + count);
-            System.out.println("Max length: " + maxLength);
-            System.out.println("****************************************************************");
-            System.out.println("\n\n\n");
-        }
     }
 
 }

@@ -86,7 +86,7 @@ public class Main {
         Options options = createOptionMenu();
 
         try {
-            CommandLine commandLine = commandLineParser.parse( options, args );
+            CommandLine commandLine = commandLineParser.parse(options, args);
             String inputFile, outputFile;
             PrintStream outStream;
             int timeout = 60;
@@ -152,9 +152,9 @@ public class Main {
                     int min = Integer.parseInt(matcher.group(1));
                     int max = Integer.parseInt(matcher.group(2));
 
-                    AutomaticTestGenerator atg = new AutomaticTestGenerator(outStream, snl2FlParser, min, max);
+                    AutomaticTestGenerator atg = new AutomaticTestGenerator(min, max);
 
-                    atg.run();
+                    atg.generate(outStream);
 
                 } else {
                     System.err.println("Value for option atg not valid. It has to follow the pattern \"[min, max]\", where" +
