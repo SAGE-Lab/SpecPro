@@ -7,6 +7,11 @@ import java.util.regex.Pattern;
 
 public class NuSMV extends ModelChecker {
 
+    public NuSMV() {
+        super(new NuSMVTranslator());
+        this.execPath = System.getenv("SPECPRO_NUSMV");
+    }
+
     public NuSMV(long timeout) {
         super(timeout, new NuSMVTranslator());
         this.execPath = System.getenv("SPECPRO_NUSMV");

@@ -4,9 +4,7 @@ import it.sagelab.specpro.reasoners.translators.panda.PANDATranslator;
 
 public class Panda extends ModelChecker {
 
-    public Panda(long timeout) {
-        super(timeout, new PANDATranslator());
-    }
+    public Panda() { super(new PANDATranslator()); }
 
     @Override
     protected String[] getCommand(String filePath) {

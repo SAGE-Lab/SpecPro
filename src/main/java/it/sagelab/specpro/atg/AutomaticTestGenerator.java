@@ -91,22 +91,35 @@ public class AutomaticTestGenerator {
     }
 
     public void parseRequirements(String filePath) throws IOException {
+        parseRequirements(filePath, false);
+    }
+
+    public void parseRequirements(String filePath, boolean conjunctionBA) throws IOException {
 
         Snl2FlParser parser = new Snl2FlParser();
         parser.parseFile(filePath);
-        List<Requirement> requirements = new ArrayList<>(parser.getRequirements());
 
-        for(Requirement r: requirements) {
-
+        if(conjunctionBA) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try (PrintStream ps = new PrintStream(baos, true, "UTF-8")) {
-                parser.getRequirements().clear();
-                parser.getRequirements().add(r);
                 parser.translate(new SpotTranslator(), ps);
+                addFormula(new String(baos.toByteArray(), StandardCharsets.UTF_8));
+            }
+        } else {
 
-                String ltlFormula = new String(baos.toByteArray(), StandardCharsets.UTF_8);
+            List<Requirement> requirements = new ArrayList<>(parser.getRequirements());
+            for (Requirement r : requirements) {
 
-                addFormula(ltlFormula);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                try (PrintStream ps = new PrintStream(baos, true, "UTF-8")) {
+                    parser.getRequirements().clear();
+                    parser.getRequirements().add(r);
+                    parser.translate(new SpotTranslator(), ps);
+
+                    String ltlFormula = new String(baos.toByteArray(), StandardCharsets.UTF_8);
+
+                    addFormula(ltlFormula);
+                }
             }
         }
 

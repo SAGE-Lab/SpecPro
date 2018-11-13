@@ -7,6 +7,11 @@ import java.util.regex.Pattern;
 
 public class Aalta extends ModelChecker {
 
+    public Aalta() {
+        super(new AALTATranslator());
+        this.execPath = System.getenv("SPECPRO_AALTA");
+    }
+
     public Aalta(long timeout) {
         super(timeout, new AALTATranslator());
         this.execPath = System.getenv("SPECPRO_AALTA");
