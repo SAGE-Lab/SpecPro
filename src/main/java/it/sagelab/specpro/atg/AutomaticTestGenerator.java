@@ -1,6 +1,8 @@
 package it.sagelab.specpro.atg;
 
 import it.sagelab.specpro.atg.coverage.BACoverage;
+import it.sagelab.specpro.atg.coverage.ConditionCoverage;
+import it.sagelab.specpro.atg.coverage.StateCoverage;
 import it.sagelab.specpro.atg.coverage.TransitionCoverage;
 import it.sagelab.specpro.atg.pipes.BAProductTestPipe;
 import it.sagelab.specpro.atg.pipes.InputVarsTestPipe;
@@ -139,6 +141,7 @@ public class AutomaticTestGenerator {
         for(BuchiAutomaton ba: buchiAutomata) {
             cout.println("Generating paths for req # " + (++count) + "/" + buchiAutomata.size());
             generate(ba);
+            printStatistics(ba);
             cout.println("*****************************************************************************");
         }
 
@@ -175,7 +178,8 @@ public class AutomaticTestGenerator {
 
             if(test != null) {
                 coverageCriterion.accept(path, test);
-                tests.add(new TestSequence(path, test));
+                tests.add(new TestSequence(new ArrayList<>(path), test));
+                cout.println(path);
                 cout.println(test);
 
                 if(coverageCriterion.covered(path)) {
@@ -194,6 +198,30 @@ public class AutomaticTestGenerator {
         automataList.remove(ba);
         pipes.add(new BAProductTestPipe(automataList));
         return pipes;
+    }
+
+    private void printStatistics(BuchiAutomaton ba) {
+        cout.println("###############################");
+        cout.println("Stats");
+        cout.println("# Vertexes:   " + ba.vertexSet().size());
+        cout.println("# Edges:      " + ba.edgeSet().size());
+        cout.println("# Conditions: " + ba.edgeSet().stream().map(e -> e.getAssigments()).mapToInt(Set::size).sum());
+
+        Set<TestSequence> tests = generatedTests.get(ba);
+        StateCoverage sc = new StateCoverage(ba);
+        TransitionCoverage tc = new TransitionCoverage(ba);
+        ConditionCoverage cc = new ConditionCoverage(ba);
+        for(TestSequence t : tests) {
+            sc.accept(t.getPath(), t.getAssignmentList());
+            tc.accept(t.getPath(), t.getAssignmentList());
+            cc.accept(t.getPath(), t.getAssignmentList());
+        }
+
+        cout.println("State Coverage:      " + sc.coverage());
+        cout.println("Transition Coverage: " + tc.coverage());
+        cout.println("Condition Coverage:  " + cc.coverage());
+        cout.println("Target Coverage:     " + coverageCriterion.coverage());
+        cout.println("###############################");
     }
 
 }

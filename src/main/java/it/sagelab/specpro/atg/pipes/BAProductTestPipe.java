@@ -25,6 +25,10 @@ public class BAProductTestPipe implements TestPipe {
         if(test == null) {
             return null;
         }
+        if(buchiAutomataList == null || buchiAutomataList.size() == 0) {
+            return test;
+        }
+
         this.test = test;
 
         List<Trie<Edge>> inducedPaths = new ArrayList<>();

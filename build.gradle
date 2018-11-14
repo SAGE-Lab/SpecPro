@@ -51,5 +51,5 @@ run {
 
 applicationDistribution.from("$projectDir") {
     into ''
-    include 'README.md', 'LICENSE'
+    include 'README.md', 'LICENSE', 'ltl2gba_launcher.pl'
 }

@@ -6,6 +6,7 @@ import org.apache.commons.cli.*;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,9 +41,8 @@ public class Main {
         return options;
     }
 
-    public static void printHelp(CommandLine commandLine) {
+    public static void printHelp(CommandLine commandLine, String[] args) {
 
-        String [] args = commandLine.getArgs();
         Map<String, Command> commands = getCommands();
 
         if(args.length > 0 && commands.containsKey(args[0])) {
@@ -68,16 +68,17 @@ public class Main {
 
     public static void main(String[] args) {
 
-        CommandLineParser commandLineParser = new DefaultParser();
+        ExtendedParser commandLineParser = new ExtendedParser();
         Options options = getOptions();
 
         try {
-            CommandLine commandLine = commandLineParser.parse(options, args);
+            CommandLine commandLine = commandLineParser.parse(options, args, false);
+            String [] args2 = commandLineParser.getNotParsedArgs();
             String inputFile, outputFile;
             PrintStream outStream;
 
             if (commandLine.hasOption("h")) {
-                printHelp(commandLine);
+                printHelp(commandLine, args2);
             }
 
             inputFile = commandLine.getOptionValue("i");
@@ -89,7 +90,7 @@ public class Main {
                 outStream = System.out;
             }
 
-            String [] args2 = commandLine.getArgs();
+
             if(args2.length == 0) {
                 System.err.println("No command selected. See 'SpecPro --help'");
                 System.exit(-1);
@@ -99,9 +100,12 @@ public class Main {
                 System.err.println("'" + args2[0] + "' is not a valid command. See 'SpecPro --help'");
                 System.exit(-1);
             }
-            Command command = commands.get(args2[0]);
-            CommandLine commandLine2 = commandLineParser.parse(command.createOptionMenu(), args2);
 
+
+            Command command = commands.get(args2[0]);
+
+            CommandLine commandLine2 = commandLineParser.parse(command.createOptionMenu(), args2);
+            System.out.println(inputFile);
             command.setInputFile(inputFile);
             command.setOutStream(outStream);
             command.run(commandLine2);

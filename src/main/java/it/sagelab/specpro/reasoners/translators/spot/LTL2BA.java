@@ -15,7 +15,7 @@ import java.io.StringReader;
 public class LTL2BA {
 
     DotBuilder db;
-    int index = 0;
+    static int index = 0;
 
     DOTImporter<Vertex, Edge> importer;
 
@@ -28,7 +28,8 @@ public class LTL2BA {
         BuchiAutomaton g = new BuchiAutomaton(db);
         Runtime rt = Runtime.getRuntime();
         Process process = null;
-        String[] command = {"ltl2tgba", "-B", formula, "-d"};
+        //String[] command = {"ltl2tgba", "-B", formula, "-d"};
+        String[] command = {"./ltl2gba_launcher.pl", formula};
         try {
             process = rt.exec(command);
             int exitValue = process.waitFor();

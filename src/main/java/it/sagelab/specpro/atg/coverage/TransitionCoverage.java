@@ -2,6 +2,7 @@ package it.sagelab.specpro.atg.coverage;
 
 import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ba.Edge;
+import it.sagelab.specpro.models.ba.Vertex;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 
 import java.util.HashSet;
@@ -15,6 +16,8 @@ public class TransitionCoverage extends BACoverage {
     public TransitionCoverage(BuchiAutomaton buchiAutomaton) {
         super(buchiAutomaton);
         visitedEdges = new HashSet<>();
+        for(Vertex v: buchiAutomaton.initStates())
+            visitedEdges.addAll(buchiAutomaton.outgoingEdgesOf(v));
     }
 
     public TransitionCoverage() {
@@ -26,6 +29,8 @@ public class TransitionCoverage extends BACoverage {
     public void reset(BuchiAutomaton buchiAutomaton) {
         super.reset(buchiAutomaton);
         visitedEdges.clear();
+        for(Vertex v: buchiAutomaton.initStates())
+            visitedEdges.addAll(buchiAutomaton.outgoingEdgesOf(v));
     }
 
     @Override
@@ -54,4 +59,10 @@ public class TransitionCoverage extends BACoverage {
         }
         return false;
     }
+
+    @Override
+    public double coverage() {
+        return ((double) visitedEdges.size()) / ((double) buchiAutomaton.edgeSet().size());
+    }
+
 }
