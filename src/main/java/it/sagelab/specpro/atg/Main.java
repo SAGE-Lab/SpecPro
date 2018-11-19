@@ -49,6 +49,9 @@ public class Main {
         rtg.parseRequirements(filePath);
         //rtg.addFormula("G(!t -> (!p U t) | G!p)");
         //rtg.addFormula("G(!r -> F p)");
+
+        rtg.setMaxLength(8);
+        rtg.setFilterInputVars(false);
         Map<BuchiAutomaton, Set<TestSequence>> tests = rtg.generate();
 
     }

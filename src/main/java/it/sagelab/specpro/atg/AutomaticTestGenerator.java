@@ -8,9 +8,13 @@ import it.sagelab.specpro.atg.pipes.BAProductTestPipe;
 import it.sagelab.specpro.atg.pipes.InputVarsTestPipe;
 import it.sagelab.specpro.atg.pipes.TestPipe;
 import it.sagelab.specpro.collections.SequenceBuilder;
+import it.sagelab.specpro.collections.Trie;
 import it.sagelab.specpro.fe.snl2fl.Snl2FlParser;
+import it.sagelab.specpro.models.ba.BAExplorer;
 import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ba.Edge;
+import it.sagelab.specpro.models.ba.ac.LassoShapedAcceptanceCondition;
+import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.reasoners.translators.spot.LTL2BA;
@@ -34,6 +38,9 @@ public class AutomaticTestGenerator {
     private ArrayList<BuchiAutomaton> buchiAutomata = new ArrayList<>();
     private Set<String> inputVars;
     private Map<BuchiAutomaton, Set<TestSequence>> generatedTests;
+
+    private final HashSet<List<Assignment>> uniqueAssignments = new HashSet<>();
+
     private PrintStream cout;
 
 
@@ -140,10 +147,19 @@ public class AutomaticTestGenerator {
         int count = 0;
         for(BuchiAutomaton ba: buchiAutomata) {
             cout.println("Generating paths for req # " + (++count) + "/" + buchiAutomata.size());
+            long startTime = System.nanoTime();
             generate(ba);
             printStatistics(ba);
+            long endTime = System.nanoTime();
+            long elapsedTime = endTime - startTime;
+            double seconds = (double)elapsedTime / 1_000_000_000.0;
+            cout.println("Current Time: " + System.currentTimeMillis());
+            cout.println(String.format("Elapsed Time: %.5f", seconds));
             cout.println("*****************************************************************************");
         }
+
+        cout.println("Different tests generated: " + uniqueAssignments.size());
+        uniqueAssignments.forEach(l -> cout.println(l));
 
 
         return generatedTests;
@@ -153,6 +169,7 @@ public class AutomaticTestGenerator {
         List<TestPipe> pipes = getPipes(ba);
         coverageCriterion.reset(ba);
         generatedTests.putIfAbsent(ba, new HashSet<>());
+        updateCoverage(ba);
 
         int length = minLength;
         Iterator<List<Edge>> itr = ba.iterator(length);
@@ -169,6 +186,26 @@ public class AutomaticTestGenerator {
 
     }
 
+    private void updateCoverage(BuchiAutomaton ba) {
+        BAExplorer baExplorer = new BAExplorer();
+        baExplorer.addAcceptanceCondition(new LassoShapedAcceptanceCondition());
+        Set<TestSequence> testSet = generatedTests.get(ba);
+            for(List<Assignment> test: uniqueAssignments) {
+                baExplorer.setLength(test.size());
+                Trie<Edge> inducedPaths = baExplorer.findInducedPaths(ba, test);
+                for(List<Edge> path: inducedPaths) {
+                    coverageCriterion.accept(path, test);
+                    testSet.add(new TestSequence(new ArrayList<>(path), test));
+                    cout.println("** Test already generated **");
+                    cout.println(path);
+                    cout.println(test);
+                }
+
+            }
+
+
+    }
+
     private Set<TestSequence> evaluate(List<Edge> path, List<TestPipe> pipes) {
         Set<TestSequence> tests = new HashSet<>();
         for(List<Assignment> test: new SequenceBuilder<Assignment>(path)) {
@@ -179,6 +216,7 @@ public class AutomaticTestGenerator {
             if(test != null) {
                 coverageCriterion.accept(path, test);
                 tests.add(new TestSequence(new ArrayList<>(path), test));
+                uniqueAssignments.add(test);
                 cout.println(path);
                 cout.println(test);
 

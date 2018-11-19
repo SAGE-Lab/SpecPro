@@ -120,7 +120,7 @@ public class BAExplorer {
         for(Edge e: edges) {
             if(isInduced(e, test.get(test.size() - n))) {
                 path[path.length - n] = e;
-                dfs(e.getTarget(), n - 1);
+                inducedDfs(e.getTarget(), test,n - 1);
             }
         }
     }
