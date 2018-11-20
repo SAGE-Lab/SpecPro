@@ -32,6 +32,7 @@ public class AtgCommand extends Command {
         options.addOption(null, "disable-input-check", false,"Disable the check on input variables");
         options.addOption(null, "conjunction", false,
                 "Generates only one buchi automata with the conjunction of all the specifications");
+        options.addOption(null, "cross-coverage", false, "Compute the coverage of the conjunction BA with the tests generated");
 
         return options;
     }
@@ -76,5 +77,9 @@ public class AtgCommand extends Command {
 
         atg.parseRequirements(inputFile, commandLine.hasOption("conjunction"));
         atg.generate(outStream);
+
+        if(commandLine.hasOption("cross-coverage")) {
+            atg.computeCrossCoverageWithConjBA(inputFile);
+        }
     }
 }

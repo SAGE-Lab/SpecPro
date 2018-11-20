@@ -48,6 +48,67 @@ public class AutomaticTestGenerator {
         this(2, 10);
     }
 
+    public void debug() {
+        ArrayList<Assignment> assignments = new ArrayList<>();
+        Assignment a1 = new Assignment();
+        a1.add(new Atom("state_init"), true);
+        a1.add(new Atom("object_detected"), true);
+        a1.add(new Atom("alarm_button_pressed"), false);
+        a1.add(new Atom("proximity_sensor"), false);
+        a1.add(new Atom("ef_open"), true);
+        a1.add(new Atom("ef_idle"), true);
+        a1.add(new Atom("arm_idle"), true);
+
+        Assignment a2 = new Assignment();
+        a2.add(new Atom("state_scanning"), true);
+        a2.add(new Atom("object_detected"), true);
+        a2.add(new Atom("alarm_button_pressed"), false);
+        a2.add(new Atom("proximity_sensor"), false);
+        a2.add(new Atom("ef_idle"), true);
+        a2.add(new Atom("arm_idle"), true);
+
+
+        Assignment a3 = new Assignment();
+        a3.add(new Atom("state_moving_to_target"), true);
+        a3.add(new Atom("object_detected"), true);
+        a3.add(new Atom("alarm_button_pressed"), false);
+        a3.add(new Atom("proximity_sensor"), false);
+        a3.add(new Atom("arm_idle"), false);
+        a3.add(new Atom("arm_moving"), true);
+
+        Assignment a4 = new Assignment();
+        a4.add(new Atom("state_target_reached"), true);
+        a4.add(new Atom("object_detected"), true);
+        a4.add(new Atom("alarm_button_pressed"), false);
+        a4.add(new Atom("proximity_sensor"), false);
+        a4.add(new Atom("arm_idle"), true);
+        a4.add(new Atom("arm_moving"), false);
+
+        Assignment a5 = new Assignment();
+        a5.add(new Atom("state_grabbing"), true);
+        a5.add(new Atom("object_detected"), true);
+        a5.add(new Atom("alarm_button_pressed"), false);
+        a5.add(new Atom("proximity_sensor"), false);
+
+        Assignment a6 = new Assignment();
+        a6.add(new Atom("state_init"), true);
+        a6.add(new Atom("object_detected"), true);
+        a6.add(new Atom("alarm_button_pressed"), false);
+        a6.add(new Atom("proximity_sensor"), false);
+
+        assignments.add(a1);
+        assignments.add(a2);
+        assignments.add(a3);
+        assignments.add(a4);
+        assignments.add(a5);
+        assignments.add(a6);
+
+        BAProductTestPipe pipe = new BAProductTestPipe(buchiAutomata);
+        List<Assignment> test = pipe.process(assignments);
+
+        System.out.println(test);
+    }
+
     public AutomaticTestGenerator(int minLength, int maxLength) {
         this.minLength = minLength;
         this.maxLength = maxLength;
@@ -165,6 +226,21 @@ public class AutomaticTestGenerator {
         return generatedTests;
     }
 
+    public void computeCrossCoverageWithConjBA(String filePath) throws IOException {
+        ArrayList<BuchiAutomaton> oldBAs = new ArrayList<>(buchiAutomata);
+        buchiAutomata.clear();
+        parseRequirements(filePath, true);
+        cout.println("\n\n");
+        cout.println("*** Cross Coverage Statistics *** ");
+        coverageCriterion.reset(buchiAutomata.get(0));
+        generatedTests.put(buchiAutomata.get(0), new HashSet<>());
+        updateCoverage(buchiAutomata.get(0));
+        printStatistics(buchiAutomata.get(0));
+        buchiAutomata = oldBAs;
+    }
+
+
+
     private void generate(BuchiAutomaton ba) {
         List<TestPipe> pipes = getPipes(ba);
         coverageCriterion.reset(ba);
@@ -193,6 +269,12 @@ public class AutomaticTestGenerator {
             for(List<Assignment> test: uniqueAssignments) {
                 baExplorer.setLength(test.size());
                 Trie<Edge> inducedPaths = baExplorer.findInducedPaths(ba, test);
+
+                if(inducedPaths.size() == 0) {
+                    cout.println("** WARN: No induced path for test " + test);
+                    cout.println("*****************************************************************************");
+                }
+
                 for(List<Edge> path: inducedPaths) {
                     coverageCriterion.accept(path, test);
                     testSet.add(new TestSequence(new ArrayList<>(path), test));
