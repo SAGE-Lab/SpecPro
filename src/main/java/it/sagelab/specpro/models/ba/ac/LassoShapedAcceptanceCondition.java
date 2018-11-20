@@ -15,7 +15,7 @@ public class LassoShapedAcceptanceCondition implements AcceptanceCondition {
         for(int i = 0; i < n; ++i)
             visitedStates[i + 1] = path[i].getTarget();
         int index = 0;
-        while(visitedStates[index] != visitedStates[n - 1])
+        while(visitedStates[index] != visitedStates[n])
             ++index;
         for(int i = index; i <= n; ++i) {
             if(visitedStates[i].isAcceptingState()) {
