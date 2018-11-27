@@ -61,6 +61,11 @@ public class TransitionCoverage extends BACoverage {
     }
 
     @Override
+    public boolean evaluateTest(List<Edge> path, List<Assignment> test) {
+        return true;
+    }
+
+    @Override
     public double coverage() {
         return ((double) visitedEdges.size()) / ((double) buchiAutomaton.edgeSet().size());
     }

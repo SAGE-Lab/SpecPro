@@ -60,6 +60,11 @@ public class StateCoverage extends BACoverage {
     }
 
     @Override
+    public boolean evaluateTest(List<Edge> path, List<Assignment> test) {
+        return true;
+    }
+
+    @Override
     public double coverage() {
         return ((double) visitedStates.size()) / ((double) buchiAutomaton.vertexSet().size());
     }

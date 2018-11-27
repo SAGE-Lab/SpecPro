@@ -61,7 +61,7 @@ public class ConditionCoverage extends BACoverage {
         for(int i = 0; i < path.size(); ++i) {
             visitedConditions.putIfAbsent(path.get(i), new HashSet<>());
             for(Assignment a: path.get(i)) {
-                if(test.get(i).contains(a)) {
+                if(test.get(i).isCompatible(a)) {
                     visitedConditions.get(path.get(i)).add(a);
                 }
             }
@@ -74,6 +74,16 @@ public class ConditionCoverage extends BACoverage {
             visitedConditions.putIfAbsent(e, new HashSet<>());
             if(e.getAssigments().size() != visitedConditions.get(e).size())
                 return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean evaluateTest(List<Edge> path, List<Assignment> test) {
+        for(int i = 0; i < path.size(); ++i) {
+            if(!visitedConditions.get(path.get(i)).contains(test.get(i))) {
+                return true;
+            }
         }
         return false;
     }
