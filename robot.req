@@ -56,7 +56,6 @@ Globally, it is always the case that if state_grabbing holds, then not ef_idle e
 # Alarm state requirements
 After alarm_button_pressed, state_alarm eventually holds.
 Globally, it is always the case that if state_alarm holds, then alarm_button_pressed previously held.
-# Before alarm_button_pressed, it is never the case that state_alarm holds.
 Globally, it is always the case that if state_alarm holds, then arm_idle and ef_idle holds as well.
 
 Globally, it is always the case that if proximity_sensor holds, then arm_idle eventually holds.

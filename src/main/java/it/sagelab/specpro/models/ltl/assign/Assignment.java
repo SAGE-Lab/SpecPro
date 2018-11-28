@@ -7,16 +7,29 @@ import java.util.Map;
 
 public class Assignment {
 
-    final private HashMap<Atom, Boolean> assignmentsMap;
+    private final HashMap<Atom, Boolean> assignmentsMap;
+
+    private boolean startBeta = false;
 
     public Assignment() {
         assignmentsMap = new HashMap<>();
     }
 
-    public Assignment(Assignment ass) { this((HashMap) ass.assignmentsMap.clone()); }
+    public Assignment(Assignment ass) {
+        this((HashMap) ass.assignmentsMap.clone());
+        this.startBeta = ass.startBeta;
+    }
 
     public Assignment(HashMap<Atom, Boolean> assignment) {
         this.assignmentsMap = assignment;
+    }
+
+    public boolean isStartBeta() {
+        return startBeta;
+    }
+
+    public void setStartBeta(boolean startBeta) {
+        this.startBeta = startBeta;
     }
 
     public void add(Atom a, boolean value) {
@@ -42,6 +55,7 @@ public class Assignment {
         try {
             Assignment newAss = new Assignment(this);
             newAss.add(assignment);
+            newAss.setStartBeta(this.isStartBeta() || assignment.isStartBeta());
             return newAss;
         } catch (IllegalArgumentException e) {
             return null;
@@ -98,6 +112,8 @@ public class Assignment {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        if(startBeta)
+            builder.append("*");
         builder.append("{");
         int counter = 0;
         for(Map.Entry<Atom, Boolean> entry: assignmentsMap.entrySet()) {
