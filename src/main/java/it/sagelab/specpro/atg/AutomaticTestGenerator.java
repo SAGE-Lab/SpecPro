@@ -1,11 +1,7 @@
 package it.sagelab.specpro.atg;
 
-import it.sagelab.specpro.atg.coverage.BACoverage;
-import it.sagelab.specpro.atg.coverage.ConditionCoverage;
-import it.sagelab.specpro.atg.coverage.StateCoverage;
-import it.sagelab.specpro.atg.coverage.TransitionCoverage;
+import it.sagelab.specpro.atg.coverage.*;
 import it.sagelab.specpro.atg.pipes.BAProductTestPipe;
-import it.sagelab.specpro.atg.pipes.InputVarsTestPipe;
 import it.sagelab.specpro.atg.pipes.TestPipe;
 import it.sagelab.specpro.collections.SequenceBuilder;
 import it.sagelab.specpro.collections.Trie;
@@ -33,6 +29,7 @@ public class AutomaticTestGenerator {
     private boolean filterInputVars;
     private boolean addNegatedInput;
     private BACoverage coverageCriterion;
+    private final BAProductTestPipe baProductTestPipe;
 
     /** Internal use only data **/
     private ArrayList<BuchiAutomaton> buchiAutomata = new ArrayList<>();
@@ -52,6 +49,11 @@ public class AutomaticTestGenerator {
         ArrayList<Assignment> assignments = new ArrayList<>();
         Assignment a1 = new Assignment();
         a1.add(new Atom("state_init"), true);
+        a1.add(new Atom("state_scanning"), false);
+        a1.add(new Atom("state_moving_to_target"), false);
+        a1.add(new Atom("state_target_reached"), false);
+        a1.add(new Atom("state_grabbing"), false);
+        a1.add(new Atom("state_alarm"), false);
         a1.add(new Atom("object_detected"), true);
         a1.add(new Atom("alarm_button_pressed"), false);
         a1.add(new Atom("proximity_sensor"), false);
@@ -59,17 +61,28 @@ public class AutomaticTestGenerator {
         a1.add(new Atom("ef_idle"), true);
         a1.add(new Atom("arm_idle"), true);
 
+
         Assignment a2 = new Assignment();
         a2.add(new Atom("state_scanning"), true);
+        a2.add(new Atom("state_moving_to_target"), false);
+        a2.add(new Atom("state_target_reached"), false);
+        a2.add(new Atom("state_grabbing"), false);
+        a2.add(new Atom("state_alarm"), false);
         a2.add(new Atom("object_detected"), true);
         a2.add(new Atom("alarm_button_pressed"), false);
         a2.add(new Atom("proximity_sensor"), false);
         a2.add(new Atom("ef_idle"), true);
         a2.add(new Atom("arm_idle"), true);
+        a2.setStartBeta(true);
 
 
         Assignment a3 = new Assignment();
         a3.add(new Atom("state_moving_to_target"), true);
+        a3.add(new Atom("state_init"), false);
+        a3.add(new Atom("state_scanning"), false);
+        a3.add(new Atom("state_target_reached"), false);
+        a3.add(new Atom("state_grabbing"), false);
+        a3.add(new Atom("state_alarm"), false);
         a3.add(new Atom("object_detected"), true);
         a3.add(new Atom("alarm_button_pressed"), false);
         a3.add(new Atom("proximity_sensor"), false);
@@ -78,6 +91,11 @@ public class AutomaticTestGenerator {
 
         Assignment a4 = new Assignment();
         a4.add(new Atom("state_target_reached"), true);
+        a4.add(new Atom("state_init"), false);
+        a4.add(new Atom("state_scanning"), false);
+        a4.add(new Atom("state_moving_to_target"), false);
+        a4.add(new Atom("state_grabbing"), false);
+        a4.add(new Atom("state_alarm"), false);
         a4.add(new Atom("object_detected"), true);
         a4.add(new Atom("alarm_button_pressed"), false);
         a4.add(new Atom("proximity_sensor"), false);
@@ -86,15 +104,35 @@ public class AutomaticTestGenerator {
 
         Assignment a5 = new Assignment();
         a5.add(new Atom("state_grabbing"), true);
+        a5.add(new Atom("state_init"), false);
+        a5.add(new Atom("state_scanning"), false);
+        a5.add(new Atom("state_moving_to_target"), false);
+        a5.add(new Atom("state_target_reached"), false);
+        a5.add(new Atom("state_alarm"), false);
         a5.add(new Atom("object_detected"), true);
         a5.add(new Atom("alarm_button_pressed"), false);
         a5.add(new Atom("proximity_sensor"), false);
 
         Assignment a6 = new Assignment();
         a6.add(new Atom("state_init"), true);
+        a6.add(new Atom("state_scanning"), false);
+        a6.add(new Atom("state_moving_to_target"), false);
+        a6.add(new Atom("state_target_reached"), false);
+        a6.add(new Atom("state_grabbing"), false);
+        a6.add(new Atom("state_alarm"), false);
         a6.add(new Atom("object_detected"), true);
         a6.add(new Atom("alarm_button_pressed"), false);
         a6.add(new Atom("proximity_sensor"), false);
+
+
+        Assignment a7 = new Assignment();
+        a7.add(new Atom("state_init"), true);
+        a7.add(new Atom("state_alarm"), false);
+        a7.add(new Atom("object_detected"), true);
+        a7.add(new Atom("alarm_button_pressed"), false);
+        a7.add(new Atom("proximity_sensor"), false);
+        a7.setStartBeta(true);
+
 
         assignments.add(a1);
         assignments.add(a2);
@@ -102,6 +140,7 @@ public class AutomaticTestGenerator {
         assignments.add(a4);
         assignments.add(a5);
         assignments.add(a6);
+        //assignments.add(a7);
 
         BAProductTestPipe pipe = new BAProductTestPipe(buchiAutomata);
         List<Assignment> test = pipe.process(assignments);
@@ -116,10 +155,15 @@ public class AutomaticTestGenerator {
         inputVars = new HashSet<>();
         addNegatedInput = true;
         filterInputVars = true;
+        baProductTestPipe = new BAProductTestPipe();
     }
 
     public void setCoverageCriterion(BACoverage coverageCriterion) {
         this.coverageCriterion = coverageCriterion;
+    }
+
+    public BAProductTestPipe getBaProductTestPipe() {
+        return baProductTestPipe;
     }
 
     public int getMinLength() {
@@ -137,6 +181,7 @@ public class AutomaticTestGenerator {
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
     }
+
 
     public boolean isFilterInputVars() {
         return filterInputVars;
@@ -227,9 +272,17 @@ public class AutomaticTestGenerator {
     }
 
     public void computeCrossCoverageWithConjBA(String filePath) throws IOException {
+        computeCrossCoverageWithConjBA(filePath, false);
+    }
+
+    public void computeCrossCoverageWithConjBA(String input, boolean ltlFormula) throws IOException {
         ArrayList<BuchiAutomaton> oldBAs = new ArrayList<>(buchiAutomata);
         buchiAutomata.clear();
-        parseRequirements(filePath, true);
+        if (ltlFormula) {
+            addFormula(input);
+        } else {
+            parseRequirements(input, true);
+        }
         cout.println("\n\n");
         cout.println("*** Cross Coverage Statistics *** ");
         coverageCriterion.reset(buchiAutomata.get(0));
@@ -281,6 +334,15 @@ public class AutomaticTestGenerator {
                     cout.println("** Test already generated **");
                     cout.println(path);
                     cout.println(test);
+
+                    for(int i = 0; i < path.size(); ++i) {
+                        Assignment ass = test.get(i);
+                        for(Assignment a: path.get(i)) {
+                            if(ass.isCompatible(a) && !ass.contains(a)) {
+                                cout.println("** WARN: possible new assignment -> " + a);
+                            }
+                        }
+                     }
                 }
 
             }
@@ -290,17 +352,37 @@ public class AutomaticTestGenerator {
 
     private Set<TestSequence> evaluate(List<Edge> path, List<TestPipe> pipes) {
         Set<TestSequence> tests = new HashSet<>();
+        List<Integer> betaIndexes = LassoShapedAcceptanceCondition.getValidBetaIndexes(path);
+        if(betaIndexes.size() == 0) {
+            throw new RuntimeException("The path evaluated is not lasso shaped!");
+        }
         for(List<Assignment> test: new SequenceBuilder<Assignment>(path)) {
-            for(TestPipe pipe: pipes) {
-                test = pipe.process(test);
+            if(!coverageCriterion.evaluateTest(path, test)) {
+                continue;
+            }
+            List<Assignment> processedTest = null;
+            for(Integer beta: betaIndexes) {
+                // We create a copy of the assignment for which we want to set the startBeta flag because the list may
+                // contains multiple references of the same assignments object
+                test.set(beta, new Assignment(test.get(beta)));
+                test.get(beta).setStartBeta(true);
+                processedTest = test;
+                for (TestPipe pipe : pipes) {
+                    processedTest = pipe.process(processedTest);
+                }
+                test.get(beta).setStartBeta(false);
+                if(processedTest != null) {
+                    break;
+                }
+
             }
 
-            if(test != null) {
-                coverageCriterion.accept(path, test);
-                tests.add(new TestSequence(new ArrayList<>(path), test));
-                uniqueAssignments.add(test);
+            if(processedTest != null) {
+                coverageCriterion.accept(path, processedTest);
+                tests.add(new TestSequence(new ArrayList<>(path), processedTest));
+                uniqueAssignments.add(processedTest);
                 cout.println(path);
-                cout.println(test);
+                cout.println(processedTest);
 
                 if(coverageCriterion.covered(path)) {
                     break;
@@ -312,11 +394,13 @@ public class AutomaticTestGenerator {
 
     private List<TestPipe> getPipes(BuchiAutomaton ba) {
         List<TestPipe> pipes = new ArrayList<>();
-        if(filterInputVars && inputVars.size() > 0)
-            pipes.add(new InputVarsTestPipe(inputVars, addNegatedInput));
+//        if(filterInputVars && inputVars.size() > 0)
+//            pipes.add(new InputVarsTestPipe(inputVars, addNegatedInput));
         ArrayList<BuchiAutomaton> automataList = new ArrayList<>(buchiAutomata);
         automataList.remove(ba);
-        pipes.add(new BAProductTestPipe(automataList));
+        baProductTestPipe.setBuchiAutomataList(automataList);
+        pipes.add(baProductTestPipe);
+        //pipes.add(new BAProductTestPipe(automataList));
         return pipes;
     }
 
@@ -324,20 +408,24 @@ public class AutomaticTestGenerator {
         cout.println("###############################");
         cout.println("Stats");
         cout.println("# Vertexes:   " + ba.vertexSet().size());
+        cout.println("# Acc. States:" + ba.vertexSet().stream().filter(v -> v.isAcceptingState()).count());
         cout.println("# Edges:      " + ba.edgeSet().size());
         cout.println("# Conditions: " + ba.edgeSet().stream().map(e -> e.getAssigments()).mapToInt(Set::size).sum());
 
         Set<TestSequence> tests = generatedTests.get(ba);
         StateCoverage sc = new StateCoverage(ba);
+        AcceptanceStateCoverage asc = new AcceptanceStateCoverage(ba);
         TransitionCoverage tc = new TransitionCoverage(ba);
         ConditionCoverage cc = new ConditionCoverage(ba);
         for(TestSequence t : tests) {
             sc.accept(t.getPath(), t.getAssignmentList());
+            asc.accept(t.getPath(), t.getAssignmentList());
             tc.accept(t.getPath(), t.getAssignmentList());
             cc.accept(t.getPath(), t.getAssignmentList());
         }
 
         cout.println("State Coverage:      " + sc.coverage());
+        cout.println("Acc. State Coverage: " + asc.coverage());
         cout.println("Transition Coverage: " + tc.coverage());
         cout.println("Condition Coverage:  " + cc.coverage());
         cout.println("Target Coverage:     " + coverageCriterion.coverage());

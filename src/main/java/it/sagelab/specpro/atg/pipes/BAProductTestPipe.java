@@ -1,5 +1,8 @@
 package it.sagelab.specpro.atg.pipes;
 
+import it.sagelab.specpro.atg.cache.CacheStrategy;
+import it.sagelab.specpro.atg.cache.ResetCacheStrategy;
+import it.sagelab.specpro.collections.ListUtils;
 import it.sagelab.specpro.models.ba.BAExplorer;
 import it.sagelab.specpro.collections.SequenceBuilder;
 import it.sagelab.specpro.collections.Trie;
@@ -10,14 +13,31 @@ import it.sagelab.specpro.models.ltl.assign.Assignment;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class BAProductTestPipe implements TestPipe {
 
-    private final List<BuchiAutomaton> buchiAutomataList;
+    private List<BuchiAutomaton> buchiAutomataList;
+    private CacheStrategy cache;
     private List<Assignment> test;
 
+
     public BAProductTestPipe(List<BuchiAutomaton> buchiAutomataList) {
+        this();
         this.buchiAutomataList = buchiAutomataList;
+    }
+
+    public BAProductTestPipe() {
+        cache = new ResetCacheStrategy();
+    }
+
+    public void setBuchiAutomataList(List<BuchiAutomaton> buchiAutomataList) {
+        this.buchiAutomataList = buchiAutomataList;
+        cache.start();
+    }
+
+    public void setCacheStrategy(CacheStrategy cacheStrategy) {
+        this.cache = cacheStrategy;
     }
 
     @Override
@@ -31,12 +51,14 @@ public class BAProductTestPipe implements TestPipe {
 
         this.test = test;
 
+        int betaIndex = IntStream.range(0, test.size()).filter(i -> test.get(i).isStartBeta()).findFirst().getAsInt();
+
         List<Trie<Edge>> inducedPaths = new ArrayList<>();
         List<List<Edge>> prefixes = new ArrayList<>();
 
         BAExplorer explorer = new BAExplorer();
         explorer.setLength(test.size());
-        explorer.addAcceptanceCondition(new LassoShapedAcceptanceCondition());
+        explorer.addAcceptanceCondition(new LassoShapedAcceptanceCondition(betaIndex));
 
         for(BuchiAutomaton ba: buchiAutomataList) {
             Trie<Edge> edgeInducedPaths = explorer.findInducedPaths(ba, test);
@@ -47,7 +69,7 @@ public class BAProductTestPipe implements TestPipe {
             prefixes.add(new ArrayList<>());
         }
 
-        Deque<Assignment> composedTest = findCompatibleEdges(inducedPaths, prefixes, test.size());
+        Deque<Assignment> composedTest = findCompatibleAssignments(inducedPaths, prefixes, test.size());
 
         if(composedTest != null) {
             ArrayList<Assignment> assignments = new ArrayList<>();
@@ -62,7 +84,7 @@ public class BAProductTestPipe implements TestPipe {
         return null;
     }
 
-    private Deque<Assignment> findCompatibleEdges(List<Trie<Edge>> inducedPaths, List<List<Edge>> prefixes, int n) {
+    private Deque<Assignment> findCompatibleAssignments(List<Trie<Edge>> inducedPaths, List<List<Edge>> prefixes, int n) {
         if(n == 0) {
             return new ArrayDeque<>();
         }
@@ -73,13 +95,13 @@ public class BAProductTestPipe implements TestPipe {
             successors.add(inducedPaths.get(i).getSuccessors(prefixes.get(i)));
         }
 
-        for(List<Edge> sequence: new SequenceBuilder<>(successors)) {
-            Assignment mergedAssignment = merge(sequence, test.size() - n);
+        for(List<Edge> edges: new SequenceBuilder<>(successors)) {
+            Assignment mergedAssignment = merge(edges, test.size() - n);
             if(mergedAssignment != null) {
-                for(int i = 0; i < sequence.size(); ++i) {
-                    prefixes.get(i).add(sequence.get(i));
+                for(int i = 0; i < edges.size(); ++i) {
+                    prefixes.get(i).add(edges.get(i));
                 }
-                Deque<Assignment> res = findCompatibleEdges(inducedPaths, prefixes, n - 1);
+                Deque<Assignment> res = findCompatibleAssignments(inducedPaths, prefixes, n - 1);
                 if(res != null) {
                     res.push(mergedAssignment);
                     return res;
@@ -98,10 +120,7 @@ public class BAProductTestPipe implements TestPipe {
 
     private Assignment merge(List<Edge> edges, int n) {
         Assignment assignment = test.get(n);
-        List<Set<Assignment>> assignments = new ArrayList<>();
-        for(Edge e: edges) {
-            assignments.add(e.getAssigments());
-        }
+        List<Set<Assignment>> assignments = cache.getCachedAssignments(edges);
         return merge(assignments, assignment);
     }
 
@@ -113,7 +132,7 @@ public class BAProductTestPipe implements TestPipe {
         if(assignments.size() == 0)
             return mergedAss;
         if(assignments.size() == 1) {
-            return mergedAss.combine(assignments.get(0).iterator().next());
+            return findValidAssignment(assignments.get(0), mergedAss);
         }
 
         Set<Assignment> firstSet = assignments.get(0);
@@ -154,5 +173,18 @@ public class BAProductTestPipe implements TestPipe {
             return null;
         }
     }
+
+    private Assignment findValidAssignment(Set<Assignment> assignments,  Assignment testAssignment) {
+
+        Optional<Assignment> ass = assignments.parallelStream().filter(a -> a.isCompatible(testAssignment)).findFirst();
+
+        if(ass.isPresent()) {
+            return ass.get().combine(testAssignment);
+        }
+
+        return null;
+    }
+
+
 
 }
