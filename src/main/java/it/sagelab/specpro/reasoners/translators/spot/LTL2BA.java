@@ -15,7 +15,6 @@ import java.io.StringReader;
 public class LTL2BA {
 
     DotBuilder db;
-    static int index = 0;
 
     DOTImporter<Vertex, Edge> importer;
 
@@ -42,8 +41,6 @@ public class LTL2BA {
             }
             if(process.getInputStream().available() > 0) {
                 String input = IOUtils.toString(process.getInputStream());
-                IOUtils.write(input, new FileOutputStream("test" + index + ".dot"));
-                ++index;
                 input = input.replace("label=\"\\n[Büchi]\"", "");
                 //System.out.println(input);
                 importer.importGraph(g, new StringReader(input));

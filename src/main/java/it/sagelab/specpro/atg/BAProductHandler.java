@@ -1,8 +1,7 @@
-package it.sagelab.specpro.atg.pipes;
+package it.sagelab.specpro.atg;
 
 import it.sagelab.specpro.atg.cache.CacheStrategy;
 import it.sagelab.specpro.atg.cache.ResetCacheStrategy;
-import it.sagelab.specpro.collections.ListUtils;
 import it.sagelab.specpro.models.ba.BAExplorer;
 import it.sagelab.specpro.collections.SequenceBuilder;
 import it.sagelab.specpro.collections.Trie;
@@ -15,19 +14,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class BAProductTestPipe implements TestPipe {
+public class BAProductHandler {
 
     private List<BuchiAutomaton> buchiAutomataList;
     private CacheStrategy cache;
     private List<Assignment> test;
 
 
-    public BAProductTestPipe(List<BuchiAutomaton> buchiAutomataList) {
+    public BAProductHandler(List<BuchiAutomaton> buchiAutomataList) {
         this();
         this.buchiAutomataList = buchiAutomataList;
     }
 
-    public BAProductTestPipe() {
+    public BAProductHandler() {
         cache = new ResetCacheStrategy();
     }
 
@@ -40,7 +39,6 @@ public class BAProductTestPipe implements TestPipe {
         this.cache = cacheStrategy;
     }
 
-    @Override
     public List<Assignment> process(List<Assignment> test) {
         if(test == null) {
             return null;

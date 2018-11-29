@@ -1,8 +1,6 @@
 package it.sagelab.specpro.atg;
 
 import it.sagelab.specpro.atg.coverage.*;
-import it.sagelab.specpro.atg.pipes.BAProductTestPipe;
-import it.sagelab.specpro.atg.pipes.TestPipe;
 import it.sagelab.specpro.collections.SequenceBuilder;
 import it.sagelab.specpro.collections.Trie;
 import it.sagelab.specpro.fe.snl2fl.Snl2FlParser;
@@ -26,10 +24,8 @@ public class AutomaticTestGenerator {
 
     /** Public Properties **/
     private int minLength, maxLength;
-    private boolean filterInputVars;
-    private boolean addNegatedInput;
     private BACoverage coverageCriterion;
-    private final BAProductTestPipe baProductTestPipe;
+    private final BAProductHandler baProductHandler;
 
     /** Internal use only data **/
     private ArrayList<BuchiAutomaton> buchiAutomata = new ArrayList<>();
@@ -45,125 +41,20 @@ public class AutomaticTestGenerator {
         this(2, 10);
     }
 
-    public void debug() {
-        ArrayList<Assignment> assignments = new ArrayList<>();
-        Assignment a1 = new Assignment();
-        a1.add(new Atom("state_init"), true);
-        a1.add(new Atom("state_scanning"), false);
-        a1.add(new Atom("state_moving_to_target"), false);
-        a1.add(new Atom("state_target_reached"), false);
-        a1.add(new Atom("state_grabbing"), false);
-        a1.add(new Atom("state_alarm"), false);
-        a1.add(new Atom("object_detected"), true);
-        a1.add(new Atom("alarm_button_pressed"), false);
-        a1.add(new Atom("proximity_sensor"), false);
-        a1.add(new Atom("ef_open"), true);
-        a1.add(new Atom("ef_idle"), true);
-        a1.add(new Atom("arm_idle"), true);
-
-
-        Assignment a2 = new Assignment();
-        a2.add(new Atom("state_scanning"), true);
-        a2.add(new Atom("state_moving_to_target"), false);
-        a2.add(new Atom("state_target_reached"), false);
-        a2.add(new Atom("state_grabbing"), false);
-        a2.add(new Atom("state_alarm"), false);
-        a2.add(new Atom("object_detected"), true);
-        a2.add(new Atom("alarm_button_pressed"), false);
-        a2.add(new Atom("proximity_sensor"), false);
-        a2.add(new Atom("ef_idle"), true);
-        a2.add(new Atom("arm_idle"), true);
-        a2.setStartBeta(true);
-
-
-        Assignment a3 = new Assignment();
-        a3.add(new Atom("state_moving_to_target"), true);
-        a3.add(new Atom("state_init"), false);
-        a3.add(new Atom("state_scanning"), false);
-        a3.add(new Atom("state_target_reached"), false);
-        a3.add(new Atom("state_grabbing"), false);
-        a3.add(new Atom("state_alarm"), false);
-        a3.add(new Atom("object_detected"), true);
-        a3.add(new Atom("alarm_button_pressed"), false);
-        a3.add(new Atom("proximity_sensor"), false);
-        a3.add(new Atom("arm_idle"), false);
-        a3.add(new Atom("arm_moving"), true);
-
-        Assignment a4 = new Assignment();
-        a4.add(new Atom("state_target_reached"), true);
-        a4.add(new Atom("state_init"), false);
-        a4.add(new Atom("state_scanning"), false);
-        a4.add(new Atom("state_moving_to_target"), false);
-        a4.add(new Atom("state_grabbing"), false);
-        a4.add(new Atom("state_alarm"), false);
-        a4.add(new Atom("object_detected"), true);
-        a4.add(new Atom("alarm_button_pressed"), false);
-        a4.add(new Atom("proximity_sensor"), false);
-        a4.add(new Atom("arm_idle"), true);
-        a4.add(new Atom("arm_moving"), false);
-
-        Assignment a5 = new Assignment();
-        a5.add(new Atom("state_grabbing"), true);
-        a5.add(new Atom("state_init"), false);
-        a5.add(new Atom("state_scanning"), false);
-        a5.add(new Atom("state_moving_to_target"), false);
-        a5.add(new Atom("state_target_reached"), false);
-        a5.add(new Atom("state_alarm"), false);
-        a5.add(new Atom("object_detected"), true);
-        a5.add(new Atom("alarm_button_pressed"), false);
-        a5.add(new Atom("proximity_sensor"), false);
-
-        Assignment a6 = new Assignment();
-        a6.add(new Atom("state_init"), true);
-        a6.add(new Atom("state_scanning"), false);
-        a6.add(new Atom("state_moving_to_target"), false);
-        a6.add(new Atom("state_target_reached"), false);
-        a6.add(new Atom("state_grabbing"), false);
-        a6.add(new Atom("state_alarm"), false);
-        a6.add(new Atom("object_detected"), true);
-        a6.add(new Atom("alarm_button_pressed"), false);
-        a6.add(new Atom("proximity_sensor"), false);
-
-
-        Assignment a7 = new Assignment();
-        a7.add(new Atom("state_init"), true);
-        a7.add(new Atom("state_alarm"), false);
-        a7.add(new Atom("object_detected"), true);
-        a7.add(new Atom("alarm_button_pressed"), false);
-        a7.add(new Atom("proximity_sensor"), false);
-        a7.setStartBeta(true);
-
-
-        assignments.add(a1);
-        assignments.add(a2);
-        assignments.add(a3);
-        assignments.add(a4);
-        assignments.add(a5);
-        assignments.add(a6);
-        //assignments.add(a7);
-
-        BAProductTestPipe pipe = new BAProductTestPipe(buchiAutomata);
-        List<Assignment> test = pipe.process(assignments);
-
-        System.out.println(test);
-    }
-
     public AutomaticTestGenerator(int minLength, int maxLength) {
         this.minLength = minLength;
         this.maxLength = maxLength;
         coverageCriterion = new TransitionCoverage();
         inputVars = new HashSet<>();
-        addNegatedInput = true;
-        filterInputVars = true;
-        baProductTestPipe = new BAProductTestPipe();
+        baProductHandler = new BAProductHandler();
     }
 
     public void setCoverageCriterion(BACoverage coverageCriterion) {
         this.coverageCriterion = coverageCriterion;
     }
 
-    public BAProductTestPipe getBaProductTestPipe() {
-        return baProductTestPipe;
+    public BAProductHandler getBaProductHandler() {
+        return baProductHandler;
     }
 
     public int getMinLength() {
@@ -180,23 +71,6 @@ public class AutomaticTestGenerator {
 
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
-    }
-
-
-    public boolean isFilterInputVars() {
-        return filterInputVars;
-    }
-
-    public void setFilterInputVars(boolean filterInputVars) {
-        this.filterInputVars = filterInputVars;
-    }
-
-    public boolean isAddNegatedInput() {
-        return addNegatedInput;
-    }
-
-    public void setAddNegatedInput(boolean addNegatedInput) {
-        this.addNegatedInput = addNegatedInput;
     }
 
     public void addFormula(String ltlFormula) {
@@ -292,10 +166,10 @@ public class AutomaticTestGenerator {
         buchiAutomata = oldBAs;
     }
 
-
-
     private void generate(BuchiAutomaton ba) {
-        List<TestPipe> pipes = getPipes(ba);
+        ArrayList<BuchiAutomaton> automataList = new ArrayList<>(buchiAutomata);
+        automataList.remove(ba);
+        baProductHandler.setBuchiAutomataList(automataList);
         coverageCriterion.reset(ba);
         generatedTests.putIfAbsent(ba, new HashSet<>());
         updateCoverage(ba);
@@ -306,7 +180,7 @@ public class AutomaticTestGenerator {
             if(itr.hasNext()) {
                 List<Edge> path = itr.next();
                 if(coverageCriterion.evaluate(path)) {
-                    generatedTests.get(ba).addAll(evaluate(path, pipes));
+                    generatedTests.get(ba).addAll(evaluate(path));
                 }
             } else {
                 itr = ba.iterator(++length);
@@ -342,7 +216,7 @@ public class AutomaticTestGenerator {
                                 cout.println("** WARN: possible new assignment -> " + a);
                             }
                         }
-                     }
+                    }
                 }
 
             }
@@ -350,7 +224,7 @@ public class AutomaticTestGenerator {
 
     }
 
-    private Set<TestSequence> evaluate(List<Edge> path, List<TestPipe> pipes) {
+    private Set<TestSequence> evaluate(List<Edge> path) {
         Set<TestSequence> tests = new HashSet<>();
         List<Integer> betaIndexes = LassoShapedAcceptanceCondition.getValidBetaIndexes(path);
         if(betaIndexes.size() == 0) {
@@ -366,15 +240,11 @@ public class AutomaticTestGenerator {
                 // contains multiple references of the same assignments object
                 test.set(beta, new Assignment(test.get(beta)));
                 test.get(beta).setStartBeta(true);
-                processedTest = test;
-                for (TestPipe pipe : pipes) {
-                    processedTest = pipe.process(processedTest);
-                }
+                processedTest = baProductHandler.process(test);
                 test.get(beta).setStartBeta(false);
                 if(processedTest != null) {
                     break;
                 }
-
             }
 
             if(processedTest != null) {
@@ -392,17 +262,6 @@ public class AutomaticTestGenerator {
         return tests;
     }
 
-    private List<TestPipe> getPipes(BuchiAutomaton ba) {
-        List<TestPipe> pipes = new ArrayList<>();
-//        if(filterInputVars && inputVars.size() > 0)
-//            pipes.add(new InputVarsTestPipe(inputVars, addNegatedInput));
-        ArrayList<BuchiAutomaton> automataList = new ArrayList<>(buchiAutomata);
-        automataList.remove(ba);
-        baProductTestPipe.setBuchiAutomataList(automataList);
-        pipes.add(baProductTestPipe);
-        //pipes.add(new BAProductTestPipe(automataList));
-        return pipes;
-    }
 
     private void printStatistics(BuchiAutomaton ba) {
         cout.println("###############################");

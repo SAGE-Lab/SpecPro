@@ -1,5 +1,7 @@
 package it.sagelab.specpro.atg;
+import it.sagelab.specpro.atg.coverage.AcceptanceStateCoverage;
 import it.sagelab.specpro.atg.coverage.ConditionCoverage;
+import it.sagelab.specpro.atg.coverage.StateCoverage;
 import it.sagelab.specpro.atg.coverage.TransitionCoverage;
 import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ltl.Atom;
@@ -47,13 +49,10 @@ public class Main {
         AutomaticTestGenerator rtg = new AutomaticTestGenerator();
         rtg.setCoverageCriterion(new TransitionCoverage());
         rtg.parseRequirements(filePath);
-        //rtg.addFormula("G(!t -> (!p U t) | G!p)");
-        //rtg.addFormula("G(!r -> F p)");
 
-        rtg.setMinLength(2);
-        rtg.setMaxLength(8);
-        rtg.setFilterInputVars(false);
-        Map<BuchiAutomaton, Set<TestSequence>> tests = rtg.generate();
+        rtg.setMinLength(5);
+        rtg.setMaxLength(10);
+       Map<BuchiAutomaton, Set<TestSequence>> tests = rtg.generate();
 
         rtg.computeCrossCoverageWithConjBA(filePath);
     }
