@@ -5,10 +5,11 @@ import it.sagelab.specpro.fe.snl2fl.Snl2FlException;
 import org.apache.commons.cli.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class Main {
 
@@ -33,7 +34,8 @@ public class Main {
         final Options options = new Options();
 
         if(options.getOptions().size() == 0) {
-            options.addOption("h", "help", false, "print the help message");
+            options.addOption("h", "help", false, "Print the help message and exit");
+            options.addOption(null, "version",false,"Print version information and exit");
             options.addOption("i", "input", true, "Input file [required]");
             options.addOption("o", "output", true, "Output file");
         }
@@ -61,9 +63,35 @@ public class Main {
                 System.out.println(command.getDescription());
                 System.out.println();
             }
-            System.exit(0);
         }
 
+    }
+
+    public static void printVersion() throws IOException {
+        InputStream input = Main.class.getClassLoader().getResourceAsStream("version.properties");
+
+        if(input != null) {
+            Properties versionProp = new Properties();
+            versionProp.load(input);
+
+            System.out.print("SpecPro version " + versionProp.getProperty("version"));
+            if("True".equals(versionProp.getProperty("snapshot"))) {
+                System.out.print("-SNAPSHOT");
+            }
+            System.out.println();
+            System.out.println("Build #" + versionProp.getProperty("build"));
+
+        } else {
+            System.out.println("SpecPro version unknown");
+        }
+
+        System.out.println();
+        System.out.println("Copyright (c) 2018 University of Genoa, University of Sassari.");
+        System.out.println("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.");
+        System.out.println("Contact Simone Vuotto (svuotto@uniss.it) for details.");
+        System.exit(0);
+
+        System.exit(0);
     }
 
     public static void main(String[] args) {
@@ -81,6 +109,13 @@ public class Main {
                 printHelp(commandLine, args2);
             }
 
+            if (commandLine.hasOption("version")) {
+                printVersion();
+            }
+
+            if(!commandLine.hasOption("i")) {
+                throw new IOException("Input file not specified!");
+            }
             inputFile = commandLine.getOptionValue("i");
 
             if (commandLine.hasOption("o")) {

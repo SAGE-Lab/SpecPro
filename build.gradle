@@ -5,9 +5,7 @@ apply plugin: 'application'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 group = 'it.sagelab'
-version = '0.2.0-SNAPSHOT'
 sourceCompatibility = 1.8
-
 mainClassName = 'it.sagelab.specpro.Main'
 
 buildscript {
@@ -35,6 +33,59 @@ dependencies {
     testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
     testCompile('org.junit.jupiter:junit-jupiter-params:5.2.0')
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
+}
+
+task updateVersionPropertiesFile() {
+    doLast {
+
+        def versionPropsFile = file('src/main/resources/version.properties')
+
+        Properties versionProps = new Properties()
+        if (!versionPropsFile.exists()) {
+            versionProps['version'] = "0.1.0"
+            versionProps['build'] = "0"
+            versionProps.store(versionPropsFile.newWriter(), null)
+        }
+
+        new File("$buildDir/resources/main/version.properties").withWriter { w ->
+            Properties p = new Properties()
+            p['version'] = project.version.toString()
+            p.store w, null
+        }
+
+
+        if (versionPropsFile.canRead()) {
+            versionProps.load(new FileInputStream(versionPropsFile))
+
+            def snapshot = true
+            def runTasks = gradle.startParameter.taskNames
+            if ('release' in runTasks) {
+                def v = versionProps['version'].split("\\.")
+                v[2] = (v[2].toInteger() + 1).toString();
+                versionProps['version'] = v[0] + '.' + v[1] + '.' + v[2];
+                snapshot = false
+            }
+            versionProps['snapshot'] = snapshot ? "True" : "False"
+            version = versionProps['version']
+            if(snapshot) {
+                version += '-SNAPSHOT'
+            }
+
+            versionProps['build'] = (versionProps['build'].toInteger() + 1).toString()
+            versionProps.store(versionPropsFile.newWriter(), null)
+        } else {
+            throw new FileNotFoundException("Could not read version.properties!")
+        }
+
+    }
+}
+
+task release(dependsOn: build) {
+    group 'build'
+}
+
+processResources {
+    dependsOn updateVersionPropertiesFile
 }
 
 jar {
