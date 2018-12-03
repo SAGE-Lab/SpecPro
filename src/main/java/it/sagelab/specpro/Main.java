@@ -10,8 +10,11 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.IntStream;
 
 public class Main {
+
+    private final static String VERSION_BORDER = "+-----------------------------------------------------------------------+";
 
     public static Map<String, Command> getCommands() {
         final Map<String, Command> commands = new HashMap<>();
@@ -67,29 +70,55 @@ public class Main {
 
     }
 
+    public static void printVersionRow(String text) {
+        int nSpaces = VERSION_BORDER.length() - text.length() - 2;
+        System.out.print("|");
+        IntStream.range(0, nSpaces / 2).forEach(i -> System.out.print(" "));
+        System.out.print(text);
+        IntStream.range(0, nSpaces / 2).forEach(i -> System.out.print(" "));
+        if(nSpaces % 2 != 0) {
+            System.out.print(" ");
+        }
+        System.out.println("|");
+    }
+
     public static void printVersion() throws IOException {
         InputStream input = Main.class.getClassLoader().getResourceAsStream("version.properties");
+
+        String version = "";
 
         if(input != null) {
             Properties versionProp = new Properties();
             versionProp.load(input);
 
-            System.out.print("SpecPro version " + versionProp.getProperty("version"));
+            version = "v" + versionProp.getProperty("version");
             if("True".equals(versionProp.getProperty("snapshot"))) {
-                System.out.print("-SNAPSHOT");
+                version += "-SNAPSHOT";
             }
-            System.out.println();
-            System.out.println("Build #" + versionProp.getProperty("build"));
-
+            version += " (build #" + versionProp.getProperty("build") + ")";
         } else {
-            System.out.println("SpecPro version unknown");
+            version = "version unknown";
         }
 
+
+        System.out.println(VERSION_BORDER);
+        printVersionRow("   _____                     ____                  ");
+        printVersionRow("  / ___/ ____   ___   _____ / __ \\ _____ ____      ");
+        printVersionRow("  \\__ \\ / __ \\ / _ \\ / ___// /_/ // ___// __ \\     ");
+        printVersionRow(" ___/ // /_/ //  __// /__ / ____// /   / /_/ /     ");
+        printVersionRow("/____// .___/ \\___/ \\___//_/    /_/    \\____/      ");
+        printVersionRow("     /_/                                           ");
+        printVersionRow("");
+        printVersionRow(version);
+
+        printVersionRow("Copyright (c) 2018 University of Genoa, University of Sassari.");
+        printVersionRow("Mantainer: Simone Vuotto <svuotto@uniss.it>.");
+        printVersionRow("Software released under GNU LGPLv3 license.");
+        printVersionRow("This is free software: you are free to change and redistribute it.");
+        printVersionRow("There is NO WARRANTY, to the extent permitted by law.");
+        printVersionRow("");
+        System.out.println(VERSION_BORDER);
         System.out.println();
-        System.out.println("Copyright (c) 2018 University of Genoa, University of Sassari.");
-        System.out.println("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.");
-        System.out.println("Contact Simone Vuotto (svuotto@uniss.it) for details.");
-        System.exit(0);
 
         System.exit(0);
     }
