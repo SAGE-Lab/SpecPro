@@ -95,6 +95,14 @@ public class Assignment {
         return true;
     }
 
+    public Assignment negate() {
+        Assignment negated = new Assignment();
+        for(Map.Entry<Atom, Boolean> entry: assignmentsMap.entrySet()) {
+            negated.add(entry.getKey(), !entry.getValue());
+        }
+        return negated;
+    }
+
     @Override
     public int hashCode() {
         return assignmentsMap.hashCode();

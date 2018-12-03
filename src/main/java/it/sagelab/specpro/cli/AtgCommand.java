@@ -37,6 +37,7 @@ public class AtgCommand extends Command {
         options.addOption(null, "cache", true,"Set the cache strategy. " +
                 "Possible values are 'reset', 'max-length', 'random-del' or 'no'.");
         options.addOption(null, "cache-maxLength", true, "Max path legnth stored in the cache (only for max-length strategy).");
+        options.addOption(null, "expand-trans", false, "Expand implicit transitions in BAs before starting test case generation");
 
         return options;
     }
@@ -118,6 +119,11 @@ public class AtgCommand extends Command {
         }
 
         atg.parseRequirements(inputFile, commandLine.hasOption("conjunction"));
+
+        if(commandLine.hasOption("expand-trans")) {
+            atg.expandTransitions();
+        }
+
         atg.generate(outStream);
 
         if(commandLine.hasOption("cross-coverage")) {

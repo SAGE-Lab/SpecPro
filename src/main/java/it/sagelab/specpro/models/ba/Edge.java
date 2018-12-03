@@ -39,6 +39,10 @@ public class Edge extends DefaultEdge implements Iterable<Assignment> {
         return label;
     }
 
+    void setAssignmentSet(Set<Assignment> assignmentSet) {
+        this.assignmentSet = assignmentSet;
+    }
+
     public Set<Assignment> getAssigments() {
         if(assignmentSet == null) {
             assignmentSet = parseLabel();

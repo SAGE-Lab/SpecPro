@@ -8,7 +8,6 @@ import it.sagelab.specpro.models.ba.BAExplorer;
 import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.ac.LassoShapedAcceptanceCondition;
-import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.reasoners.translators.spot.LTL2BA;
@@ -29,7 +28,6 @@ public class AutomaticTestGenerator {
 
     /** Internal use only data **/
     private ArrayList<BuchiAutomaton> buchiAutomata = new ArrayList<>();
-    private Set<String> inputVars;
     private Map<BuchiAutomaton, Set<TestSequence>> generatedTests;
 
     private final HashSet<List<Assignment>> uniqueAssignments = new HashSet<>();
@@ -45,7 +43,6 @@ public class AutomaticTestGenerator {
         this.minLength = minLength;
         this.maxLength = maxLength;
         coverageCriterion = new TransitionCoverage();
-        inputVars = new HashSet<>();
         baProductHandler = new BAProductHandler();
     }
 
@@ -111,8 +108,10 @@ public class AutomaticTestGenerator {
                 }
             }
         }
+    }
 
-        inputVars = parser.getBuilder().getContext().getInputVariables().stream().map(var -> var.getLabel()).collect(toSet());
+    public void expandTransitions() {
+        buchiAutomata.forEach(BuchiAutomaton::expandImplicitTransitions);
     }
 
     public Map<BuchiAutomaton, Set<TestSequence>> generate() {
@@ -208,15 +207,6 @@ public class AutomaticTestGenerator {
                     cout.println("** Test already generated **");
                     cout.println(path);
                     cout.println(test);
-
-                    for(int i = 0; i < path.size(); ++i) {
-                        Assignment ass = test.get(i);
-                        for(Assignment a: path.get(i)) {
-                            if(ass.isCompatible(a) && !ass.contains(a)) {
-                                cout.println("** WARN: possible new assignment -> " + a);
-                            }
-                        }
-                    }
                 }
 
             }
