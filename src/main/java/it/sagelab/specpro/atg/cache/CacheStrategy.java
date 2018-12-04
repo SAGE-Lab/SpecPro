@@ -18,9 +18,7 @@ public abstract class CacheStrategy {
         cache = new HashMap<>();
     }
 
-    public void start() {
-        System.out.println("### cache size: " + cache.size());
-    }
+    public void start() { }
 
 
     public abstract List<Set<Assignment>> getCachedAssignments(List<Edge> edges);

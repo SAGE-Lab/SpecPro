@@ -17,7 +17,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static java.util.stream.Collectors.toSet;
 
 public class AutomaticTestGenerator {
 
@@ -32,7 +31,7 @@ public class AutomaticTestGenerator {
 
     private final HashSet<List<Assignment>> uniqueAssignments = new HashSet<>();
 
-    private PrintStream cout;
+    private PrintStream outStream;
 
 
     public AutomaticTestGenerator() {
@@ -120,26 +119,28 @@ public class AutomaticTestGenerator {
 
     public Map<BuchiAutomaton, Set<TestSequence>> generate(PrintStream printStream)  {
         generatedTests = new HashMap<>();
+        outStream = printStream;
 
-        cout = printStream;
-
+        double totalTime = 0;
         int count = 0;
         for(BuchiAutomaton ba: buchiAutomata) {
-            cout.println("Generating paths for req # " + (++count) + "/" + buchiAutomata.size());
+            outStream.println("Generating paths for req # " + (++count) + "/" + buchiAutomata.size());
             long startTime = System.nanoTime();
             generate(ba);
-            printStatistics(ba);
             long endTime = System.nanoTime();
             long elapsedTime = endTime - startTime;
+            printStatistics(ba);
             double seconds = (double)elapsedTime / 1_000_000_000.0;
-            cout.println("Current Time: " + System.currentTimeMillis());
-            cout.println(String.format("Elapsed Time: %.5f", seconds));
-            cout.println("*****************************************************************************");
+            totalTime += seconds;
+            outStream.println(String.format("Elapsed Time: %.3f s", seconds));
+            outStream.println("*****************************************************************************");
         }
 
-        cout.println("Different tests generated: " + uniqueAssignments.size());
-        uniqueAssignments.forEach(l -> cout.println(l));
+        outStream.println("Different tests generated: " + uniqueAssignments.size());
+        uniqueAssignments.forEach(l -> outStream.println(l));
 
+        outStream.println();
+        outStream.println(String.format("Total time: %.3f s", totalTime));
 
         return generatedTests;
     }
@@ -156,8 +157,8 @@ public class AutomaticTestGenerator {
         } else {
             parseRequirements(input, true);
         }
-        cout.println("\n\n");
-        cout.println("*** Cross Coverage Statistics *** ");
+        outStream.println("\n\n");
+        outStream.println("*** Cross Coverage Statistics *** ");
         coverageCriterion.reset(buchiAutomata.get(0));
         generatedTests.put(buchiAutomata.get(0), new HashSet<>());
         updateCoverage(buchiAutomata.get(0));
@@ -197,16 +198,16 @@ public class AutomaticTestGenerator {
                 Trie<Edge> inducedPaths = baExplorer.findInducedPaths(ba, test);
 
                 if(inducedPaths.size() == 0) {
-                    cout.println("** WARN: No induced path for test " + test);
-                    cout.println("*****************************************************************************");
+                    outStream.println("** WARN: No induced path for test " + test);
+                    outStream.println("*****************************************************************************");
                 }
 
                 for(List<Edge> path: inducedPaths) {
                     coverageCriterion.accept(path, test);
                     testSet.add(new TestSequence(new ArrayList<>(path), test));
-                    cout.println("** Test already generated **");
-                    cout.println(path);
-                    cout.println(test);
+                    outStream.println("** Test already generated **");
+                    outStream.println(path);
+                    outStream.println(test);
                 }
 
             }
@@ -241,8 +242,8 @@ public class AutomaticTestGenerator {
                 coverageCriterion.accept(path, processedTest);
                 tests.add(new TestSequence(new ArrayList<>(path), processedTest));
                 uniqueAssignments.add(processedTest);
-                cout.println(path);
-                cout.println(processedTest);
+                outStream.println(path);
+                outStream.println(processedTest);
 
                 if(coverageCriterion.covered(path)) {
                     break;
@@ -254,12 +255,12 @@ public class AutomaticTestGenerator {
 
 
     private void printStatistics(BuchiAutomaton ba) {
-        cout.println("###############################");
-        cout.println("Stats");
-        cout.println("# Vertexes:   " + ba.vertexSet().size());
-        cout.println("# Acc. States:" + ba.vertexSet().stream().filter(v -> v.isAcceptingState()).count());
-        cout.println("# Edges:      " + ba.edgeSet().size());
-        cout.println("# Conditions: " + ba.edgeSet().stream().map(e -> e.getAssigments()).mapToInt(Set::size).sum());
+        outStream.println("###############################");
+        outStream.println("Stats");
+        outStream.println("# Vertexes:   " + ba.vertexSet().size());
+        outStream.println("# Acc. States:" + ba.vertexSet().stream().filter(v -> v.isAcceptingState()).count());
+        outStream.println("# Edges:      " + ba.edgeSet().size());
+        outStream.println("# Conditions: " + ba.edgeSet().stream().map(e -> e.getAssigments()).mapToInt(Set::size).sum());
 
         Set<TestSequence> tests = generatedTests.get(ba);
         StateCoverage sc = new StateCoverage(ba);
@@ -273,12 +274,12 @@ public class AutomaticTestGenerator {
             cc.accept(t.getPath(), t.getAssignmentList());
         }
 
-        cout.println("State Coverage:      " + sc.coverage());
-        cout.println("Acc. State Coverage: " + asc.coverage());
-        cout.println("Transition Coverage: " + tc.coverage());
-        cout.println("Condition Coverage:  " + cc.coverage());
-        cout.println("Target Coverage:     " + coverageCriterion.coverage());
-        cout.println("###############################");
+        outStream.println("State Coverage:      " + sc.coverage());
+        outStream.println("Acc. State Coverage: " + asc.coverage());
+        outStream.println("Transition Coverage: " + tc.coverage());
+        outStream.println("Condition Coverage:  " + cc.coverage());
+        outStream.println("Target Coverage:     " + coverageCriterion.coverage());
+        outStream.println("###############################");
     }
 
 }
