@@ -76,7 +76,8 @@ public class AcceptanceStateCoverage extends BACoverage {
         }
 
         for(int i = betaIndex; i < path.size(); ++i) {
-            if(path.get(i).getSource().isAcceptingState())
+            Vertex v = path.get(i).getSource();
+            if(v.isAcceptingState() && !visitedStates.contains(v))
                 return true;
         }
 
@@ -84,8 +85,9 @@ public class AcceptanceStateCoverage extends BACoverage {
     }
 
     @Override
-    public boolean evaluateTest(List<Edge> path, List<Assignment> test) {
-        for(int i = 0; i < path.size(); ++i) {
+    public boolean evaluateTest(List<Edge> path, List<Assignment> test, int beta) {
+
+        for(int i = beta; i < path.size(); ++i) {
             Vertex v = path.get(i).getSource();
             if(v.isAcceptingState() && !visitedStates.contains(v))
                 return true;

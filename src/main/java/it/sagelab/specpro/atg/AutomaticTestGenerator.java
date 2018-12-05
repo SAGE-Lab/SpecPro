@@ -222,20 +222,24 @@ public class AutomaticTestGenerator {
             throw new RuntimeException("The path evaluated is not lasso shaped!");
         }
         for(List<Assignment> test: new SequenceBuilder<Assignment>(path)) {
-            if(!coverageCriterion.evaluateTest(path, test)) {
-                continue;
-            }
+
             List<Assignment> processedTest = null;
             for(Integer beta: betaIndexes) {
+
+                if(!coverageCriterion.evaluateTest(path, test, beta)) {
+                    processedTest = null;
+                    continue;
+                }
+
                 // We create a copy of the assignment for which we want to set the startBeta flag because the list may
                 // contains multiple references of the same assignments object
                 test.set(beta, new Assignment(test.get(beta)));
                 test.get(beta).setStartBeta(true);
                 processedTest = baProductHandler.process(test);
-                test.get(beta).setStartBeta(false);
                 if(processedTest != null) {
                     break;
                 }
+                test.get(beta).setStartBeta(false);
             }
 
             if(processedTest != null) {

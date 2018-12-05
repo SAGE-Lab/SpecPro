@@ -44,8 +44,8 @@ public class CombinedCoverage extends BACoverage {
     }
 
     @Override
-    public boolean evaluateTest(List<Edge> path, List<Assignment> test) {
-        return cond1.evaluateTest(path, test) || cond2.evaluateTest(path, test);
+    public boolean evaluateTest(List<Edge> path, List<Assignment> test, int beta) {
+        return cond1.evaluateTest(path, test, beta) || cond2.evaluateTest(path, test, beta);
     }
 
     @Override

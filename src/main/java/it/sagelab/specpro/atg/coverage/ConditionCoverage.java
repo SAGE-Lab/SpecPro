@@ -79,7 +79,7 @@ public class ConditionCoverage extends BACoverage {
     }
 
     @Override
-    public boolean evaluateTest(List<Edge> path, List<Assignment> test) {
+    public boolean evaluateTest(List<Edge> path, List<Assignment> test, int beta) {
         for(int i = 0; i < path.size(); ++i) {
             visitedConditions.putIfAbsent(path.get(i), new HashSet<>());
             if(!visitedConditions.get(path.get(i)).contains(test.get(i))) {

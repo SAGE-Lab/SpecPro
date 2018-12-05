@@ -30,7 +30,7 @@ public abstract class BACoverage {
 
     public abstract boolean evaluate(List<Edge> path);
 
-    public abstract boolean evaluateTest(List<Edge> path, List<Assignment> test);
+    public abstract boolean evaluateTest(List<Edge> path, List<Assignment> test, int beta);
 
     public abstract double coverage();
 

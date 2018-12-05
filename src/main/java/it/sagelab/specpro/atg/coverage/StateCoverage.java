@@ -60,7 +60,7 @@ public class StateCoverage extends BACoverage {
     }
 
     @Override
-    public boolean evaluateTest(List<Edge> path, List<Assignment> test) {
+    public boolean evaluateTest(List<Edge> path, List<Assignment> test, int beta) {
         return true;
     }
 
