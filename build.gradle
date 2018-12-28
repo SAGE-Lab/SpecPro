@@ -35,7 +35,7 @@ dependencies {
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
 }
 
-task updateVersionPropertiesFile() {
+task updateVersionPropertiesFile(dependsOn: processResources) {
     doLast {
 
         def versionPropsFile = file('src/main/resources/version.properties')
@@ -59,12 +59,16 @@ task updateVersionPropertiesFile() {
 
             def snapshot = true
             def runTasks = gradle.startParameter.taskNames
-            if ('release' in runTasks) {
-                def v = versionProps['version'].split("\\.")
+            def v = versionProps['version'].split("\\.")
+            if ('majorRelease' in runTasks) {
+                v[1] = (v[1].toInteger() + 1).toString();
+                v[2] = '0'
+                snapshot = false
+            } else if ('minorRelease' in runTasks) {
                 v[2] = (v[2].toInteger() + 1).toString();
-                versionProps['version'] = v[0] + '.' + v[1] + '.' + v[2];
                 snapshot = false
             }
+            versionProps['version'] = v[0] + '.' + v[1] + '.' + v[2]
             versionProps['snapshot'] = snapshot ? "True" : "False"
             version = versionProps['version']
             if(snapshot) {
@@ -80,12 +84,12 @@ task updateVersionPropertiesFile() {
     }
 }
 
-task release(dependsOn: build) {
+task minorRelease(dependsOn: build) {
     group 'build'
 }
 
-processResources {
-    dependsOn updateVersionPropertiesFile
+task majorRelease(dependsOn: build) {
+    group 'build'
 }
 
 jar {
