@@ -1,4 +1,4 @@
-package it.sagelab.specpro.reasoners.translators.spot;
+package it.sagelab.specpro.reasoners;
 
 import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ba.DotBuilder;
@@ -8,7 +8,6 @@ import org.apache.commons.io.IOUtils;
 import org.jgrapht.io.DOTImporter;
 import org.jgrapht.io.ImportException;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -27,8 +26,8 @@ public class LTL2BA {
         BuchiAutomaton g = new BuchiAutomaton(db);
         Runtime rt = Runtime.getRuntime();
         Process process = null;
-        //String[] command = {"ltl2tgba", "-B", formula, "-d"};
-        String[] command = {"./ltl2gba_launcher.pl", formula};
+        String[] command = {"ltl2tgba", "-B", formula, "-d"};
+        //String[] command = {"./ltl2gba_launcher.pl", formula};
         try {
             process = rt.exec(command);
             int exitValue = process.waitFor();

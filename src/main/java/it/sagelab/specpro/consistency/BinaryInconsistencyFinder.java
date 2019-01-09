@@ -16,7 +16,7 @@ public class BinaryInconsistencyFinder extends InconsistencyFinder{
     public BinaryInconsistencyFinder(ConsistencyChecker cc) {
         super(cc);
         long seed = System.currentTimeMillis();
-        System.out.println("seed: " + seed);
+        //System.out.println("seed: " + seed);
         random = new Random(seed);
     }
 

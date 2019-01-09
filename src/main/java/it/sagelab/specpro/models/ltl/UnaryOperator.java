@@ -1,7 +1,5 @@
 package it.sagelab.specpro.models.ltl;
 
-import it.sagelab.specpro.fe.ltl.visitor.FormulaVisitor;
-
 /**
  * The Class UnaryOperator.
  *

@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 import it.sagelab.specpro.fe.snl2fl.Snl2FlException;
 import it.sagelab.specpro.models.ltl.Atom;
-import it.sagelab.specpro.fe.snl2fl.visitor.ExpressionVisitor;
+import it.sagelab.specpro.models.psp.expressions.ExpressionVisitor;
 import it.sagelab.specpro.models.psp.expressions.*;
 
 /**

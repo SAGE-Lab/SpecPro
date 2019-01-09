@@ -1,7 +1,7 @@
 package it.sagelab.specpro.models.translators;
 
 import it.sagelab.specpro.fe.snl2fl.Snl2FlException;
-import it.sagelab.specpro.fe.snl2fl.visitor.ExpressionVisitor;
+import it.sagelab.specpro.models.psp.expressions.ExpressionVisitor;
 import it.sagelab.specpro.models.psp.expressions.*;
 import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.BinaryOperator;
@@ -74,7 +74,7 @@ public class PSP2LTL implements ExpressionVisitor {
      *
      * @return the list
      */
-    public List<Formula> translate() throws IOException {
+    public List<Formula> translate() {
         if(patternMap == null)
             this.patternMap = Pattern.loadPatterns(Pattern.PATTERNS_FILE);
         PatternUnifier patternUnifier = new PatternUnifier();

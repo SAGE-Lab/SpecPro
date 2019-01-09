@@ -1,6 +1,6 @@
 package it.sagelab.specpro.reasoners;
 
-import it.sagelab.specpro.reasoners.translators.panda.PANDATranslator;
+import it.sagelab.specpro.reasoners.translators.PANDATranslator;
 
 public class Panda extends ModelChecker {
 

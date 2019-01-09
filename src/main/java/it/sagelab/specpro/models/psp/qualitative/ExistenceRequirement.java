@@ -3,7 +3,6 @@ package it.sagelab.specpro.models.psp.qualitative;
 import java.util.Collections;
 
 import it.sagelab.specpro.models.psp.Scope;
-import it.sagelab.specpro.fe.snl2fl.visitor.QualitativeRequirementVisitor;
 import it.sagelab.specpro.models.psp.expressions.Expression;
 
 /**

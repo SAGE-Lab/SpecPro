@@ -2,8 +2,8 @@ package it.sagelab.specpro.fe.snl2fl;
 
 import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.models.psp.expressions.VariableExpression;
-import it.sagelab.specpro.reasoners.translators.aalta.AALTATranslator;
-import it.sagelab.specpro.reasoners.translators.nusmv.NuSMVTranslator;
+import it.sagelab.specpro.reasoners.translators.AALTATranslator;
+import it.sagelab.specpro.reasoners.translators.NuSMVTranslator;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

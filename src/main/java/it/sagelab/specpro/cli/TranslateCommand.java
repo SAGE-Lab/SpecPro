@@ -5,7 +5,7 @@ import it.sagelab.specpro.reasoners.Aalta;
 import it.sagelab.specpro.reasoners.ModelChecker;
 import it.sagelab.specpro.reasoners.NuSMV;
 import it.sagelab.specpro.reasoners.Panda;
-import it.sagelab.specpro.reasoners.translators.nusmv.NuSMVTranslator;
+import it.sagelab.specpro.reasoners.translators.NuSMVTranslator;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;

@@ -1,6 +1,5 @@
-package it.sagelab.specpro.reasoners.translators.nusmv;
+package it.sagelab.specpro.reasoners.translators;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Set;
@@ -8,16 +7,13 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import it.sagelab.specpro.models.ltl.BinaryOperator;
+import it.sagelab.specpro.models.ltl.UnaryOperator;
 import it.sagelab.specpro.models.translators.PSP2LTL;
 import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.Formula;
-import it.sagelab.specpro.reasoners.translators.LTLToolTranslator;
 
-/**
- * The Class NuSMVTranslator.
- *
- * @author Simone Vuotto
- */
+
 public class NuSMVTranslator extends LTLToolTranslator {
 
     private static final Set<String> forbiddenVarNames = Stream.of("MODULE", "DEFINE", "MDEFINE", "CONSTANTS", "VAR", "IVAR", "FROZENVAR",
@@ -64,8 +60,8 @@ public class NuSMVTranslator extends LTLToolTranslator {
      *
      * @param stream the stream
      */
-    public void translate(PrintStream stream) throws IOException {
-        LTLNuSMVVisitor visitor = new LTLNuSMVVisitor(stream);
+    public void translate(PrintStream stream) {
+        FormulaPrinter formulaPrinter = getFormulaPrinter(stream);
         List<Formula> invariants = psp2ltl.getInvariants();
         List<Formula> ltlFormulae = psp2ltl.translate();
 
@@ -73,12 +69,13 @@ public class NuSMVTranslator extends LTLToolTranslator {
         this.printVariables(stream);
         stream.println();
 
+        Formula conjFormula = BinaryOperator.conjunctiveFormula(ltlFormulae);
 
         if (!noinvar) {
         	// Writing the translation constraining the Universal model
         	for(Formula inv : invariants) {
         		stream.print("INVAR ");
-        		inv.accept(visitor);
+        		formulaPrinter.print(inv);
         		stream.print(";\n");
         	}
 
@@ -86,23 +83,38 @@ public class NuSMVTranslator extends LTLToolTranslator {
         	stream.println();
         	stream.println("-- Negated Formula");
         	stream.print("LTLSPEC !(");
-        	this.printFormulaeInConjunction(stream, visitor, ltlFormulae);
+        	formulaPrinter.print(conjFormula);
         	stream.println(");");
         	      
         } else {
         	// Writing the translation without the INVAR 
         	stream.println("-- Negated Formula");
-        	stream.print("LTLSPEC ");
-        	stream.print("!G(");
-            this.printFormulaeInConjunction(stream, visitor, invariants);
-        	stream.print(")");
+        	stream.print("LTLSPEC !(");
 
-        	// Print the psp constraints (\phi_R)
-        	stream.print(" | !(");
-            this.printFormulaeInConjunction(stream, visitor, ltlFormulae);
+        	if(invariants.size() > 0) {
+                Formula invariantFormula = new UnaryOperator(BinaryOperator.conjunctiveFormula(invariants), UnaryOperator.Operator.GLOBALLY);
+                conjFormula = new BinaryOperator(invariantFormula, conjFormula, BinaryOperator.Operator.AND);
+            }
+        	formulaPrinter.print(conjFormula);
         	stream.println(");");
         }
         
+    }
+
+    @Override
+    public FormulaPrinter getFormulaPrinter(PrintStream stream) {
+        FormulaPrinter formulaPrinter = new FormulaPrinter(stream);
+        formulaPrinter.setNotOperator("!");
+        formulaPrinter.setGloballyOperator("G");
+        formulaPrinter.setEventuallyOperator("F");
+        formulaPrinter.setNextOperator("X");
+        formulaPrinter.setAndOperator("&");
+        formulaPrinter.setOrOperator("|");
+        formulaPrinter.setUntilOperator("U");
+        formulaPrinter.setXorOperator("xor");
+        formulaPrinter.setImplicationOperator("->");
+        formulaPrinter.setEquivalenceOperator("<->");
+        return formulaPrinter;
     }
 
     /**

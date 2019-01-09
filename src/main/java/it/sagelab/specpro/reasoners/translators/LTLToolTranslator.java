@@ -1,7 +1,9 @@
 package it.sagelab.specpro.reasoners.translators;
 
-import it.sagelab.specpro.fe.ltl.visitor.FormulaVisitor;
+import it.sagelab.specpro.models.ltl.BinaryOperator;
+import it.sagelab.specpro.models.ltl.FormulaVisitor;
 import it.sagelab.specpro.fe.snl2fl.Snl2FlTranslator;
+import it.sagelab.specpro.models.ltl.UnaryOperator;
 import it.sagelab.specpro.models.psp.expressions.VariableExpression;
 import it.sagelab.specpro.models.translators.PSP2LTL;
 import it.sagelab.specpro.fe.snl2fl.parser.RequirementsBuilder;
@@ -35,9 +37,19 @@ public abstract class LTLToolTranslator implements Snl2FlTranslator {
         return psp2ltl;
     }
 
-    public abstract void translate(PrintStream stream) throws IOException;
+    public void translate(PrintStream stream) {
+        List<Formula> ltlFormulae = psp2ltl.translate();
+        List<Formula> invariants = psp2ltl.getInvariants();
+        Formula consistencyFormula = BinaryOperator.conjunctiveFormula(ltlFormulae);
+        if(invariants.size() > 0) {
+            Formula invariantFormula = new UnaryOperator(BinaryOperator.conjunctiveFormula(invariants), UnaryOperator.Operator.GLOBALLY);
+            consistencyFormula = new BinaryOperator(invariantFormula, consistencyFormula, BinaryOperator.Operator.AND);
+        }
 
-    public void translate(RequirementsBuilder builder, OutputStream stream) throws IOException {
+        consistencyFormula.accept(getFormulaPrinter(stream));
+    }
+
+    public void translate(RequirementsBuilder builder, PrintStream stream) {
 
         Map<String, VariableExpression> symbolTable = builder.getContext().getSymbolTable();
         for(String varName: forbiddenVarNames) {
@@ -50,34 +62,10 @@ public abstract class LTLToolTranslator implements Snl2FlTranslator {
 
         psp2ltl.setContext(builder);
 
-        translate(new PrintStream(stream));
+        translate(stream);
     }
 
-    /**
-     * Prints the list of formulae in conjunction form.
-     * @param stream the stream
-     * @param visitor the visitor to print the formulae
-     * @param ltlFormulae the list of formulae
-     */
-    protected void printFormulaeInConjunction(PrintStream stream, FormulaVisitor visitor, List<Formula> ltlFormulae) {
-        printFormulaeInConjunction(stream, visitor, ltlFormulae, " & ");
-    }
+    public abstract FormulaPrinter getFormulaPrinter(PrintStream stream);
 
-    /**
-     * Prints the list of formulae in conjunction form.
-     * @param stream the stream
-     * @param visitor the visitor to print the formulae
-     * @param ltlFormulae the list of formulae
-     * @param andSimbol the conjunction symbol
-     */
-    protected void printFormulaeInConjunction(PrintStream stream, FormulaVisitor visitor, List<Formula> ltlFormulae, String andSimbol) {
-        for(int i=0; i < ltlFormulae.size(); ++i) {
-            Formula formula = ltlFormulae.get(i);
-            stream.print("(");
-            formula.accept(visitor);
-            stream.print(")");
-            if(i < ltlFormulae.size() - 1)
-                stream.print(andSimbol);
-        }
-    }
+
 }

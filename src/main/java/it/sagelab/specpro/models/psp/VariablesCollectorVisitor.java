@@ -1,7 +1,6 @@
 package it.sagelab.specpro.models.psp;
 
 
-import it.sagelab.specpro.fe.snl2fl.visitor.ExpressionVisitor;
 import it.sagelab.specpro.models.psp.expressions.*;
 
 import java.util.HashSet;

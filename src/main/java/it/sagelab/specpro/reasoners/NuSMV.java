@@ -1,6 +1,6 @@
 package it.sagelab.specpro.reasoners;
 
-import it.sagelab.specpro.reasoners.translators.nusmv.NuSMVTranslator;
+import it.sagelab.specpro.reasoners.translators.NuSMVTranslator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,1 +1,1 @@
-G(((~ _lower_B0) | (~ _equal_B0)) & ((~ _lower_H0) | (~ _equal_H0))) & ((G((~ _lower_B0) | (F((((~ _lower_H0) & (~ _equal_H0)) & (~ K)) & (X((~ K) U  J)))))) & (G((~((~ _lower_H0) & (~ _equal_H0))) | (G K))) & (F _lower_B0) & (G(~( J &  K))))
+(G(((~ _lower_B0) | (~ _equal_B0)) & ((~ _lower_H0) | (~ _equal_H0)))) & ((((G((~ _lower_B0) | (<>((((~ _lower_H0) & (~ _equal_H0)) & (~ K)) & (X((~ K) U  J)))))) & (G((~((~ _lower_H0) & (~ _equal_H0))) | (G K)))) & (<> _lower_B0)) & (G(~( J &  K))))

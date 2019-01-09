@@ -10,8 +10,8 @@ import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.ac.LassoShapedAcceptanceCondition;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 import it.sagelab.specpro.models.psp.Requirement;
-import it.sagelab.specpro.reasoners.translators.spot.LTL2BA;
-import it.sagelab.specpro.reasoners.translators.spot.SpotTranslator;
+import it.sagelab.specpro.reasoners.LTL2BA;
+import it.sagelab.specpro.reasoners.translators.SpotTranslator;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

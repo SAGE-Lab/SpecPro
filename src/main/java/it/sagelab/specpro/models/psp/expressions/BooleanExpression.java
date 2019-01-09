@@ -1,7 +1,5 @@
 package it.sagelab.specpro.models.psp.expressions;
 
-import it.sagelab.specpro.fe.snl2fl.visitor.ExpressionVisitor;
-
 /**
  * The Class BooleanExpression.
  *

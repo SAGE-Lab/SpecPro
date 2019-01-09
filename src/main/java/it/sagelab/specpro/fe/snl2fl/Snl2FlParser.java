@@ -144,13 +144,8 @@ public class Snl2FlParser {
         if(!parsed)
             throw  new Snl2FlException("No input parsed, nothing to translate!");
 
-        try {
-            translator.translate(builder, outStream);
-            return this;
-        } catch (IOException e) {
-            throw new Snl2FlException(e.getMessage());
-        }
-
+        translator.translate(builder, outStream);
+        return this;
     }
 
 

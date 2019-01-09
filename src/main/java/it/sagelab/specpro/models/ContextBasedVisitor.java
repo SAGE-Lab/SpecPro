@@ -1,4 +1,4 @@
-package it.sagelab.specpro.fe.snl2fl.visitor;
+package it.sagelab.specpro.models;
 
 /**
  * The Class ContextBasedVisitor.

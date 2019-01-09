@@ -1,6 +1,6 @@
 package it.sagelab.specpro.reasoners;
 
-import it.sagelab.specpro.reasoners.translators.aalta.AALTATranslator;
+import it.sagelab.specpro.reasoners.translators.AALTATranslator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

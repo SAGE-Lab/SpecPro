@@ -1,4 +1,4 @@
-package it.sagelab.specpro.fe.ltl.visitor;
+package it.sagelab.specpro.models.ltl;
 
 import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.BinaryOperator;
