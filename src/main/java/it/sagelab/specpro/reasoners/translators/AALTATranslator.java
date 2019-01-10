@@ -11,19 +11,10 @@ public class AALTATranslator extends LTLToolTranslator {
 
     private static final Set<String> forbiddenVarNames = Stream.of("X", "N", "U", "R", "V", "G", "F", "true", "false", "TRUE", "FALSE").collect(Collectors.toSet());
 
-    /**
-     * Instantiates a new nu SMV psp2ltl.
-     *
-     * @param translator the psp2ltl
-     */
     public AALTATranslator(PSP2LTL translator) {
         super(translator, forbiddenVarNames);
     }
 
-    /**
-     * Instantiates a new nu SMV psp2ltl.
-     *
-     */
     public AALTATranslator() { super(forbiddenVarNames); }
 
     @Override
@@ -31,7 +22,7 @@ public class AALTATranslator extends LTLToolTranslator {
         FormulaPrinter formulaPrinter = new FormulaPrinter(stream);
         formulaPrinter.setNotOperator("~");
         formulaPrinter.setGloballyOperator("G");
-        formulaPrinter.setEquivalenceOperator("F");
+        formulaPrinter.setEventuallyOperator("F");
         formulaPrinter.setNextOperator("X");
         formulaPrinter.setAndOperator("&");
         formulaPrinter.setOrOperator("|");

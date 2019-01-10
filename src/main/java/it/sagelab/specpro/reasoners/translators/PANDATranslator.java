@@ -8,30 +8,16 @@ import java.util.stream.Stream;
 import it.sagelab.specpro.models.translators.PSP2LTL;
 
 
-public class PANDATranslator extends LTLToolTranslator {
+public class PANDATranslator extends AALTATranslator {
 
-    private static final Set<String> forbiddenVarNames = Stream.of("X", "N", "U", "R", "V", "G", "F", "true", "false", "TRUE", "FALSE").collect(Collectors.toSet());
-
-
-    /**
-     * Instantiates a new nu SMV psp2ltl.
-     *
-     * @param translator the psp2ltl
-     */
-    public PANDATranslator(PSP2LTL translator) { super(translator, forbiddenVarNames); }
-
-    /**
-     * Instantiates a new nu SMV psp2ltl.
-     *
-     */
-    public PANDATranslator() { super(forbiddenVarNames); }
+    public PANDATranslator() { super(); }
 
     @Override
     public FormulaPrinter getFormulaPrinter(PrintStream stream) {
         FormulaPrinter formulaPrinter = new FormulaPrinter(stream);
         formulaPrinter.setNotOperator("~");
         formulaPrinter.setGloballyOperator("G");
-        formulaPrinter.setEquivalenceOperator("F");
+        formulaPrinter.setEventuallyOperator("F");
         formulaPrinter.setNextOperator("X");
         formulaPrinter.setAndOperator("&");
         formulaPrinter.setOrOperator("|");

@@ -28,17 +28,8 @@ public class NuSMVTranslator extends LTLToolTranslator {
     /** Property to indicate if the translation should not use INVAR statements*/
     private boolean noinvar;
 
-    /**
-     * Instantiates a new nu SMV psp2ltl.
-     *
-     * @param translator the psp2ltl
-     */
     public NuSMVTranslator(PSP2LTL translator) { super(translator, forbiddenVarNames); }
 
-    /**
-     * Instantiates a new nu SMV psp2ltl.
-     *
-     */
     public NuSMVTranslator() { super(forbiddenVarNames); }
 
 

@@ -1,10 +1,10 @@
 package it.sagelab.specpro.reasoners;
 
-import it.sagelab.specpro.reasoners.translators.PANDATranslator;
+import it.sagelab.specpro.reasoners.translators.LTLToolTranslator;
 
-public class Panda extends ModelChecker {
+public class GenericMC extends ModelChecker {
 
-    public Panda() { super(new PANDATranslator()); }
+    public GenericMC(LTLToolTranslator translator) { super(translator); }
 
     @Override
     protected String[] getCommand(String filePath) {
