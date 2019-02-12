@@ -1,7 +1,8 @@
 
 # SpecPro
-SpecPro is a library that checks a given specification and build artifacts that can help the user in the 
-design process of software or cyber-physical systems.
+
+SpecPro is an open-source Java library for supporting
+analysis and development of formal requirements.
 
 Currently SpecPro supports a structured language based on the Property Specification Patterns (PSPs) defined in [1][2].
 The language also supports numerical constraints that are encoded in Linear Temporal Logic (LTL). 
@@ -22,7 +23,7 @@ SpecPro is a rework and extension of [snl2fl](https://github.com/SAGE-Lab/snl2fl
       organization={Springer}
     }
 
-## Build and Run
+## Build
     
 You can build a new distribution of the software simply running in the project dir the following command:
    
@@ -39,36 +40,29 @@ Alternatively, you can run the application directly with gradle, substituting `a
       
     ./gradlew run -PappArgs="['arg1', 'args2', 'args3']" 
       
-   
+## Run
       
 There are many way to run SpecPro and they differ for the kind of output generated.
-   
-Using one of the following flags, it is possible to target one of three main model checker supported:
-   
-* `-n` or `--nusmv` (default option) to target NuSMV/NuXMV  
-   
-* `-a` or `--alta` to target Aalta
-   
-* `-p` or `--panda` to target Panda
-   
-For NuSMV, SpecPro also supports the `--noinvar` option: it encodes the inequality invariants directly into the LTLSPEC
-instead that as INVAR.
 
-SpecPro currently performs three main tasks:
+The command line interface currently support the following tasks:
 
-* `-t` (default) translate the requirement specification into the corresponding satisfiability checking problem
+* **translate**: translate the requirement specification into the corresponding satisfiability checking problem.
 
-* `-c` translate and perform the Consistency Checking of the input requirement specification. In order to use this 
-       option, the `SPECPRO_NUSMV` environment variable has to be set if NuSMV is the chosen model checker, and 
-       `SPECPRO_AALTA` if Aalta is the choosen one (Panda is currently not supported).
-       
-* `-m` to perform the Inconsistency Explanation (or equivalently MUC extraction) of the inconsistent specification.
-       `SPECPRO_NUSMV` or `SPECPRO_AALTA` has to be set as in the consistency checking task.
-   
+* **consistency**: translate and perform the Consistency Checking of the input requirement specification. 
+                   In order to use this option, the `SPECPRO_NUSMV` environment variable has to be set if NuSMV 
+                   is the chosen model checker, and `SPECPRO_AALTA` if Aalta is the choosen one.
+                   
+* **muc**: perform the Inconsistency Explanation (or equivalently MUC extraction) of the inconsistent specification.
+                  `SPECPRO_NUSMV` or `SPECPRO_AALTA` has to be set as in the consistency checking task.
+                
+* **atg**  _(experimental)_: performs automatic test generation of the given specification. To run, it requires 
+                             [Spot](https://spot.lrde.epita.fr/) to be installed.
+
+The full list of options is available with `SpecPro <task> --help` command.
  
 An exampple is:
     
-    ./bin/SpecPro --nusmv -t -i <inputfile> -o <outputfile>
+    ./bin/SpecPro translate --nusmv -i <inputfile> -o <outputfile>
 
      
 
@@ -102,4 +96,4 @@ Once you have installed ANTLR4, all you have to do is:
    Engineering, 1999. Proceedings of the 1999 International Conference
    on, pp. 411–420. IEEE (1999)
 
-   [2] http://patterns.projects.cs.ksu.edu/
+   [2] http://ps-patterns.wikidot.com/
