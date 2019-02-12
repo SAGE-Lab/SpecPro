@@ -36,7 +36,7 @@ public class LinearInconsistencyFinder extends InconsistencyFinder {
         cc.setOutputFilePath(outputFilePath + ".tmp");
 
         long seed = System.currentTimeMillis();
-        System.out.println("seed: " + seed);
+        //System.out.println("seed: " + seed);
         Collections.shuffle(cc.getParser().getRequirements(), new Random(seed));
 
         int reqSize = cc.getParser().getRequirements().size();

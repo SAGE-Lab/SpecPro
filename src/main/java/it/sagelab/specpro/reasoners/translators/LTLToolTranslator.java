@@ -1,14 +1,16 @@
 package it.sagelab.specpro.reasoners.translators;
 
-import it.sagelab.specpro.fe.ltl.visitor.FormulaVisitor;
+import it.sagelab.specpro.models.ltl.BinaryOperator;
+import it.sagelab.specpro.models.ltl.FormulaVisitor;
 import it.sagelab.specpro.fe.snl2fl.Snl2FlTranslator;
-import it.sagelab.specpro.models.psp.expressions.BooleanVariableExpression;
+import it.sagelab.specpro.models.ltl.UnaryOperator;
 import it.sagelab.specpro.models.psp.expressions.VariableExpression;
 import it.sagelab.specpro.models.translators.PSP2LTL;
 import it.sagelab.specpro.fe.snl2fl.parser.RequirementsBuilder;
 import it.sagelab.specpro.models.ltl.Formula;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +22,6 @@ public abstract class LTLToolTranslator implements Snl2FlTranslator {
 
     /** The intermediate ltl psp2ltl. */
     final protected PSP2LTL psp2ltl;
-
-    /** If true, print single formulas on multiple lines */
-    protected boolean singleFormulas = false;
 
     public LTLToolTranslator(Set<String> forbiddenVarNames) {
         psp2ltl = new PSP2LTL();
@@ -38,57 +37,35 @@ public abstract class LTLToolTranslator implements Snl2FlTranslator {
         return psp2ltl;
     }
 
-    public void setSingleFormulas(boolean singleFormulas) {
-        this.singleFormulas = singleFormulas;
+    public void translate(PrintStream stream) {
+        List<Formula> ltlFormulae = psp2ltl.translate();
+        List<Formula> invariants = psp2ltl.getInvariants();
+        Formula consistencyFormula = BinaryOperator.conjunctiveFormula(ltlFormulae);
+        if(invariants.size() > 0) {
+            Formula invariantFormula = new UnaryOperator(BinaryOperator.conjunctiveFormula(invariants), UnaryOperator.Operator.GLOBALLY);
+            consistencyFormula = new BinaryOperator(invariantFormula, consistencyFormula, BinaryOperator.Operator.AND);
+        }
+
+        consistencyFormula.accept(getFormulaPrinter(stream));
     }
 
-    public abstract void translate(PrintStream stream) throws IOException;
-
-    public void translateSingleFormulas(PrintStream stream) throws  IOException { }
-
-    public void translate(RequirementsBuilder builder, PrintStream stream) throws IOException {
+    public void translate(RequirementsBuilder builder, PrintStream stream) {
 
         Map<String, VariableExpression> symbolTable = builder.getContext().getSymbolTable();
         for(String varName: forbiddenVarNames) {
-            if(symbolTable.containsKey(varName) && symbolTable.get(varName) instanceof BooleanVariableExpression) {
+            if(symbolTable.containsKey(varName) && symbolTable.get(varName).getType() == VariableExpression.Type.BOOLEAN) {
                 VariableExpression exp = symbolTable.remove(varName);
-                exp.setName("_" + exp.getName());
-                symbolTable.put(exp.getName(), exp);
+                exp.setLabel("_" + exp.getLabel());
+                symbolTable.put(exp.getLabel(), exp);
             }
         }
 
         psp2ltl.setContext(builder);
-        if(singleFormulas)
-            translateSingleFormulas(stream);
-        else
-            translate(stream);
+
+        translate(stream);
     }
 
-    /**
-     * Prints the list of formulae in conjunction form.
-     * @param stream the stream
-     * @param visitor the visitor to print the formulae
-     * @param ltlFormulae the list of formulae
-     */
-    protected void printFormulaeInConjunction(PrintStream stream, FormulaVisitor visitor, List<Formula> ltlFormulae) {
-        printFormulaeInConjunction(stream, visitor, ltlFormulae, " & ");
-    }
+    public abstract FormulaPrinter getFormulaPrinter(PrintStream stream);
 
-    /**
-     * Prints the list of formulae in conjunction form.
-     * @param stream the stream
-     * @param visitor the visitor to print the formulae
-     * @param ltlFormulae the list of formulae
-     * @param andSimbol the conjunction symbol
-     */
-    protected void printFormulaeInConjunction(PrintStream stream, FormulaVisitor visitor, List<Formula> ltlFormulae, String andSimbol) {
-        for(int i=0; i < ltlFormulae.size(); ++i) {
-            Formula formula = ltlFormulae.get(i);
-            stream.print("(");
-            formula.accept(visitor);
-            stream.print(")");
-            if(i < ltlFormulae.size() - 1)
-                stream.print(andSimbol);
-        }
-    }
+
 }

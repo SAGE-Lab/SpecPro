@@ -1,160 +1,184 @@
 package it.sagelab.specpro;
 
-import it.sagelab.specpro.consistency.BinaryInconsistencyFinder;
-import it.sagelab.specpro.consistency.ConsistencyChecker;
-import it.sagelab.specpro.consistency.InconsistencyFinder;
-import it.sagelab.specpro.consistency.LinearInconsistencyFinder;
+import it.sagelab.specpro.cli.*;
 import it.sagelab.specpro.fe.snl2fl.Snl2FlException;
-import it.sagelab.specpro.fe.snl2fl.Snl2FlParser;
-import it.sagelab.specpro.models.psp.Requirement;
-import it.sagelab.specpro.reasoners.Aalta;
-import it.sagelab.specpro.reasoners.ModelChecker;
-import it.sagelab.specpro.reasoners.NuSMV;
-import it.sagelab.specpro.reasoners.Panda;
-import it.sagelab.specpro.reasoners.translators.nusmv.NuSMVTranslator;
 import org.apache.commons.cli.*;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.stream.IntStream;
 
-/**
- * The Class Main.
- * <img src="../docs-images/ltl-cd.png">
- * @author Simone Vuotto
- * @author Massimo Narizzano
- */
 public class Main {
 
-    public static Options createOptionMenu() {
-        // create Options for the consistency task
-        Options options = new Options();
-        options.addOption("h", "help", false, "print the help message");
+    private final static String VERSION_BORDER = "+-----------------------------------------------------------------------+";
 
-        OptionGroup actionGroup = new OptionGroup();
-        actionGroup.addOption(new Option("c", "consistency", false,
-                "Performs Consistency Check with the selected model checker"));
-        actionGroup.addOption(new Option("m", "muc", true,
-                "Performs Minimaml Unsatisfiable Core of the given requirements set using the selected algorithm. " +
-                "The possible values are 'linear' or 'binary'."));
-        actionGroup.addOption(new Option("t", "translate", false,
-                "Translate the input file in the corresponding consistency checking specification (dafault)"));
-        options.addOptionGroup(actionGroup);
+    public static Map<String, Command> getCommands() {
+        final Map<String, Command> commands = new HashMap<>();
+        if(commands.isEmpty()) {
+            Command translate = new TranslateCommand();
+            Command consistency = new ConsistencyCommand();
+            Command muc = new MucCommand();
+            Command atg = new AtgCommand();
 
+            commands.put(translate.getName(), translate);
+            commands.put(consistency.getName(), consistency);
+            commands.put(muc.getName(), muc);
+            commands.put(atg.getName(), atg);
+        }
 
-        OptionGroup mcGroup = new OptionGroup();
-        mcGroup.addOption(new Option("a", "aalta", false, "translate for Aalta model checker. " +
-                "In order to run consistency or muc tasks you have to set SPECPRO_AALTA environment variable."));
-        mcGroup.addOption(new Option("p", "panda", false, "translate for Panda model checker"));
-        mcGroup.addOption(new Option("n", "nusmv", false, "translate for NuSMV model checker (default). " +
-                "In order to run consistency or muc tasks you have to set SPECPRO_NUSMV environment variable."));
-        options.addOptionGroup(mcGroup);
+        return commands;
+    }
 
-        options.addOption(null, "noinvar", false, "translate without INVAR statemens (only for NuSMV)");
-        options.addOption(null, "timeout", true, "The timeout for the model checker call in seconds");
-        options.addOption(null, "singleFormulas", false, "The requirements are translated as single formulas");
+    public static Options getOptions() {
+        final Options options = new Options();
 
-        options.addRequiredOption("i", "input", true, "Input file [required]");
-        options.addOption("o", "output", true, "Output file");
+        if(options.getOptions().size() == 0) {
+            options.addOption("h", "help", false, "Print the help message and exit");
+            options.addOption(null, "version",false,"Print version information and exit");
+            options.addOption("i", "input", true, "Input file [required]");
+            options.addOption("o", "output", true, "Output file");
+        }
 
         return options;
     }
 
-    public static ModelChecker selectModelChecker(CommandLine commandLine, long timeout) {
-        if(commandLine.hasOption("a")) {
-            return new Aalta(timeout);
-        }
-        else if(commandLine.hasOption("p")) {
-            return new Panda(timeout);
+    public static void printHelp(CommandLine commandLine, String[] args) {
+
+        Map<String, Command> commands = getCommands();
+
+        if(args.length > 0 && commands.containsKey(args[0])) {
+            Command command = commands.get(args[0]);
+            System.out.println(command);
+            new HelpFormatter().printHelp("SpecPro " + command.getName() + " [-h] [-o <outfile>] -i <infile> [OPTIONS]", command.createOptionMenu());
+            System.exit(0);
         }
         else {
-            NuSMVTranslator translator = new NuSMVTranslator().setNoinvar(commandLine.hasOption("noinvar"));
-            translator.setSingleFormulas(commandLine.hasOption("singleFormulas"));
-            NuSMV mc = new NuSMV(timeout);
-            mc.setTranslator(translator);
-            return mc;
+            new HelpFormatter().printHelp("SpecPro [COMMAND] [-h] [-o <outfile>] -i <infile> [OPTIONS]", getOptions());
+            System.out.println("Available commands: ");
+            for(Command command: commands.values()) {
+                System.out.print("  " + command.getName());
+                for(int i = command.getName().length(); i < 15; ++i)
+                    System.out.print(" ");
+                System.out.println(command.getDescription());
+                System.out.println();
+            }
         }
+
+    }
+
+    public static void printVersionRow(String text) {
+        int nSpaces = VERSION_BORDER.length() - text.length() - 2;
+        System.out.print("|");
+        IntStream.range(0, nSpaces / 2).forEach(i -> System.out.print(" "));
+        System.out.print(text);
+        IntStream.range(0, nSpaces / 2).forEach(i -> System.out.print(" "));
+        if(nSpaces % 2 != 0) {
+            System.out.print(" ");
+        }
+        System.out.println("|");
+    }
+
+    public static void printVersion() throws IOException {
+        InputStream input = Main.class.getClassLoader().getResourceAsStream("version.properties");
+
+        String version = "";
+
+        if(input != null) {
+            Properties versionProp = new Properties();
+            versionProp.load(input);
+
+            version = "v" + versionProp.getProperty("version");
+            if("True".equals(versionProp.getProperty("snapshot"))) {
+                version += "-SNAPSHOT";
+            }
+            version += " (build #" + versionProp.getProperty("build") + ")";
+        } else {
+            version = "version unknown";
+        }
+
+
+        System.out.println(VERSION_BORDER);
+        printVersionRow("   _____                     ____                  ");
+        printVersionRow("  / ___/ ____   ___   _____ / __ \\ _____ ____      ");
+        printVersionRow("  \\__ \\ / __ \\ / _ \\ / ___// /_/ // ___// __ \\     ");
+        printVersionRow(" ___/ // /_/ //  __// /__ / ____// /   / /_/ /     ");
+        printVersionRow("/____// .___/ \\___/ \\___//_/    /_/    \\____/      ");
+        printVersionRow("     /_/                                           ");
+        printVersionRow("");
+        printVersionRow(version);
+
+        printVersionRow("Copyright (c) 2018 University of Genoa, University of Sassari.");
+        printVersionRow("Mantainer: Simone Vuotto <svuotto@uniss.it>.");
+        printVersionRow("Software released under GNU LGPLv3 license.");
+        printVersionRow("This is free software: you are free to change and redistribute it.");
+        printVersionRow("There is NO WARRANTY, to the extent permitted by law.");
+        printVersionRow("");
+        System.out.println(VERSION_BORDER);
+        System.out.println();
+
+        System.exit(0);
     }
 
     public static void main(String[] args) {
 
-        CommandLineParser commandLineParser = new DefaultParser();
-        Options options = createOptionMenu();
+        ExtendedParser commandLineParser = new ExtendedParser();
+        Options options = getOptions();
 
         try {
-            CommandLine commandLine = commandLineParser.parse( options, args );
+            CommandLine commandLine = commandLineParser.parse(options, args, false);
+            String [] args2 = commandLineParser.getNotParsedArgs();
             String inputFile, outputFile;
             PrintStream outStream;
-            int timeout = 60;
 
-            if(commandLine.hasOption("h")) {
-                new HelpFormatter().printHelp( "SpecPro [OPTIONS] -i <infile> [-o <outfile>]", options);
-                System.exit(0);
+            if (commandLine.hasOption("h")) {
+                printHelp(commandLine, args2);
             }
 
+            if (commandLine.hasOption("version")) {
+                printVersion();
+            }
+
+            if(!commandLine.hasOption("i")) {
+                throw new IOException("Input file not specified!");
+            }
             inputFile = commandLine.getOptionValue("i");
 
-            if(commandLine.hasOption("o")) {
+            if (commandLine.hasOption("o")) {
                 outputFile = commandLine.getOptionValue("o");
-                outStream = new PrintStream(new FileOutputStream(outputFile));
+                outStream = new PrintStream(outputFile);
             } else {
                 outStream = System.out;
             }
 
-            if(commandLine.hasOption("timeout")) {
-                timeout = Integer.parseInt(commandLine.getOptionValue("timeout"));
+
+            if(args2.length == 0) {
+                System.err.println("No command selected. See 'SpecPro --help'");
+                System.exit(-1);
+            }
+            Map<String, Command> commands = getCommands();
+            if(!commands.containsKey(args2[0])) {
+                System.err.println("'" + args2[0] + "' is not a valid command. See 'SpecPro --help'");
+                System.exit(-1);
             }
 
-            Snl2FlParser snl2FlParser = new Snl2FlParser();
-            ModelChecker mc = selectModelChecker(commandLine, timeout);
 
-            snl2FlParser.parseFile(inputFile);
+            Command command = commands.get(args2[0]);
 
-            if(commandLine.hasOption("m")) {
-                String value = commandLine.getOptionValue("m");
-                ConsistencyChecker consistencyChecker = new ConsistencyChecker(mc, snl2FlParser, "out.temp");
-                InconsistencyFinder muc = null;
-                if("linear".equals(value)) {
-                    muc = new LinearInconsistencyFinder(consistencyChecker);
-                } else if("binary".equals(value)) {
-                    muc = new BinaryInconsistencyFinder(consistencyChecker);
-                } else {
-                   System.out.println("Value for option m not valid");
-                   System.exit(-1);
-                }
-                List<Requirement> reqs = muc.run();
-                if(reqs == null) {
-                    outStream.println("Fail occured during model checking call.");
-                    outStream.println(mc.getMessage());
-                }
-                else {
-                    outStream.println("# MUC of " + reqs.size() + " elements found: ");
-                    for (Requirement r : reqs) {
-                        outStream.println(r.getText());
-                    }
-                }
-
-            } else if(commandLine.hasOption("c")) {
-                ConsistencyChecker consistencyChecker = new ConsistencyChecker(mc, snl2FlParser, "out.temp");
-                ConsistencyChecker.Result result = consistencyChecker.run();
-                outStream.println(result);
-                if(result == ConsistencyChecker.Result.FAIL) {
-                    System.out.println(mc.getMessage());
-                }
-            } else {
-                // Translate
-                snl2FlParser.translate(mc.getTranslator(), outStream);
-            }
-
-            Files.deleteIfExists(Paths.get("out.temp"));
-            outStream.close();
+            CommandLine commandLine2 = commandLineParser.parse(command.createOptionMenu(), args2);
+            System.out.println(inputFile);
+            command.setInputFile(inputFile);
+            command.setOutStream(outStream);
+            command.run(commandLine2);
 
         } catch (ParseException | IOException | Snl2FlException e) {
             System.err.println("Error: " + e.getMessage());
-            System.out.println();
-            new HelpFormatter().printHelp( "SpecPro [OPTIONS] -i <infile> [-o <outfile>]", options);
+            System.err.println();
+            System.exit(-1);
         }
-    }
 
+    }
 }

@@ -6,7 +6,7 @@ import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.BinaryOperator;
 import it.sagelab.specpro.models.ltl.Formula;
 import it.sagelab.specpro.models.ltl.UnaryOperator;
-import it.sagelab.specpro.fe.ltl.visitor.FormulaVisitor;
+import it.sagelab.specpro.models.ltl.FormulaVisitor;
 import it.sagelab.specpro.models.psp.expressions.Expression;
 import it.sagelab.specpro.models.psp.Requirement;
 

@@ -3,8 +3,6 @@
  */
 package it.sagelab.specpro.models.ltl;
 
-import it.sagelab.specpro.fe.ltl.visitor.FormulaVisitor;
-
 /**
  * The Class Atom.
  *
@@ -34,6 +32,16 @@ public class Atom extends Formula {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj instanceof Atom && ((Atom)obj).getName().equals(name);
     }
 
     @Override

@@ -16,7 +16,7 @@ public class BinaryInconsistencyFinder extends InconsistencyFinder{
     public BinaryInconsistencyFinder(ConsistencyChecker cc) {
         super(cc);
         long seed = System.currentTimeMillis();
-        System.out.println("seed: " + seed);
+        //System.out.println("seed: " + seed);
         random = new Random(seed);
     }
 
@@ -70,7 +70,6 @@ public class BinaryInconsistencyFinder extends InconsistencyFinder{
     }
 
     protected List<Requirement>[] split(List<Requirement> requirements) {
-
         Collections.shuffle(requirements, random);
         int m = requirements.size() / 2;
         List<Requirement> r1 = requirements.subList(0, m);

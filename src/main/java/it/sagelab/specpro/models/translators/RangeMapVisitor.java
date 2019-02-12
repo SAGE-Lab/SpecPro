@@ -3,8 +3,9 @@ package it.sagelab.specpro.models.translators;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import it.sagelab.specpro.fe.snl2fl.Snl2FlException;
 import it.sagelab.specpro.models.ltl.Atom;
-import it.sagelab.specpro.fe.snl2fl.visitor.ExpressionVisitor;
+import it.sagelab.specpro.models.psp.expressions.ExpressionVisitor;
 import it.sagelab.specpro.models.psp.expressions.*;
 
 /**
@@ -39,17 +40,12 @@ public class RangeMapVisitor implements ExpressionVisitor {
 
     @Override
     public void visitCompareExpression(CompareExpression exp) {
-        if(exp.getLeftExp() instanceof FloatVariableExpression && exp.getRightExp() instanceof FloatVariableExpression)
-            return; //Special case to be evaluated
-        if(exp.getLeftExp() instanceof FloatVariableExpression)
-            add((FloatVariableExpression) exp.getLeftExp(),  (NumberExpression) exp.getRightExp());
+        if(exp.getLeftExp() instanceof VariableExpression && exp.getRightExp() instanceof VariableExpression)
+            throw new Snl2FlException("Comparison between two variables is not supported.");
+        if(exp.getLeftExp() instanceof VariableExpression)
+            add((VariableExpression) exp.getLeftExp(),  (NumberExpression) exp.getRightExp());
         else
-            add((FloatVariableExpression) exp.getRightExp(), (NumberExpression) exp.getLeftExp());
-
-    }
-
-    @Override
-    public void visitBooleanVariableExpression(BooleanVariableExpression exp) {
+            add((VariableExpression) exp.getRightExp(), (NumberExpression) exp.getLeftExp());
 
     }
 
@@ -59,7 +55,7 @@ public class RangeMapVisitor implements ExpressionVisitor {
     }
 
     @Override
-    public void visitFloatVariableExpression(FloatVariableExpression exp) {
+    public void visitVariableExpression(VariableExpression exp) {
 
     }
 
@@ -69,13 +65,13 @@ public class RangeMapVisitor implements ExpressionVisitor {
      * @param var the var
      * @param exp the exp
      */
-    private void add(FloatVariableExpression var, NumberExpression exp) {
+    private void add(VariableExpression var, NumberExpression exp) {
 
-        TreeMap<Float, Atom[]> treeMap = rangeMap.computeIfAbsent(var.getName(), k -> new TreeMap<>());
+        TreeMap<Float, Atom[]> treeMap = rangeMap.computeIfAbsent(var.getLabel(), k -> new TreeMap<>());
         if(!treeMap.containsKey(exp.floatValue())) {
             Atom [] atoms = new Atom[2];
-            atoms[0] = new Atom("_lower_"+var.getName()+treeMap.size());
-            atoms[1] = new Atom("_equal_"+var.getName()+treeMap.size());
+            atoms[0] = new Atom("_lower_"+var.getLabel()+treeMap.size());
+            atoms[1] = new Atom("_equal_"+var.getLabel()+treeMap.size());
             treeMap.put(exp.floatValue(), atoms);
         }
 

@@ -2,7 +2,6 @@ package it.sagelab.specpro.models.psp;
 
 import java.util.List;
 
-import it.sagelab.specpro.fe.snl2fl.visitor.ScopeVisitor;
 import it.sagelab.specpro.models.psp.expressions.Expression;
 
 /**

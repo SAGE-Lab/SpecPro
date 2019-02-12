@@ -4,6 +4,7 @@ import it.sagelab.specpro.reasoners.ModelChecker;
 import it.sagelab.specpro.reasoners.NuSMV;
 import it.sagelab.specpro.fe.snl2fl.Snl2FlParser;
 import it.sagelab.specpro.models.psp.Requirement;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class InconsistencyFinderTests {
 
+    @EnabledIf("systemEnvironment.get('SPECPRO_NUSMV') != null")
     @ParameterizedTest
     //@ValueSource(strings = {"test7.req", "fault1.req", "fault2.req", "fault3.req", "fault4.req", "fault5.req", "fault6.req"})
     @ValueSource(strings = {"inconsistency1.req", "inconsistency2.req"})

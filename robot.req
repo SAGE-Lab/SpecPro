@@ -1,0 +1,64 @@
+# Input Variables
+alarm_button_pressed is an input variable.
+proximity_sensor is an input variable.
+object_detected is an input variable.
+
+# Output Variables
+arm_idle is an output variable.
+arm_moving is an output variable.
+ef_holds is an output variable.
+ef_idle is an output variable.
+ef_open is an output variable.
+
+# Express states evolution
+Globally, it is always the case that if state_init holds, then state_scanning eventually holds.
+Globally, it is always the case that if state_scanning holds, then state_moving_to_target or state_alarm eventually holds.
+Globally, it is always the case that if state_moving_to_target holds, then state_target_reached or state_alarm eventually holds.
+Globally, it is always the case that if state_target_reached holds, then state_grabbing or state_alarm eventually holds.
+Globally, it is always the case that if state_grabbing holds, then state_init or state_alarm eventually holds.
+
+After state_init until state_scanning, it is never the case that state_moving_to_target holds.
+After state_init until state_moving_to_target, it is never the case that state_target_reached holds.
+After state_init until state_target_reached, it is never the case that state_grabbing holds.
+
+# Mutually exclusive states
+Globally, it is always the case that if state_init holds, then not (state_scanning or state_moving_to_target or state_target_reached or state_grabbing or state_alarm) holds as well.
+Globally, it is always the case that if state_scanning holds, then not (state_init or state_moving_to_target or state_target_reached or state_grabbing or state_alarm) holds as well.
+Globally, it is always the case that if state_moving_to_target holds, then not (state_init or state_scanning or state_target_reached or state_grabbing or state_alarm) holds as well.
+Globally, it is always the case that if state_target_reached holds, then not (state_init or state_scanning or state_moving_to_target or state_grabbing or state_alarm) holds as well.
+Globally, it is always the case that if state_grabbing holds, then not (state_init or state_scanning or state_moving_to_target or state_target_reached or state_alarm) holds as well.
+Globally, it is always the case that if state_alarm holds, then not (state_init or state_scanning or state_moving_to_target or state_target_reached or state_grabbing) holds as well.
+
+Globally, it is always the case that (state_init or state_scanning or state_moving_to_target or state_target_reached or state_grabbing or state_alarm) holds.
+
+# Init state requirements
+Between state_init and state_scanning, arm_idle and ef_idle and ef_open eventually holds.
+Globally, it is always the case that if (state_scanning or state_moving_to_target or state_target_reached or state_grabbing or state_alarm) holds, then state_init previously held.
+
+# Scanning state requirements
+Globally, it is always the case that if state_scanning holds, then arm_idle and ef_idle holds as well.
+Between state_scanning and state_moving_to_target, object_detected or state_alarm eventually holds.
+Globally, it is always the case that if state_scanning and object_detected holds, then state_moving_to_target or state_alarm eventually holds.
+
+# Moving to target state requirements
+Globally, it is always the case that if state_moving_to_target holds, then arm_moving or state_alarm eventually holds.
+Globally, it is always the case that if state_moving_to_target holds, then ef_open and ef_idle holds as well.
+
+# Target reached state requirements
+Globally, it is always the case that if state_target_reached holds, then arm_idle and ef_idle holds as well.
+Globally, it is always the case that if state_target_reached holds, then ef_open holds as well.
+
+# Grabbing state requirements
+Globally, it is always the case that if state_grabbing holds, then arm_idle holds as well.
+Globally, it is always the case that if state_grabbing holds, then ef_holds eventually holds.
+
+# Alarm state requirements
+After alarm_button_pressed, state_alarm eventually holds.
+Globally, it is always the case that if state_alarm holds, then alarm_button_pressed previously held.
+Globally, it is always the case that if state_alarm holds, then arm_idle and ef_idle holds as well.
+
+Globally, it is always the case that if proximity_sensor holds, then arm_idle eventually holds.
+
+# Invariants
+Globally, it is never the case that arm_idle and arm_moving holds.
+Globally, it is never the case that ef_open and ef_holds holds.

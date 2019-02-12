@@ -1,6 +1,6 @@
 package it.sagelab.specpro.models.ltl;
 
-import it.sagelab.specpro.fe.ltl.visitor.FormulaVisitor;
+import java.util.List;
 
 /**
  * The Class BinaryOperator.
@@ -101,19 +101,33 @@ public class BinaryOperator extends Formula {
      */
     public Operator getOperator() { return op; }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "("+leftFormula + " " + op + " " + rightFormula +")";
     }
 
-    /* (non-Javadoc)
-     * @see Formula#accept(FormulaVisitor)
+    /**
+     * Visitor accept method
      */
     @Override
     public void accept(FormulaVisitor visitor) {
         visitor.visitBinaryOperator(this);
     }
+
+    /**
+     * Compute the conjunctive formula of the formulas given as parameter
+     * @param formulaList the list of formulas to be put in and
+     * @return The conjunctive formula
+     */
+    public static Formula conjunctiveFormula(List<Formula> formulaList) {
+        if(formulaList == null || formulaList.size() == 0)
+            throw new IllegalArgumentException("The list of forumulas is empty");
+        Formula conjFormula = formulaList.get(0);
+        for(int i = 1; i < formulaList.size(); ++i) {
+            conjFormula = new BinaryOperator(conjFormula, formulaList.get(i), Operator.AND);
+        }
+        return conjFormula;
+    }
+
+
 }

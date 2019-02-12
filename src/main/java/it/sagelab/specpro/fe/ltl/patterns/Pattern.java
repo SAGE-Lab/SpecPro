@@ -72,16 +72,21 @@ public class Pattern {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws JSONException the JSON exception
      */
-    public static Map<String, Pattern> loadPatterns(String configurationFile) throws IOException, JSONException {
+    public static Map<String, Pattern> loadPatterns(String configurationFile) {
     	HashMap<String, Pattern> patterns = new HashMap<>();
         ParseTreeWalker walker = new ParseTreeWalker();
 
         InputStream is = Pattern.class.getResourceAsStream(configurationFile);
 
-        if(is == null) throw new IOException("Resource not found");
+        if(is == null) throw new RuntimeException("Resource not found");
 
-        String json = IOUtils.toString(is);
-  
+        String json = null;
+        try {
+            json = IOUtils.toString(is);
+        } catch (IOException e) {
+            throw new RuntimeException("Impossible to read resource");
+        }
+
         JSONArray jsonArray = new JSONArray(json);
   
         for(int i=0; i < jsonArray.length(); ++i) {

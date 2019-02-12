@@ -105,6 +105,23 @@ public class RequirementsBuilder extends RequirementsGrammarBaseListener {
     }
 
     /*********************************************
+     *  Variable Definition
+     *********************************************/
+
+    @Override
+    public void exitVarDeclaration(RequirementsGrammarParser.VarDeclarationContext ctx) {
+        String varName = ctx.ID().getText();
+        String type = ctx.varType().getText();
+        VariableExpression variableExpression = context.getSymbolTable().getOrDefault(varName,
+                                                            new VariableExpression(varName, VariableExpression.Type.UNDEFINED));
+        if("input".equals(type))
+            variableExpression.setInput(true);
+        if("output".equals(type))
+            variableExpression.setOutput(true);
+        context.getSymbolTable().put(varName, variableExpression);
+    }
+
+    /*********************************************
      *  Qualitative Requirement Listeners
      *********************************************/
 

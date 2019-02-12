@@ -5,7 +5,6 @@ import java.util.List;
 import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.models.psp.Scope;
 import it.sagelab.specpro.models.psp.Time;
-import it.sagelab.specpro.fe.snl2fl.visitor.RealTimeRequirementVisitor;
 import it.sagelab.specpro.models.psp.expressions.Expression;
 
 /**

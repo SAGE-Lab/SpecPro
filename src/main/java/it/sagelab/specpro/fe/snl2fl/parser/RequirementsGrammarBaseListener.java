@@ -28,6 +28,30 @@ public class RequirementsGrammarBaseListener implements RequirementsGrammarListe
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterVarDeclaration(RequirementsGrammarParser.VarDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVarDeclaration(RequirementsGrammarParser.VarDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVarType(RequirementsGrammarParser.VarTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVarType(RequirementsGrammarParser.VarTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterRequirement(RequirementsGrammarParser.RequirementContext ctx) { }
 	/**
 	 * {@inheritDoc}

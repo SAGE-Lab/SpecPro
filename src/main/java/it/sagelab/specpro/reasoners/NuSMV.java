@@ -1,11 +1,16 @@
 package it.sagelab.specpro.reasoners;
 
-import it.sagelab.specpro.reasoners.translators.nusmv.NuSMVTranslator;
+import it.sagelab.specpro.reasoners.translators.NuSMVTranslator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NuSMV extends ModelChecker {
+
+    public NuSMV() {
+        super(new NuSMVTranslator());
+        this.execPath = System.getenv("SPECPRO_NUSMV");
+    }
 
     public NuSMV(long timeout) {
         super(timeout, new NuSMVTranslator());

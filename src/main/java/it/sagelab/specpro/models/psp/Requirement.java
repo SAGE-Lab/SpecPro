@@ -1,9 +1,11 @@
 package it.sagelab.specpro.models.psp;
 
 import it.sagelab.specpro.models.psp.expressions.Expression;
+import it.sagelab.specpro.models.psp.expressions.VariableExpression;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -85,6 +87,24 @@ public abstract class Requirement {
      * @return the expressions
      */
     public List<Expression> getExpressions() { return expressions; }
+
+    /**
+     * Gets the set of variables used in the requirement.
+     *
+     * @return the set of variable
+     */
+    public Set<VariableExpression> getVariables() {
+        VariablesCollectorVisitor visitor = new VariablesCollectorVisitor();
+        for(Expression e: expressions) {
+            e.accept(visitor);
+        }
+
+        for(Expression e : scope.getExpressions()) {
+            e.accept(visitor);
+        }
+
+        return visitor.getVariables();
+    }
 
     /**
      * Key.

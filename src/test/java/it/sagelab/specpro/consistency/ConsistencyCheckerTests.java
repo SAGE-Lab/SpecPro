@@ -1,5 +1,6 @@
 package it.sagelab.specpro.consistency;
 
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import it.sagelab.specpro.reasoners.ModelChecker;
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ConsistencyCheckerTests {
 
 
+    @EnabledIf("systemEnvironment.get('SPECPRO_NUSMV') != null")
     @ParameterizedTest
     @ValueSource(strings = {"test1.req", "test3.req", "test4.req", "test5.req", "test6.req", "test7.req", "test8.req"})
     public void testConsistencyWithNuSMV(String filePath) throws IOException {
@@ -28,6 +30,7 @@ public class ConsistencyCheckerTests {
         assertEquals(ConsistencyChecker.Result.CONSISTENT, result, mc.getMessage());
     }
 
+    @EnabledIf("systemEnvironment.get('SPECPRO_NUSMV') != null")
     @ParameterizedTest
     @ValueSource(strings = {"test2.req", "test9.req", "inconsistency1.req", "inconsistency2.req"})
     public void testInconsistencyWithNuSMV(String filePath) throws IOException {

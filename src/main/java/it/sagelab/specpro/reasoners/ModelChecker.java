@@ -16,7 +16,7 @@ public abstract class ModelChecker {
     }
 
     private Thread thread;
-    private final long timeout;
+    private long timeout;
     private Snl2FlTranslator translator;
     protected String message;
     protected String execPath;
@@ -25,7 +25,14 @@ public abstract class ModelChecker {
         this.timeout = timeout;
         this.translator = translator;
         this.execPath = System.getenv("SNL2FL_MODELCHECKER");
+    }
 
+    public ModelChecker(Snl2FlTranslator translator) {
+        this.translator = translator;
+    }
+
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
     }
 
     public Result run(String filePath) {
