@@ -35,7 +35,7 @@ dependencies {
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
 }
 
-task updateVersionPropertiesFile(dependsOn: processResources) {
+task updateVersionPropertiesFile() {
     doLast {
 
         def versionPropsFile = file('src/main/resources/version.properties')
@@ -83,6 +83,11 @@ task updateVersionPropertiesFile(dependsOn: processResources) {
 
     }
 }
+
+processResources {
+    dependsOn updateVersionPropertiesFile
+}
+
 
 task minorRelease(dependsOn: build) {
     group 'build'

@@ -1,6 +1,5 @@
 package it.sagelab.specpro.fe.snl2fl;
 
-import it.sagelab.specpro.fe.ltl.visitor.FormulaVisitor;
 import it.sagelab.specpro.fe.snl2fl.parser.RequirementsBuilder;
 import it.sagelab.specpro.fe.snl2fl.parser.RequirementsGrammarLexer;
 import it.sagelab.specpro.fe.snl2fl.parser.RequirementsGrammarParser;
