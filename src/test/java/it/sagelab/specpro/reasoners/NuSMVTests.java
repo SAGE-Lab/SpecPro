@@ -1,5 +1,6 @@
 package it.sagelab.specpro.reasoners;
 
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -8,6 +9,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@EnabledIfEnvironmentVariable(named = "SPECPRO_NUSMV", matches = ".*")
 public class NuSMVTests {
 
     @ParameterizedTest
