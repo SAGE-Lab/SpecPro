@@ -1,5 +1,7 @@
-
 # SpecPro
+
+[![pipeline status](https://gitlab.sagelab.it/sage/SpecPro/badges/master/pipeline.svg)](https://gitlab.sagelab.it/sage/SpecPro/commits/master)
+[![https://img.shields.io/badge/license-LGPLv3-blue.svg](LICENSE)
 
 SpecPro is an open-source Java library for supporting
 analysis and development of formal requirements.
