@@ -47,13 +47,6 @@ task updateVersionPropertiesFile() {
             versionProps.store(versionPropsFile.newWriter(), null)
         }
 
-        new File("$buildDir/resources/main/version.properties").withWriter { w ->
-            Properties p = new Properties()
-            p['version'] = project.version.toString()
-            p.store w, null
-        }
-
-
         if (versionPropsFile.canRead()) {
             versionProps.load(new FileInputStream(versionPropsFile))
 
