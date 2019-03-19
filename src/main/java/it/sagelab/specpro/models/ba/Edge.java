@@ -14,6 +14,14 @@ public class Edge extends DefaultEdge implements Iterable<Assignment> {
     Map<String, Attribute> attributes;
     Set<Assignment> assignmentSet = null;
 
+    public Edge(Vertex source, Vertex target, Set<Assignment> assignments) {
+        this.source = source;
+        this.target = target;
+        this.label = null;
+        this.attributes = Collections.emptyMap();
+        this.assignmentSet = assignments;
+    }
+
     public Edge(Vertex source, Vertex target, String label, Map<String, Attribute> attributes) {
         this.source = source;
         this.target = target;
