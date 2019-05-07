@@ -7,6 +7,7 @@ import it.sagelab.specpro.reasoners.ModelChecker;
 import it.sagelab.specpro.reasoners.NuSMV;
 import it.sagelab.specpro.reasoners.translators.NuSMVTranslator;
 import it.sagelab.specpro.reasoners.translators.PANDATranslator;
+import it.sagelab.specpro.reasoners.translators.PltlMupTranslator;
 import it.sagelab.specpro.reasoners.translators.TRPUCTranslator;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
@@ -36,6 +37,8 @@ public class TranslateCommand extends Command {
         mcGroup.addOption(new Option("p", "panda", false, "translate for GenericMC model checker"));
         mcGroup.addOption(new Option("n", "nusmv", false, "translate for NuSMV model checker (default)"));
         mcGroup.addOption(new Option(null, "trpuc", false, "translate for TRP++UC model checker"));
+        mcGroup.addOption(new Option(null, "pltlmup", false, "translate for PLTL-MUP model checker"));
+
         options.addOptionGroup(mcGroup);
 
         options.addOption(null, "noinvar", false, "translate without INVAR statemens (for NuSMV only)");
@@ -60,6 +63,8 @@ public class TranslateCommand extends Command {
             return new GenericMC(new PANDATranslator());
         } else if(commandLine.hasOption("trpuc")) {
             return new GenericMC(new TRPUCTranslator());
+        } else if(commandLine.hasOption("pltlmup")) {
+            return new GenericMC(new PltlMupTranslator());
         } else {
             NuSMVTranslator translator = new NuSMVTranslator().setNoinvar(commandLine.hasOption("noinvar"));
             NuSMV mc = new NuSMV();
