@@ -19,7 +19,7 @@ public class AALTATranslator extends LTLToolTranslator {
 
     @Override
     public FormulaPrinter getFormulaPrinter(PrintStream stream) {
-        FormulaPrinter formulaPrinter = new FormulaPrinter(stream);
+        FormulaPrinter formulaPrinter = new FlatFormulaPrinter(stream);
         formulaPrinter.setNotOperator("~");
         formulaPrinter.setGloballyOperator("G");
         formulaPrinter.setEventuallyOperator("F");

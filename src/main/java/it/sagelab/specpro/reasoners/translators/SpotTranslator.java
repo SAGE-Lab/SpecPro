@@ -22,7 +22,7 @@ public class SpotTranslator extends LTLToolTranslator {
 
     @Override
     public FormulaPrinter getFormulaPrinter(PrintStream stream) {
-        FormulaPrinter formulaPrinter = new FormulaPrinter(stream);
+        FormulaPrinter formulaPrinter = new FlatFormulaPrinter(stream);
         formulaPrinter.setNotOperator("!");
         formulaPrinter.setGloballyOperator("[]");
         formulaPrinter.setEquivalenceOperator("<>");

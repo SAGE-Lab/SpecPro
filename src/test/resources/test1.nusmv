@@ -8,21 +8,21 @@ VAR
 	_lower_S2 : boolean; -- S < 30.0
 	_equal_S2 : boolean; -- S = 30.0
 
-INVAR (! _lower_S1) | (! _equal_S1);
-INVAR (! _lower_S1) | (! _lower_S0);
-INVAR (! _lower_S1) | (! _equal_S0);
-INVAR (! _lower_S1) | (! _lower_S2);
-INVAR (! _lower_S1) | (! _equal_S2);
-INVAR (! _equal_S1) | (! _lower_S0);
-INVAR (! _equal_S1) | (! _equal_S0);
-INVAR (! _equal_S1) | (! _lower_S2);
-INVAR (! _equal_S1) | (! _equal_S2);
-INVAR (! _lower_S0) | (! _equal_S0);
-INVAR (! _lower_S0) | (! _lower_S2);
-INVAR (! _lower_S0) | (! _equal_S2);
-INVAR (! _equal_S0) | (! _lower_S2);
-INVAR (! _equal_S0) | (! _equal_S2);
-INVAR (! _lower_S2) | (! _equal_S2);
+INVAR ! _lower_S1 | ! _equal_S1;
+INVAR ! _lower_S1 | ! _lower_S0;
+INVAR ! _lower_S1 | ! _equal_S0;
+INVAR ! _lower_S1 | ! _lower_S2;
+INVAR ! _lower_S1 | ! _equal_S2;
+INVAR ! _equal_S1 | ! _lower_S0;
+INVAR ! _equal_S1 | ! _equal_S0;
+INVAR ! _equal_S1 | ! _lower_S2;
+INVAR ! _equal_S1 | ! _equal_S2;
+INVAR ! _lower_S0 | ! _equal_S0;
+INVAR ! _lower_S0 | ! _lower_S2;
+INVAR ! _lower_S0 | ! _equal_S2;
+INVAR ! _equal_S0 | ! _lower_S2;
+INVAR ! _equal_S0 | ! _equal_S2;
+INVAR ! _lower_S2 | ! _equal_S2;
 
 -- Negated Formula
-LTLSPEC !(((G(!(( _lower_S1 |  _equal_S1) |  _lower_S0))) & (G(! _lower_S1))) & (G(!((((((! _lower_S1) & (! _equal_S1)) & (! _lower_S0)) & (! _equal_S0)) & (! _lower_S2)) & (! _equal_S2)))));
+LTLSPEC !((G ! ((_lower_S1 | _equal_S1) | _lower_S0) & G ! _lower_S1) & G ! (((((! _lower_S1 & ! _equal_S1) & ! _lower_S0) & ! _equal_S0) & ! _lower_S2) & ! _equal_S2));

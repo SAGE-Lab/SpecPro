@@ -14,12 +14,13 @@ public class TRPUCTranslator extends LTLToolTranslator {
 
     public TRPUCTranslator() {
         super(forbiddenVarNames);
+        varPrefix = "X";
     }
 
 
     @Override
     public FormulaPrinter getFormulaPrinter(PrintStream stream) {
-        FormulaPrinter formulaPrinter = new FormulaPrinter(stream);
+        FormulaPrinter formulaPrinter = new FlatFormulaPrinter(stream);
         formulaPrinter.setNotOperator("not");
         formulaPrinter.setGloballyOperator("always");
         formulaPrinter.setEventuallyOperator("sometime");
