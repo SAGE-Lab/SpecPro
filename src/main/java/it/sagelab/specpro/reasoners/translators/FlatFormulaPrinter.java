@@ -56,7 +56,7 @@ public class FlatFormulaPrinter extends FormulaPrinter {
                 print(opToStr((UnaryOperator)curr) + " ");
                 s.push(((UnaryOperator)curr).getChild());
             } else if(curr instanceof Atom){
-                print(((Atom)curr).getName());
+                print(((Atom)curr).getLabel());
             } else {
                 print(((StrStack)curr).str);
             }

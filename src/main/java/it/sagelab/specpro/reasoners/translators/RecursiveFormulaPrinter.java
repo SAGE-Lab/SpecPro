@@ -51,7 +51,7 @@ public class RecursiveFormulaPrinter extends FormulaPrinter implements FormulaVi
 
     @Override
     public void visitAtom(Atom at) {
-        print(at.getName());
+        print(at.getLabel());
     }
 
 }

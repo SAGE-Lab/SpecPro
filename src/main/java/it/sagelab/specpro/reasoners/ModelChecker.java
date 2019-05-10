@@ -1,7 +1,7 @@
 package it.sagelab.specpro.reasoners;
 
+import it.sagelab.specpro.reasoners.translators.LTLToolTranslator;
 import org.apache.commons.io.IOUtils;
-import it.sagelab.specpro.fe.snl2fl.Snl2FlTranslator;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -17,17 +17,17 @@ public abstract class ModelChecker {
 
     private Thread thread;
     private long timeout;
-    private Snl2FlTranslator translator;
+    private LTLToolTranslator translator;
     protected String message;
     protected String execPath;
 
-    public ModelChecker(long timeout, Snl2FlTranslator translator) {
+    public ModelChecker(long timeout, LTLToolTranslator translator) {
         this.timeout = timeout;
         this.translator = translator;
         this.execPath = System.getenv("SNL2FL_MODELCHECKER");
     }
 
-    public ModelChecker(Snl2FlTranslator translator) {
+    public ModelChecker(LTLToolTranslator translator) {
         this.translator = translator;
     }
 
@@ -74,11 +74,11 @@ public abstract class ModelChecker {
 
     protected abstract Result parseOutput(String output, String error);
 
-    public Snl2FlTranslator getTranslator() {
+    public LTLToolTranslator getTranslator() {
         return translator;
     }
 
-    public void setTranslator(Snl2FlTranslator translator) {
+    public void setTranslator(LTLToolTranslator translator) {
         this.translator = translator;
     }
 

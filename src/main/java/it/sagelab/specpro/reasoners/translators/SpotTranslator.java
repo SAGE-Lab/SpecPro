@@ -13,9 +13,6 @@ public class SpotTranslator extends LTLToolTranslator {
 
     private static final Set<String> forbiddenVarNames = Stream.of("X", "W", "U", "xor").collect(Collectors.toSet());
 
-    public SpotTranslator(PSP2LTL translator) { super(translator, forbiddenVarNames); }
-
-
     public SpotTranslator() {
         super(forbiddenVarNames);
     }
