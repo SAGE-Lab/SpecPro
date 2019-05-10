@@ -1,4 +1,4 @@
-package it.sagelab.specpro.fe.snl2fl.parser;
+package it.sagelab.specpro.fe.psp.parser;
 
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;

@@ -1,4 +1,4 @@
-package it.sagelab.specpro.fe.snl2fl.parser;
+package it.sagelab.specpro.fe.psp.parser;
 
 import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.models.psp.Scope;

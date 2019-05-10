@@ -1,5 +1,5 @@
-// Generated from RequirementsGrammar.g4 by ANTLR 4.7.1
-package it.sagelab.specpro.fe.snl2fl.parser;
+// Generated from RequirementsGrammar.g4 by ANTLR 4.7.2
+package it.sagelab.specpro.fe.psp.parser;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class RequirementsGrammarParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.7.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -38,36 +38,45 @@ public class RequirementsGrammarParser extends Parser {
 		RULE_boundedResponse = 24, RULE_boundedInvariance = 25, RULE_invariant = 26, 
 		RULE_expr = 27, RULE_time = 28, RULE_always = 29, RULE_never = 30, RULE_number = 31, 
 		RULE_positiveInt = 32;
-	public static final String[] ruleNames = {
-		"file", "varDeclaration", "varType", "requirement", "scope", "reqID", 
-		"rId", "specification", "qualitative", "absence", "universality", "existence", 
-		"boundedExistence", "precedence", "precedenceChain12", "precedenceChain21", 
-		"response", "constrainedChain12", "responseChain21", "responseChain12", 
-		"realtime", "minDuration", "maxDuration", "boundedRecurrence", "boundedResponse", 
-		"boundedInvariance", "invariant", "expr", "time", "always", "never", "number", 
-		"positiveInt"
-	};
+	private static String[] makeRuleNames() {
+		return new String[] {
+			"file", "varDeclaration", "varType", "requirement", "scope", "reqID", 
+			"rId", "specification", "qualitative", "absence", "universality", "existence", 
+			"boundedExistence", "precedence", "precedenceChain12", "precedenceChain21", 
+			"response", "constrainedChain12", "responseChain21", "responseChain12", 
+			"realtime", "minDuration", "maxDuration", "boundedRecurrence", "boundedResponse", 
+			"boundedInvariance", "invariant", "expr", "time", "always", "never", 
+			"number", "positiveInt"
+		};
+	}
+	public static final String[] ruleNames = makeRuleNames();
 
-	private static final String[] _LITERAL_NAMES = {
-		null, "'is'", "'an'", "'variable'", "'.'", "'input'", "'output'", "','", 
-		"'Globally'", "'Before'", "'After'", "'Between'", "'and'", "'until'", 
-		"'['", "']'", "'holds'", "'eventually'", "'transitions'", "'to'", "'states'", 
-		"'in'", "'which'", "'occur'", "'at'", "'most'", "'times'", "'if'", "'then'", 
-		"'previously'", "'held'", "'succeeded'", "'by'", "'was'", "'preceded'", 
-		"'where'", "'does'", "'not'", "'hold'", "'between'", "'after'", "'once'", 
-		"'becomes'", "'satisfied'", "'it'", "'for'", "'least'", "'every'", "'as'", 
-		"'well'", "'('", "')'", "'='", "'>'", "'>='", "'<'", "'<='", "'!='", "'or'", 
-		"'xor'", "'It'", "'always'", "'the'", "'case'", "'that'", "'never'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, "POSITIVE_INT", "FLOAT", "TIME_UNIT", 
-		"ID", "GENERIC_ID", "REQ_LABEL", "WS", "LINE_COMMENT"
-	};
+	private static String[] makeLiteralNames() {
+		return new String[] {
+			null, "'is'", "'an'", "'variable'", "'.'", "'input'", "'output'", "','", 
+			"'Globally'", "'Before'", "'After'", "'Between'", "'and'", "'until'", 
+			"'['", "']'", "'holds'", "'eventually'", "'transitions'", "'to'", "'states'", 
+			"'in'", "'which'", "'occur'", "'at'", "'most'", "'times'", "'if'", "'then'", 
+			"'previously'", "'held'", "'succeeded'", "'by'", "'was'", "'preceded'", 
+			"'where'", "'does'", "'not'", "'hold'", "'between'", "'after'", "'once'", 
+			"'becomes'", "'satisfied'", "'it'", "'for'", "'least'", "'every'", "'as'", 
+			"'well'", "'('", "')'", "'='", "'>'", "'>='", "'<'", "'<='", "'!='", 
+			"'or'", "'xor'", "'It'", "'always'", "'the'", "'case'", "'that'", "'never'"
+		};
+	}
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	private static String[] makeSymbolicNames() {
+		return new String[] {
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, "POSITIVE_INT", "FLOAT", "TIME_UNIT", 
+			"ID", "GENERIC_ID", "REQ_LABEL", "WS", "LINE_COMMENT"
+		};
+	}
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -117,6 +126,7 @@ public class RequirementsGrammarParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+
 	public static class FileContext extends ParserRuleContext {
 		public List<VarDeclarationContext> varDeclaration() {
 			return getRuleContexts(VarDeclarationContext.class);

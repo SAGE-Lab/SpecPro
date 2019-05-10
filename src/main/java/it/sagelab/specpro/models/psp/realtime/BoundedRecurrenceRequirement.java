@@ -25,7 +25,7 @@ public class BoundedRecurrenceRequirement extends RealTimeRequirement {
     }
 
     /* (non-Javadoc)
-     * @see it.sagelab.models.psp.realtime.RealTimeRequirement#accept(it.sagelab.it.sagelab.fe.snl2fl.req.visitor.RealTimeRequirementVisitor)
+     * @see it.sagelab.models.psp.realtime.RealTimeRequirement#accept(it.sagelab.it.sagelab.fe.psp.req.visitor.RealTimeRequirementVisitor)
      */
     @Override
     public void accept(RealTimeRequirementVisitor visitor) {

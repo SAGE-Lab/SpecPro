@@ -1,7 +1,7 @@
 package it.sagelab.specpro;
 
 import it.sagelab.specpro.cli.*;
-import it.sagelab.specpro.fe.snl2fl.Snl2FlException;
+import it.sagelab.specpro.fe.psp.Snl2FlException;
 import org.apache.commons.cli.*;
 
 import java.io.IOException;

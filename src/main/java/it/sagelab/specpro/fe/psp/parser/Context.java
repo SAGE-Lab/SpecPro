@@ -1,7 +1,6 @@
-package it.sagelab.specpro.fe.snl2fl.parser;
+package it.sagelab.specpro.fe.psp.parser;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.models.psp.expressions.VariableExpression;

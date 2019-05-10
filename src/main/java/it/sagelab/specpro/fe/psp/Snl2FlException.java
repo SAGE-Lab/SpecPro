@@ -1,4 +1,4 @@
-package it.sagelab.specpro.fe.snl2fl;
+package it.sagelab.specpro.fe.psp;
 
 public class Snl2FlException extends RuntimeException {
 

@@ -3,7 +3,7 @@ package it.sagelab.specpro.models.translators;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import it.sagelab.specpro.fe.snl2fl.Snl2FlException;
+import it.sagelab.specpro.fe.psp.Snl2FlException;
 import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.psp.expressions.ExpressionVisitor;
 import it.sagelab.specpro.models.psp.expressions.*;

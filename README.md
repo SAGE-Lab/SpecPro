@@ -87,7 +87,7 @@ Once you have installed ANTLR4, all you have to do is:
 
 3. Build RequirementsGrammar:
         
-        antlr4 -o ../main/java/it/sagelab/specpro/fe/snl2fl/parser -package it.sagelab.specpro.fe.psp.parser RequirementsGrammar.g4
+        antlr4 -o ../main/java/it/sagelab/specpro/fe/psp/parser -package it.sagelab.specpro.fe.psp.parser RequirementsGrammar.g4
 
 ## References
 

@@ -1,6 +1,6 @@
-package it.sagelab.specpro.fe.snl2fl;
+package it.sagelab.specpro.fe.psp;
 
-import it.sagelab.specpro.fe.snl2fl.parser.RequirementsBuilder;
+import it.sagelab.specpro.fe.psp.parser.RequirementsBuilder;
 
 import java.io.PrintStream;
 

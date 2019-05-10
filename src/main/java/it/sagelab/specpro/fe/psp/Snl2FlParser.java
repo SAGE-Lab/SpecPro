@@ -1,9 +1,9 @@
-package it.sagelab.specpro.fe.snl2fl;
+package it.sagelab.specpro.fe.psp;
 
-import it.sagelab.specpro.fe.snl2fl.parser.RequirementsBuilder;
-import it.sagelab.specpro.fe.snl2fl.parser.RequirementsGrammarLexer;
-import it.sagelab.specpro.fe.snl2fl.parser.RequirementsGrammarParser;
-import it.sagelab.specpro.fe.snl2fl.parser.ThrowingErrorListener;
+import it.sagelab.specpro.fe.psp.parser.RequirementsBuilder;
+import it.sagelab.specpro.fe.psp.parser.RequirementsGrammarLexer;
+import it.sagelab.specpro.fe.psp.parser.RequirementsGrammarParser;
+import it.sagelab.specpro.fe.psp.parser.ThrowingErrorListener;
 import it.sagelab.specpro.models.psp.Requirement;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;

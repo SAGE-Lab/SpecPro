@@ -1,4 +1,4 @@
-package it.sagelab.specpro.fe.snl2fl.similarity;
+package it.sagelab.specpro.fe.psp.similarity;
 
 import java.util.*;
 

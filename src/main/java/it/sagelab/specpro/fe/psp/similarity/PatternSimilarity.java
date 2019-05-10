@@ -1,4 +1,4 @@
-package it.sagelab.specpro.fe.snl2fl.similarity;
+package it.sagelab.specpro.fe.psp.similarity;
 
 import it.sagelab.specpro.fe.ltl.patterns.Pattern;
 import it.sagelab.specpro.models.psp.Scope;

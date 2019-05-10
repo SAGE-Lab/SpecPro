@@ -1,19 +1,15 @@
 package it.sagelab.specpro.models.translators;
 
-import it.sagelab.specpro.fe.snl2fl.Snl2FlException;
+import it.sagelab.specpro.fe.psp.Snl2FlException;
+import it.sagelab.specpro.models.ltl.*;
 import it.sagelab.specpro.models.psp.expressions.ExpressionVisitor;
 import it.sagelab.specpro.models.psp.expressions.*;
-import it.sagelab.specpro.models.ltl.Atom;
-import it.sagelab.specpro.models.ltl.BinaryOperator;
-import it.sagelab.specpro.models.ltl.UnaryOperator;
-import it.sagelab.specpro.models.ltl.Formula;
 import it.sagelab.specpro.fe.ltl.patterns.Pattern;
 import it.sagelab.specpro.fe.ltl.patterns.PatternUnifier;
 import it.sagelab.specpro.fe.snl2fl.parser.RequirementsBuilder;
 import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.models.psp.qualitative.QualitativeRequirement;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
