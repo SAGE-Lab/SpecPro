@@ -15,11 +15,11 @@ public class BinaryOperator extends Formula {
     public enum Operator {
         
         /** The and. */
-        AND("&"), 
+        AND("&", "&&"),
          /** The or. */
-         OR("|"),
+         OR("|", "||"),
          /** The xor. */
-         XOR("^"),
+         XOR("^", "xor"),
          /** The until. */
          UNTIL("U"),
          /** The weak until. */
@@ -29,33 +29,45 @@ public class BinaryOperator extends Formula {
          /** The equivalence. */
          EQUIVALENCE("<->");
 
-        /** The description. */
-        private final String description;
+        /** The symbols. */
+        private final String[] symbols;
         
         /**
          * Instantiates a new operator.
          *
-         * @param description the description
+         * @param symbols the symbols
          */
-        Operator(String description){ this.description = description;}
+        Operator(String... symbols){ this.symbols = symbols;}
 
-        /* (non-Javadoc)
-         * @see java.lang.Enum#toString()
+        /**
+         * Check if the operator contains the given symbol.
+         * @param symbol The symbol to check.
+         * @return True if the symbols is associated with the operator.
+         */
+        public boolean contains(String symbol) {
+            for(String s: symbols) {
+                if(s.equals(symbol))
+                    return true;
+            }
+            return false;
+        }
+
+        /**
+         * String representation of the operator
+         * @return One of the symbols representing the operator
          */
         @Override
-        public String toString() {
-            return description;
-        }
+        public String toString() { return symbols[0]; }
 
         /**
          * Gets the op.
          *
-         * @param description the description
-         * @return the op
+         * @param symbol The symbol used to search the operator
+         * @return The Operator corresponding to the input symbol or null.
          */
-        public static Operator getOp(String description) {
+        public static Operator getOp(String symbol) {
             for(BinaryOperator.Operator op : BinaryOperator.Operator.values())
-                if(op.toString().equals(description))
+                if(op.contains(symbol))
                     return op;
             return null;
         }

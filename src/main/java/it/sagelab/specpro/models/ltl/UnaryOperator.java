@@ -13,41 +13,55 @@ public class UnaryOperator extends Formula {
     public enum Operator {
         
         /** The not. */
-        NOT("!"), 
+        NOT("!", "~"),
         /** The globally. */
-        GLOBALLY("[]"), 
+        GLOBALLY("[]", "G"),
         /** The eventually. */
-        EVENTUALLY("<>"), 
+        EVENTUALLY("<>", "F"),
         /** The next. */
-        NEXT("o");
+        NEXT("o", "X");
 
         /** The description. */
-        private final String description;
+        private final String[] symbols;
 
         /**
          * Instantiates a new operator.
          *
-         * @param description the description
+         * @param symbols the symbols associated with the operator
          */
-        Operator(String description){ this.description = description; }
+        Operator(String... symbols){ this.symbols = symbols; }
 
-        /* (non-Javadoc)
-         * @see java.lang.Enum#toString()
+        /**
+         * Check if the operator contains the given symbol.
+         * @param symbol The symbol to check.
+         * @return True if the symbols is associated with the operator.
+         */
+        public boolean contains(String symbol) {
+            for(String s: symbols) {
+                if(s.equals(symbol))
+                    return true;
+            }
+            return false;
+        }
+
+        /**
+         * String representation of the operator
+         * @return One of the symbols representing the operator
          */
         @Override
-        public String toString() { return description; }
+        public String toString() { return symbols[0]; }
 
         /**
          * Gets the op.
          *
-         * @param description the description
+         * @param symbol the description
          * @return the op
          */
-        public static Operator getOp(String description) {
+        public static Operator getOp(String symbol) {
             for(UnaryOperator.Operator op: UnaryOperator.Operator.values())
-                if(op.toString().equals(description))
+                if(op.contains(symbol))
                     return op;
-            return null;
+            throw new RuntimeException("Operator '" + symbol + "' not found!");
         }
 
     }

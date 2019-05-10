@@ -1,11 +1,9 @@
 package it.sagelab.specpro.fe.ltl.patterns;
 
-import it.sagelab.specpro.fe.ltl.parser.FLBuilder;
-import it.sagelab.specpro.fe.ltl.parser.FLGrammarLexer;
-import it.sagelab.specpro.fe.ltl.parser.FLGrammarParser;
-import it.sagelab.specpro.fe.snl2fl.parser.RequirementsBuilder;
-import it.sagelab.specpro.fe.snl2fl.parser.RequirementsGrammarLexer;
-import it.sagelab.specpro.fe.snl2fl.parser.RequirementsGrammarParser;
+import it.sagelab.specpro.fe.ltl.parser.*;
+import it.sagelab.specpro.fe.psp.parser.RequirementsBuilder;
+import it.sagelab.specpro.fe.psp.parser.RequirementsGrammarLexer;
+import it.sagelab.specpro.fe.psp.parser.RequirementsGrammarParser;
 import it.sagelab.specpro.models.ltl.Formula;
 import it.sagelab.specpro.models.psp.Requirement;
 import org.antlr.v4.runtime.CharStreams;
@@ -110,14 +108,14 @@ public class Pattern {
 
                 // Parse the formula
                 String textFormula = formulae.getString(scope);
-                FLGrammarLexer flLexer = new FLGrammarLexer(CharStreams.fromString(textFormula));
+                LTLGrammarLexer flLexer = new LTLGrammarLexer(CharStreams.fromString(textFormula));
                 CommonTokenStream flTokens = new CommonTokenStream(flLexer);
-                FLGrammarParser flParser = new FLGrammarParser(flTokens);
-                FLBuilder flBuilder = new FLBuilder();
+                LTLGrammarParser flParser = new LTLGrammarParser(flTokens);
+                LTLBuilder LTLBuilder = new LTLBuilder();
 
-                walker.walk(flBuilder, flParser.fl());
+                walker.walk(LTLBuilder, flParser.file());
 
-                Formula formula = flBuilder.getFormula();
+                Formula formula = LTLBuilder.getSpec().getRequirements().get(0);
                 Pattern p = new Pattern(requirement, formula);
                 patterns.put(requirement.key(), p);                
             }
