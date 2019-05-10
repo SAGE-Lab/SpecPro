@@ -1,6 +1,7 @@
 package it.sagelab.specpro.cli;
 
-import it.sagelab.specpro.fe.snl2fl.Snl2FlParser;
+import it.sagelab.specpro.fe.PSPFrontEnd;
+import it.sagelab.specpro.models.ltl.LTLSpec;
 import it.sagelab.specpro.reasoners.Aalta;
 import it.sagelab.specpro.reasoners.GenericMC;
 import it.sagelab.specpro.reasoners.ModelChecker;
@@ -50,9 +51,9 @@ public class TranslateCommand extends Command {
     @Override
     public void run(CommandLine commandLine) throws IOException {
         ModelChecker mc = selectModelChecker(commandLine);
-        Snl2FlParser snl2FlParser = new Snl2FlParser();
-        snl2FlParser.parseFile(inputFile);
-        snl2FlParser.translate(mc.getTranslator(), outStream);
+        PSPFrontEnd fe = new PSPFrontEnd();
+        LTLSpec spec = fe.parseFile(inputFile);
+        mc.getTranslator().translate(outStream, spec);
     }
 
     protected static ModelChecker selectModelChecker(CommandLine commandLine) {

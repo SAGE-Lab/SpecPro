@@ -14,6 +14,10 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.List;
 
+/**
+ * This class has been deprectad. See @{@link it.sagelab.specpro.fe.PSPFrontEnd} instead.
+ */
+@Deprecated
 public class Snl2FlParser {
 
     private RequirementsBuilder builder;

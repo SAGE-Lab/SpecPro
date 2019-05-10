@@ -1,6 +1,6 @@
 package it.sagelab.specpro.consistency;
 
-import it.sagelab.specpro.fe.snl2fl.Snl2FlParser;
+import it.sagelab.specpro.models.ltl.LTLSpec;
 import it.sagelab.specpro.reasoners.ModelChecker;
 
 import java.io.FileOutputStream;
@@ -19,12 +19,12 @@ public class ConsistencyChecker {
     }
 
     private ModelChecker mc;
-    private Snl2FlParser parser;
+    private LTLSpec spec;
     private String outputFilePath;
 
-    public ConsistencyChecker(ModelChecker mc, Snl2FlParser parser, String outputFilePath) {
+    public ConsistencyChecker(ModelChecker mc, LTLSpec spec, String outputFilePath) {
         this.mc = mc;
-        this.parser = parser;
+        this.spec = spec;
         this.outputFilePath = outputFilePath;
     }
 
@@ -44,19 +44,17 @@ public class ConsistencyChecker {
         this.outputFilePath = outputFilePath;
     }
 
-    public Snl2FlParser getParser() {
-        return parser;
+    public void setLTLSpec(LTLSpec spec) {
+        this.spec = spec;
     }
 
-    public void setParser(Snl2FlParser parser) {
-        this.parser = parser;
-    }
+    public LTLSpec getLTLSpec() { return spec; }
 
     public Result run() {
 
         try {
             PrintStream stream = new PrintStream(new FileOutputStream(outputFilePath));
-            parser.translate(mc.getTranslator(), stream);
+            mc.getTranslator().translate(stream, spec);
             stream.close();
             ModelChecker.Result res = mc.run(outputFilePath);
 

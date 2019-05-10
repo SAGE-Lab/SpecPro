@@ -4,7 +4,9 @@ import it.sagelab.specpro.consistency.BinaryInconsistencyFinder;
 import it.sagelab.specpro.consistency.ConsistencyChecker;
 import it.sagelab.specpro.consistency.InconsistencyFinder;
 import it.sagelab.specpro.consistency.LinearInconsistencyFinder;
-import it.sagelab.specpro.fe.snl2fl.Snl2FlParser;
+import it.sagelab.specpro.fe.PSPFrontEnd;
+import it.sagelab.specpro.models.InputRequirement;
+import it.sagelab.specpro.models.ltl.LTLSpec;
 import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.reasoners.Aalta;
 import it.sagelab.specpro.reasoners.ModelChecker;
@@ -61,10 +63,10 @@ public class MucCommand extends Command {
             mc = new NuSMV(timeout);
         }
 
-        Snl2FlParser snl2FlParser = new Snl2FlParser();
-        snl2FlParser.parseFile(inputFile);
+        PSPFrontEnd fe = new PSPFrontEnd();
+        LTLSpec spec = fe.parseFile(inputFile);
 
-        ConsistencyChecker consistencyChecker = new ConsistencyChecker(mc, snl2FlParser, "out.temp");
+        ConsistencyChecker consistencyChecker = new ConsistencyChecker(mc, spec, "out.temp");
         InconsistencyFinder muc = null;
         if(commandLine.hasOption("alg")) {
             String value = commandLine.getOptionValue("alg");
@@ -80,14 +82,14 @@ public class MucCommand extends Command {
             muc = new BinaryInconsistencyFinder(consistencyChecker);
         }
 
-        List<Requirement> reqs = muc.run();
+        List<InputRequirement> reqs = muc.run();
         if(reqs == null) {
             outStream.println("Fail occured during model checking call.");
             outStream.println(mc.getMessage());
         }
         else {
             outStream.println("# MUC of " + reqs.size() + " elements found: ");
-            for (Requirement r : reqs) {
+            for (InputRequirement r : reqs) {
                 outStream.println(r.getText());
             }
         }

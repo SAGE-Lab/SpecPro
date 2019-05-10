@@ -1,6 +1,6 @@
 package it.sagelab.specpro.consistency;
 
-import it.sagelab.specpro.models.psp.Requirement;
+import it.sagelab.specpro.models.InputRequirement;
 
 import java.util.List;
 
@@ -12,5 +12,5 @@ public abstract class InconsistencyFinder {
         this.cc = cc;
     }
 
-    public abstract List<Requirement> run();
+    public abstract List<InputRequirement> run();
 }

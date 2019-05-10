@@ -3,13 +3,15 @@ package it.sagelab.specpro.atg;
 import it.sagelab.specpro.atg.coverage.*;
 import it.sagelab.specpro.collections.SequenceBuilder;
 import it.sagelab.specpro.collections.Trie;
-import it.sagelab.specpro.fe.snl2fl.Snl2FlParser;
+import it.sagelab.specpro.fe.AbstractLTLFrontEnd;
+import it.sagelab.specpro.fe.PSPFrontEnd;
 import it.sagelab.specpro.models.ba.BAExplorer;
 import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.ac.LassoShapedAcceptanceCondition;
+import it.sagelab.specpro.models.ltl.Formula;
+import it.sagelab.specpro.models.ltl.LTLSpec;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
-import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.reasoners.LTL2BA;
 import it.sagelab.specpro.reasoners.translators.SpotTranslator;
 
@@ -81,26 +83,27 @@ public class AutomaticTestGenerator {
 
     public void parseRequirements(String filePath, boolean conjunctionBA) throws IOException {
 
-        Snl2FlParser parser = new Snl2FlParser();
-        parser.parseFile(filePath);
+        AbstractLTLFrontEnd fe = new PSPFrontEnd();
+        LTLSpec spec = fe.parseFile(filePath);
+        SpotTranslator translator = new SpotTranslator();
 
         if(conjunctionBA) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try (PrintStream ps = new PrintStream(baos, true, "UTF-8")) {
-                parser.translate(new SpotTranslator(), ps);
+
+                translator.translate(ps, spec);
                 addFormula(new String(baos.toByteArray(), StandardCharsets.UTF_8));
             }
         } else {
 
-            List<Requirement> requirements = new ArrayList<>(parser.getRequirements());
-            for (Requirement r : requirements) {
+
+            for (Formula f: spec.getRequirements()) {
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 try (PrintStream ps = new PrintStream(baos, true, "UTF-8")) {
-                    parser.getRequirements().clear();
-                    parser.getRequirements().add(r);
-                    parser.translate(new SpotTranslator(), ps);
-
+                    LTLSpec newSpec = new LTLSpec();
+                    newSpec.addRequirement(f);
+                    translator.translate(ps, newSpec);
                     String ltlFormula = new String(baos.toByteArray(), StandardCharsets.UTF_8);
 
                     addFormula(ltlFormula);

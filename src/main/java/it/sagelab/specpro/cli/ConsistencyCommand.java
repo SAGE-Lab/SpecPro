@@ -1,7 +1,8 @@
 package it.sagelab.specpro.cli;
 
 import it.sagelab.specpro.consistency.ConsistencyChecker;
-import it.sagelab.specpro.fe.snl2fl.Snl2FlParser;
+import it.sagelab.specpro.fe.PSPFrontEnd;
+import it.sagelab.specpro.models.ltl.LTLSpec;
 import it.sagelab.specpro.reasoners.Aalta;
 import it.sagelab.specpro.reasoners.ModelChecker;
 import it.sagelab.specpro.reasoners.NuSMV;
@@ -55,10 +56,10 @@ public class ConsistencyCommand extends Command {
             mc = new NuSMV(timeout);
         }
 
-        Snl2FlParser snl2FlParser = new Snl2FlParser();
-        snl2FlParser.parseFile(inputFile);
+        PSPFrontEnd fe = new PSPFrontEnd();
+        LTLSpec spec = fe.parseFile(inputFile);
 
-        ConsistencyChecker consistencyChecker = new ConsistencyChecker(mc, snl2FlParser, "out.temp");
+        ConsistencyChecker consistencyChecker = new ConsistencyChecker(mc, spec, "out.temp");
         ConsistencyChecker.Result result = consistencyChecker.run();
         outStream.println(result);
         if(result == ConsistencyChecker.Result.FAIL) {
