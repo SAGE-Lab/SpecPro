@@ -71,7 +71,13 @@ public class RangeMapVisitor implements ExpressionVisitor {
         if(!treeMap.containsKey(exp.floatValue())) {
             Atom [] atoms = new Atom[2];
             atoms[0] = new Atom("_lower_"+var.getLabel()+treeMap.size());
+            atoms[0].setProperty(Atom.PROPERTY_NUMERIC, exp.floatValue());
+            atoms[0].setProperty(Atom.PROPERTY_NUMERIC_VAR, var.getLabel());
+            atoms[0].setProperty(Atom.PROPERTY_NUMERIC_EQ, false);
             atoms[1] = new Atom("_equal_"+var.getLabel()+treeMap.size());
+            atoms[1].setProperty(Atom.PROPERTY_NUMERIC, exp.floatValue());
+            atoms[1].setProperty(Atom.PROPERTY_NUMERIC_VAR, var.getLabel());
+            atoms[1].setProperty(Atom.PROPERTY_NUMERIC_EQ, true);
             treeMap.put(exp.floatValue(), atoms);
         }
 
