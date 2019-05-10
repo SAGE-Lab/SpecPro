@@ -1,8 +1,6 @@
 MODULE main
 VAR
 
-	_lower_S30 : boolean; -- S3 < 20.0
-	_equal_S30 : boolean; -- S3 = 20.0
 	_lower_S10 : boolean; -- S1 < 10.0
 	_equal_S10 : boolean; -- S1 = 10.0
 	_lower_S11 : boolean; -- S1 < 20.0
@@ -13,6 +11,8 @@ VAR
 	_equal_S21 : boolean; -- S2 = 10.0
 	_lower_S20 : boolean; -- S2 < 20.0
 	_equal_S20 : boolean; -- S2 = 20.0
+	_lower_S30 : boolean; -- S3 < 20.0
+	_equal_S30 : boolean; -- S3 = 20.0
 
 INVAR ! _lower_S30 | ! _equal_S30;
 INVAR ! _lower_S10 | ! _equal_S10;
