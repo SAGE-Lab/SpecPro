@@ -1,5 +1,9 @@
 grammar LTLGrammar;
 
+@header {
+package it.sagelab.specpro.fe.ltl.parser;
+}
+
 file: (formula ';'?)+;
 
 formula
@@ -11,5 +15,5 @@ formula
         ;
 
 WS: [ \t\r\n]+ -> skip ;
-ATOM: [a-zA-Z0-9]+;
-LINE_COMMENT : '#' .*? '\r'? '\n' -> skip ; // Match "#" stuff '\n'
+ATOM: [a-zA-Z0-9_]+;
+LINE_COMMENT : ('#' | '//') .*? '\r'? '\n' -> skip ; // Match single line comments

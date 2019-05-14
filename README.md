@@ -83,11 +83,11 @@ Once you have installed ANTLR4, all you have to do is:
 
 2. Build LTLGrammar:
 
-        antlr4 -o ../main/java/it/sagelab/specpro/fe/ltl/parser -package it.sagelab.specpro.fe.ltl.parser LTLGrammar.g4
+        antlr4 -o ../main/java/it/sagelab/specpro/fe/ltl/parser LTLGrammar.g4
 
 3. Build RequirementsGrammar:
         
-        antlr4 -o ../main/java/it/sagelab/specpro/fe/psp/parser -package it.sagelab.specpro.fe.psp.parser RequirementsGrammar.g4
+        antlr4 -o ../main/java/it/sagelab/specpro/fe/psp/parser RequirementsGrammar.g4
 
 ## References
 

@@ -1,5 +1,9 @@
 grammar RequirementsGrammar;
 
+@header {
+package it.sagelab.specpro.fe.psp.parser;
+}
+
 file: (varDeclaration | requirement)+ ;
 
 varDeclaration: ID 'is' 'an' varType 'variable' '.';
