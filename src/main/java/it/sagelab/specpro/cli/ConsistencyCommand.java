@@ -56,9 +56,6 @@ public class ConsistencyCommand extends Command {
             mc = new NuSMV(timeout);
         }
 
-        PSPFrontEnd fe = new PSPFrontEnd();
-        LTLSpec spec = fe.parseFile(inputFile);
-
         ConsistencyChecker consistencyChecker = new ConsistencyChecker(mc, spec, "out.temp");
         ConsistencyChecker.Result result = consistencyChecker.run();
         outStream.println(result);

@@ -52,7 +52,6 @@ public class TranslateCommand extends Command {
     public void run(CommandLine commandLine) throws IOException {
         ModelChecker mc = selectModelChecker(commandLine);
         PSPFrontEnd fe = new PSPFrontEnd();
-        LTLSpec spec = fe.parseFile(inputFile);
         mc.getTranslator().translate(outStream, spec);
     }
 

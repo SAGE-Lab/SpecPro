@@ -118,7 +118,7 @@ public class AtgCommand extends Command {
             }
         }
 
-        atg.parseRequirements(inputFile, commandLine.hasOption("conjunction"));
+        atg.parseRequirements(spec, commandLine.hasOption("conjunction"));
 
         if(commandLine.hasOption("expand-trans")) {
             atg.expandTransitions();
@@ -127,7 +127,7 @@ public class AtgCommand extends Command {
         atg.generate(outStream);
 
         if(commandLine.hasOption("cross-coverage")) {
-            atg.computeCrossCoverageWithConjBA(inputFile);
+            atg.computeCrossCoverageWithConjBA(spec);
         }
     }
 }
