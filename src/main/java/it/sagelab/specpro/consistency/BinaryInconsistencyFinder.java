@@ -63,7 +63,9 @@ public class BinaryInconsistencyFinder extends InconsistencyFinder{
             cc.getLTLSpec().getRequirements().addAll(requirements);
         if(inconsitentRequirements != null)
             cc.getLTLSpec().getRequirements().addAll(inconsitentRequirements);
-        // System.out.println("reqs: " + cc.getParser().getRequirements().stream().map(Requirement::getReqId).collect(toList()));
+
+        if(cc.getLTLSpec().getRequirements().size() == 0)
+            return true;
 
         ConsistencyChecker.Result result = cc.run();
         return result == ConsistencyChecker.Result.CONSISTENT;
