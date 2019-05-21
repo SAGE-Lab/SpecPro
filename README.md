@@ -6,8 +6,9 @@
 SpecPro is an open-source Java library for supporting
 analysis and development of formal requirements.
 
-Currently SpecPro supports a structured language based on the Property Specification Patterns (PSPs) defined in [1][2].
-The language also supports numerical constraints that are encoded in Linear Temporal Logic (LTL). 
+Currently SpecPro supports a structured language based on the Property Specification Patterns (PSPs) defined in [1][2] and
+Linear Temporal Logic (LTL) formulae.
+The PSP language also supports numerical constraints that are encoded in Linear Temporal Logic (LTL). 
 An example of accepted input can be found [here](https://github.com/SAGE-Lab/robot-arm-usecase). 
 
 SpecPro is a rework and extension of [snl2fl](https://github.com/SAGE-Lab/snl2fl). 
