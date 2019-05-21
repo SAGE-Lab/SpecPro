@@ -16,6 +16,17 @@ SpecPro is a rework and extension of [snl2fl](https://github.com/SAGE-Lab/snl2fl
 
    SpecPro is open source software released under the [LGPLv3 license](LICENSE). If you use it, please acknowledge it by citing:
 
+    @article{narizzano2019property,
+      title={Property specification patterns at work: verification and inconsistency explanation},
+      author={Narizzano, Massimo and Pulina, Luca and Tacchella, Armando and Vuotto, Simone},
+      journal={Innovations in Systems and Software Engineering},
+      pages={1--17},
+      year={2019},
+      publisher={Springer}
+    }
+
+or
+
     @inproceedings{narizzano2018consistency,
       title={Consistency of property specification patterns with boolean and constrained numerical signals},
       author={Narizzano, Massimo and Pulina, Luca and Tacchella, Armando and Vuotto, Simone},
