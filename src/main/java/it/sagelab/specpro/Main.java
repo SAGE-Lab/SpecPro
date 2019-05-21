@@ -7,6 +7,9 @@ import it.sagelab.specpro.fe.PSPFrontEnd;
 import it.sagelab.specpro.fe.psp.Snl2FlException;
 import it.sagelab.specpro.models.ltl.LTLSpec;
 import org.apache.commons.cli.*;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +49,7 @@ public class Main {
             options.addOption("i", "input", true, "Input file [required]");
             options.addOption("o", "output", true, "Output file");
             options.addOption("fe", "frontend", true, "Select input format to use. Possible values are: ltl, psp (default).");
+            options.addOption("v", "verbose", false, "Print additional information");
         }
 
         return options;
@@ -173,6 +177,12 @@ public class Main {
                 }
             } else {
                 frontEnd = new PSPFrontEnd();
+            }
+
+            if(commandLine.hasOption("v")) {
+                Configurator.setRootLevel(Level.INFO);
+            } else {
+                Configurator.setRootLevel(Level.WARN);
             }
 
 

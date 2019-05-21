@@ -30,13 +30,16 @@ public class AtgCommand extends Command {
         options.addOption(null, "minLength", true, "Min length of generated paths");
         options.addOption(null, "maxLength", true, "Max length of generated paths");
         options.addOption("c", "coverage", true, "Choose the coverage criteria. " +
-                "Possible values are 'state', 'transition', 'condition', 'acceptance', 'as-state', 'as-transition' or 'as-condition'.");
+                "Possible values are 'state', 'transition', 'acceptance', 'acc+state' or 'acc+transition'.");
+        /*
         options.addOption(null, "conjunction", false,
                 "Generates only one buchi automata with the conjunction of all the specifications");
         options.addOption(null, "cross-coverage", false, "Compute the coverage of the conjunction BA with the tests generated");
+        */
         options.addOption(null, "cache", true,"Set the cache strategy. " +
                 "Possible values are 'reset', 'max-length', 'random-del' or 'no'.");
         options.addOption(null, "cache-maxLength", true, "Max path legnth stored in the cache (only for max-length strategy).");
+
         options.addOption(null, "expand-trans", false, "Expand implicit transitions in BAs before starting test case generation");
 
         return options;
@@ -72,13 +75,13 @@ public class AtgCommand extends Command {
                 case "acceptance":
                     atg.setCoverageCriterion(new AcceptanceStateCoverage());
                     break;
-                case "as-state":
+                case "acc+state":
                     atg.setCoverageCriterion(new CombinedCoverage(new StateCoverage(), new AcceptanceStateCoverage()));
                     break;
-                case "as-transition":
+                case "acc+transition":
                     atg.setCoverageCriterion(new CombinedCoverage(new TransitionCoverage(), new AcceptanceStateCoverage()));
                     break;
-                case "as-condition":
+                case "acc+condition":
                     atg.setCoverageCriterion(new CombinedCoverage(new ConditionCoverage(), new AcceptanceStateCoverage()));
                     break;
                 default:
@@ -118,7 +121,8 @@ public class AtgCommand extends Command {
             }
         }
 
-        atg.parseRequirements(spec, commandLine.hasOption("conjunction"));
+        //atg.parseRequirements(spec, commandLine.hasOption("conjunction"));
+        atg.parseRequirements(spec, true);
 
         if(commandLine.hasOption("expand-trans")) {
             atg.expandTransitions();

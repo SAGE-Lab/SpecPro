@@ -26,6 +26,8 @@ dependencies {
     compile('commons-cli:commons-cli:1.4')
     compile('org.json:json:20171018')
     compile('org.apache.directory.studio:org.apache.commons.io:2.4')
+    compile('org.apache.logging.log4j:log4j-api:2.11.2')
+    compile('org.apache.logging.log4j:log4j-core:2.11.2')
     compile('org.antlr:antlr4:4.7')
     compile('edu.stanford.nlp:stanford-corenlp:3.9.1')
     compile('org.jgrapht:jgrapht-core:1.2.0')
