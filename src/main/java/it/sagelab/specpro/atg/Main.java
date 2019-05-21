@@ -30,7 +30,7 @@ public class Main {
 
         for(Set<TestSequence> ts: tests.values()) {
             for(TestSequence test : ts) {
-                mc.evaluateTest(test.getAssignmentList());
+                mc.evaluateTest(test.getAssignmentList(),1);
             }
         }
 
