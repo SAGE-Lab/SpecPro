@@ -1,5 +1,6 @@
 package it.sagelab.specpro.models.psp;
 
+import it.sagelab.specpro.models.InputRequirement;
 import it.sagelab.specpro.models.psp.expressions.Expression;
 import it.sagelab.specpro.models.psp.expressions.VariableExpression;
 
@@ -13,10 +14,9 @@ import java.util.Set;
  *
  * @author Simone Vuotto
  */
-public abstract class Requirement {
+public abstract class Requirement extends InputRequirement {
 
-    /** The requirement ID */
-    private String reqId;
+
     
     /** The scope. */
     private final Scope scope;
@@ -24,7 +24,6 @@ public abstract class Requirement {
     /** The expressions. */
     private final List<Expression> expressions;
 
-    private String text;
 
     /**
      * Instantiates a new requirement.
@@ -33,45 +32,11 @@ public abstract class Requirement {
      * @param expressions the expressions
      */
     public Requirement(Scope scope, List<Expression> expressions){
-        this.reqId = null;
         if(scope == null)
             this.scope = new Scope(Scope.Type.GLOBALLY, Collections.emptyList());
         else
             this.scope = scope;
         this.expressions = expressions;
-    }
-
-
-    /**
-     * Gets the requirement id
-     *
-     * @return the reqId
-     */
-    public String getReqId() { return reqId; }
-
-    /**
-     * Sets the psp id
-     *
-     * @param reqId the new requirement id
-     */
-    public void setReqId(String reqId) {
-        this.reqId = reqId;
-    }
-
-    /**
-     * Gets the text representation of the requirement
-     * @return the requirement in text format
-     */
-    public String getText() {
-        return text;
-    }
-
-    /**
-     * Sets the requirement text
-     * @param text the text of the requirement
-     */
-    public void setText(String text) {
-        this.text = text;
     }
 
     /**

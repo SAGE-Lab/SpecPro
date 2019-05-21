@@ -72,8 +72,8 @@ An exampple is:
 
 There are two grammars used in **SpecPro**: 
 
-* [FLGrammar.g4](FLGrammar.g4): defines the formal formulae syntax
-* [RequirementsGrammar.g4](RequirementsGrammar.g4): defines the grammar for patterns
+* [LTLGrammar.g4](src/antlr/LTLGrammar.g4): defines the formal LTL formulae syntax
+* [RequirementsGrammar.g4](src/antlr/RequirementsGrammar.g4): defines the grammar for patterns
 
 The grammars are built using [ANTLR4](http://www.antlr.org/), you need to download and install
 it in order to rebuild them. The installation guide is available
@@ -81,15 +81,15 @@ it in order to rebuild them. The installation guide is available
  
 Once you have installed ANTLR4, all you have to do is:
 
-1. Open a terminal and move to the it.sagelab.it.sagelab.fe.snl2fl root directory
+1. Open a terminal in the project root directory and move to `src/antlr/`
 
-2. Build FLGrammar:
+2. Build LTLGrammar:
 
-        antlr4 -o src/main/java/it/sagelab/specpro/fe/ltl/parser -package it.sagelab.specpro.fe.ltl.parser FLGrammar.g4
+        antlr4 -o ../main/java/it/sagelab/specpro/fe/ltl/parser LTLGrammar.g4
 
 3. Build RequirementsGrammar:
         
-        antlr4 -o src/main/java/it/sagelab/specpro/fe/snl2fl/parser -package it.sagelab.specpro.fe.snl2fl.parser RequirementsGrammar.g4
+        antlr4 -o ../main/java/it/sagelab/specpro/fe/psp/parser RequirementsGrammar.g4
 
 ## References
 

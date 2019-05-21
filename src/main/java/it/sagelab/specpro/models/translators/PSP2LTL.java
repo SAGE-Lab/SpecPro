@@ -1,19 +1,15 @@
 package it.sagelab.specpro.models.translators;
 
-import it.sagelab.specpro.fe.snl2fl.Snl2FlException;
+import it.sagelab.specpro.fe.psp.Snl2FlException;
+import it.sagelab.specpro.models.ltl.*;
 import it.sagelab.specpro.models.psp.expressions.ExpressionVisitor;
 import it.sagelab.specpro.models.psp.expressions.*;
-import it.sagelab.specpro.models.ltl.Atom;
-import it.sagelab.specpro.models.ltl.BinaryOperator;
-import it.sagelab.specpro.models.ltl.UnaryOperator;
-import it.sagelab.specpro.models.ltl.Formula;
 import it.sagelab.specpro.fe.ltl.patterns.Pattern;
 import it.sagelab.specpro.fe.ltl.patterns.PatternUnifier;
-import it.sagelab.specpro.fe.snl2fl.parser.RequirementsBuilder;
+import it.sagelab.specpro.fe.psp.parser.RequirementsBuilder;
 import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.models.psp.qualitative.QualitativeRequirement;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -23,11 +19,11 @@ import java.util.*;
  */
 public class PSP2LTL implements ExpressionVisitor {
 
-    /** The list of qualitative requirements. */
-    private List<QualitativeRequirement> requirements;
 
-    /** The pattern map. */
-    private Map<String, Pattern> patternMap;
+    /** The patterns map. */
+    private static final Map<String, Pattern> patternMap = Pattern.loadPatterns(Pattern.PATTERNS_FILE);
+
+    private LTLSpec spec;
 
     /** The range map. */
     private Map<String, TreeMap<Float, Atom[]>> rangeMap;
@@ -35,51 +31,16 @@ public class PSP2LTL implements ExpressionVisitor {
     /** The formula. */
     private Formula formula;
 
-    /** Boolean Vars */
-    private Map<String, Atom> booleanAtoms;
-
     public PSP2LTL() {
-        this.requirements = new ArrayList<>();
+
     }
 
-    public Map<String, TreeMap<Float, Atom[]>> getRangeMap() {
-        return rangeMap;
-    }
 
-    public Map<String, Atom> getBooleanAtoms() {
-        return booleanAtoms;
-    }
-
-    /**
-     * Set the context for translation
-     *
-     * @param builder the requirement builder containing the input parsed
-     */
-    public void setContext(RequirementsBuilder builder) {
-
-        this.requirements = new ArrayList<>();
-        this.booleanAtoms = new HashMap<>();
-        for(Requirement r : builder.getContext().getRequirementList()) {
-            if (r instanceof QualitativeRequirement)
-                this.requirements.add((QualitativeRequirement)r);
-            else
-                System.err.println("Requirement " + requirements.indexOf(r) + " is not a qualitative requirement, it is skipped.");
-        }
-
+    public LTLSpec translate(List<? extends Requirement> requirements) {
         rangeMap = computeRangeMap(requirements);
-    }
-
-    /**
-     * Translate.
-     *
-     * @return the list
-     */
-    public List<Formula> translate() {
-        if(patternMap == null)
-            this.patternMap = Pattern.loadPatterns(Pattern.PATTERNS_FILE);
         PatternUnifier patternUnifier = new PatternUnifier();
-        ArrayList<Formula> formulae = new ArrayList<>();
-        for(QualitativeRequirement r : requirements) {
+        spec = new LTLSpec();
+        for(Requirement r : requirements) {
 
             try {
                 Pattern pattern = patternMap.get(r.key());
@@ -87,13 +48,27 @@ public class PSP2LTL implements ExpressionVisitor {
                     throw new RuntimeException("Pattern " + r.key() + " not found!");
                 List<Formula> scopeFormulae = parseExpressions(r.getScope().getExpressions());
                 List<Formula> bodyFormulae = parseExpressions(r.getExpressions());
-                formulae.add(patternUnifier.unify(pattern, scopeFormulae, bodyFormulae));
+                Formula f = patternUnifier.unify(pattern, scopeFormulae, bodyFormulae);
+                spec.addRequirement(f, r);
 
             } catch (RuntimeException e) {
                 throw new Snl2FlException("Requirement " + requirements.indexOf(r) + ": " + e.getMessage());
             }
         }
-        return formulae;
+
+        List<Formula> invariants = getInvariants();
+        for(Formula i: invariants) {
+            spec.addInvariant(i);
+        }
+
+        for(TreeMap<Float, Atom[]> map: rangeMap.values()) {
+            for(Atom[] atoms : map.values()) {
+                spec.getSymbolTable().put(atoms[0].getLabel(), atoms[0]);
+                spec.getSymbolTable().put(atoms[1].getLabel(), atoms[1]);
+            }
+        }
+
+        return spec;
     }
 
     /**
@@ -101,7 +76,7 @@ public class PSP2LTL implements ExpressionVisitor {
      *
      * @return the invariants
      */
-    public List<Formula> getInvariants() {
+    private List<Formula> getInvariants() {
         ArrayList<Formula> invariants = new ArrayList<>();
         for(String varName : rangeMap.keySet()) {
             TreeMap<Float, Atom[]> rangesToAtoms = rangeMap.get(varName);
@@ -192,8 +167,7 @@ public class PSP2LTL implements ExpressionVisitor {
     @Override
     public void visitVariableExpression(VariableExpression exp) {
         if(exp.getType() == VariableExpression.Type.BOOLEAN) {
-            booleanAtoms.putIfAbsent(exp.getLabel(), new Atom(exp.getLabel()));
-            formula = booleanAtoms.get(exp.getLabel());
+            formula = spec.getOrCreateAtom(exp.getLabel());
         }
     }
 
@@ -201,19 +175,15 @@ public class PSP2LTL implements ExpressionVisitor {
     public void visitNumberExpression(NumberExpression exp) {  }
 
 
-    /*********************************************
-     *  Util Methods
-     *********************************************/
-
     /**
      * Compute range map.
      *
      * @param requirements the psp
      * @return the map
      */
-    public static Map<String, TreeMap<Float, Atom[]>> computeRangeMap(List<QualitativeRequirement> requirements){
+    private static Map<String, TreeMap<Float, Atom[]>> computeRangeMap(List<? extends Requirement> requirements){
         RangeMapVisitor rangeMapVisitor = new RangeMapVisitor();
-        for(QualitativeRequirement r : requirements) {
+        for(Requirement r : requirements) {
             for (Expression e : r.getScope().getExpressions())
                 e.accept(rangeMapVisitor);
             for (Expression e : r.getExpressions())
@@ -230,10 +200,12 @@ public class PSP2LTL implements ExpressionVisitor {
      * @param operator the operator
      * @return the formula
      */
-    public Formula getFormulaFromConstraint(String varName, Float threshold, CompareExpression.Operator operator) {
+    private Formula getFormulaFromConstraint(String varName, Float threshold, CompareExpression.Operator operator) {
         Formula f = null;
         if (operator == CompareExpression.Operator.EQUAL) {
             f = getEqualAtom(varName, threshold);
+        } else if(operator == CompareExpression.Operator.NOT_EQUAL) {
+            f = new UnaryOperator(getEqualAtom(varName, threshold), UnaryOperator.Operator.NOT);
         } else {
             List<Atom> variables = getAtoms(varName,threshold,operator);
             for (Atom a : variables) {
@@ -250,7 +222,6 @@ public class PSP2LTL implements ExpressionVisitor {
                         f = new BinaryOperator(f, new UnaryOperator(a, UnaryOperator.Operator.NOT),
                                 BinaryOperator.Operator.AND);
                     } else {
-                        // TODO: thrown exception if operator is not LOWER or LOWER_EQUAL
                         f = new BinaryOperator(f, a, BinaryOperator.Operator.OR);
                     }
                 }
@@ -267,7 +238,7 @@ public class PSP2LTL implements ExpressionVisitor {
      * @param operator the operator
      * @return the set of booleanAtoms in the compare expression formula.
      */
-    public List<Atom> getAtoms(String varName, Float threshold, CompareExpression.Operator operator) {
+    private List<Atom> getAtoms(String varName, Float threshold, CompareExpression.Operator operator) {
         TreeMap<Float, Atom[]> treeMap = rangeMap.get(varName);
         if(treeMap == null) {
             throw new RuntimeException("Variable " + varName + " not found");
@@ -297,7 +268,7 @@ public class PSP2LTL implements ExpressionVisitor {
      * @param threshold the threshold
      * @return the equal atom
      */
-    public Atom getEqualAtom(String varName, Float threshold) {
+    private Atom getEqualAtom(String varName, Float threshold) {
         return rangeMap.get(varName).get(threshold)[1];
     }
 

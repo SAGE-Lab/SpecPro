@@ -26,32 +26,29 @@ public class LTL2BA {
         BuchiAutomaton g = new BuchiAutomaton(db);
         Runtime rt = Runtime.getRuntime();
         Process process = null;
-        String[] command = {"ltl2tgba", "-B", formula, "-d"};
-        //String[] command = {"./ltl2gba_launcher.pl", formula};
+        String input = null;
         try {
-            process = rt.exec(command);
+            ProcessBuilder builder = new ProcessBuilder("ltl2tgba", "-B", formula, "--low","-d");
+            builder.redirectErrorStream(true);
+            builder.redirectOutput(ProcessBuilder.Redirect.PIPE);
+            process = builder.start();
+
+            input = IOUtils.toString(process.getInputStream());
+
             int exitValue = process.waitFor();
-            if(exitValue != 0)
+            if(exitValue != 0) {
+                System.err.println(input);
                 throw new RuntimeException("ltl2gba returned with value " + exitValue);
-            if(process.getErrorStream().available() > 0) {
-                String error = IOUtils.toString(process.getErrorStream());
-                if (error.length() > 0)
-                    System.err.println(error);
             }
-            if(process.getInputStream().available() > 0) {
-                String input = IOUtils.toString(process.getInputStream());
+            else {
                 input = input.replace("label=\"\\n[Büchi]\"", "");
-                //System.out.println(input);
                 importer.importGraph(g, new StringReader(input));
-            } else {
-                return null;
             }
 
         } catch (IOException | InterruptedException | ImportException e) {
             if(process != null)
                 process.destroyForcibly();
             e.printStackTrace();
-            g = null;
         }
 
         return g;

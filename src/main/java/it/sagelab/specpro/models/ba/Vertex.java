@@ -2,12 +2,18 @@ package it.sagelab.specpro.models.ba;
 
 import org.jgrapht.io.Attribute;
 
+import java.util.Collections;
 import java.util.Map;
 
 public class Vertex {
 
     final String id;
     final Map<String, Attribute> attributes;
+
+    public Vertex(String id) {
+        this.id = id;
+        attributes = Collections.emptyMap();
+    }
 
     public Vertex(String id, Map<String, Attribute> attributes) {
         this.id = id;

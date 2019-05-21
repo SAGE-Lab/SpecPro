@@ -1,10 +1,10 @@
 package it.sagelab.specpro.reasoners;
 
+import it.sagelab.specpro.reasoners.translators.LTLToolTranslator;
 import org.apache.commons.io.IOUtils;
-import it.sagelab.specpro.fe.snl2fl.Snl2FlTranslator;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 public abstract class ModelChecker {
@@ -17,17 +17,17 @@ public abstract class ModelChecker {
 
     private Thread thread;
     private long timeout;
-    private Snl2FlTranslator translator;
+    private LTLToolTranslator translator;
     protected String message;
     protected String execPath;
 
-    public ModelChecker(long timeout, Snl2FlTranslator translator) {
+    public ModelChecker(long timeout, LTLToolTranslator translator) {
         this.timeout = timeout;
         this.translator = translator;
-        this.execPath = System.getenv("SNL2FL_MODELCHECKER");
+        this.execPath = "";
     }
 
-    public ModelChecker(Snl2FlTranslator translator) {
+    public ModelChecker(LTLToolTranslator translator) {
         this.translator = translator;
     }
 
@@ -41,19 +41,34 @@ public abstract class ModelChecker {
         Process process = null;
         String[] command = getCommand(filePath);
         try {
-            process = rt.exec(command);
 
+            ProcessBuilder builder = new ProcessBuilder(command);
+            //builder.redirectErrorStream(true);
+
+            builder.redirectOutput(ProcessBuilder.Redirect.PIPE);
+            builder.redirectError(ProcessBuilder.Redirect.PIPE);
+            process = builder.start();
+
+            /* Read output and error streams in separate threads to avoid deadlock */
+            ExecutorService newFixedThreadPool = Executors.newFixedThreadPool(2);
+
+            final Process finalProcess = process;
+            Future<String> fOutput = newFixedThreadPool.submit(() -> IOUtils.toString(finalProcess.getInputStream()));
+            Future<String> fError = newFixedThreadPool.submit(() -> IOUtils.toString(finalProcess.getErrorStream()));
+            newFixedThreadPool.shutdown();
+
+            /* Wait for the process to end or until timeout expires */
             process.waitFor(timeout, TimeUnit.SECONDS);
 
             if(process.isAlive())
-                throw new InterruptedException("Timeout exceeded");
+                throw new InterruptedException("Timeout expired");
 
-            String output = IOUtils.toString(process.getInputStream());
-            String errorMessage = IOUtils.toString(process.getErrorStream());
+            String output = fOutput.get();
+            String error = fError.get();
 
-            return parseOutput(output, errorMessage);
+            return parseOutput(output, error);
 
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException | ExecutionException e) {
             if(process != null)
                 process.destroyForcibly();
                 this.message = e.getMessage();
@@ -74,11 +89,11 @@ public abstract class ModelChecker {
 
     protected abstract Result parseOutput(String output, String error);
 
-    public Snl2FlTranslator getTranslator() {
+    public LTLToolTranslator getTranslator() {
         return translator;
     }
 
-    public void setTranslator(Snl2FlTranslator translator) {
+    public void setTranslator(LTLToolTranslator translator) {
         this.translator = translator;
     }
 

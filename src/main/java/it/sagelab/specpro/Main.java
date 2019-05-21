@@ -1,8 +1,15 @@
 package it.sagelab.specpro;
 
 import it.sagelab.specpro.cli.*;
-import it.sagelab.specpro.fe.snl2fl.Snl2FlException;
+import it.sagelab.specpro.fe.AbstractLTLFrontEnd;
+import it.sagelab.specpro.fe.LTLFrontEnd;
+import it.sagelab.specpro.fe.PSPFrontEnd;
+import it.sagelab.specpro.fe.psp.Snl2FlException;
+import it.sagelab.specpro.models.ltl.LTLSpec;
 import org.apache.commons.cli.*;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +48,8 @@ public class Main {
             options.addOption(null, "version",false,"Print version information and exit");
             options.addOption("i", "input", true, "Input file [required]");
             options.addOption("o", "output", true, "Output file");
+            options.addOption("fe", "frontend", true, "Select input format to use. Possible values are: ltl, psp (default).");
+            options.addOption("v", "verbose", false, "Print additional information");
         }
 
         return options;
@@ -133,6 +142,7 @@ public class Main {
             String [] args2 = commandLineParser.getNotParsedArgs();
             String inputFile, outputFile;
             PrintStream outStream;
+            AbstractLTLFrontEnd frontEnd;
 
             if (commandLine.hasOption("h")) {
                 printHelp(commandLine, args2);
@@ -154,6 +164,27 @@ public class Main {
                 outStream = System.out;
             }
 
+            if(commandLine.hasOption("fe")) {
+                switch (commandLine.getOptionValue("fe")) {
+                    case "ltl":
+                        frontEnd = new LTLFrontEnd();
+                        break;
+                    case "psp":
+                        frontEnd = new PSPFrontEnd();
+                        break;
+                    default:
+                        throw  new Snl2FlException("Option " + commandLine.getOptionValue("fe") + " not recognized");
+                }
+            } else {
+                frontEnd = new PSPFrontEnd();
+            }
+
+            if(commandLine.hasOption("v")) {
+                Configurator.setRootLevel(Level.INFO);
+            } else {
+                Configurator.setRootLevel(Level.WARN);
+            }
+
 
             if(args2.length == 0) {
                 System.err.println("No command selected. See 'SpecPro --help'");
@@ -169,8 +200,10 @@ public class Main {
             Command command = commands.get(args2[0]);
 
             CommandLine commandLine2 = commandLineParser.parse(command.createOptionMenu(), args2);
-            System.out.println(inputFile);
-            command.setInputFile(inputFile);
+
+            LTLSpec spec = frontEnd.parseFile(inputFile);
+
+            command.setLTLSpec(spec);
             command.setOutStream(outStream);
             command.run(commandLine2);
 

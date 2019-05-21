@@ -3,7 +3,7 @@ package it.sagelab.specpro.models.translators;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import it.sagelab.specpro.fe.snl2fl.Snl2FlException;
+import it.sagelab.specpro.fe.psp.Snl2FlException;
 import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.psp.expressions.ExpressionVisitor;
 import it.sagelab.specpro.models.psp.expressions.*;
@@ -71,7 +71,13 @@ public class RangeMapVisitor implements ExpressionVisitor {
         if(!treeMap.containsKey(exp.floatValue())) {
             Atom [] atoms = new Atom[2];
             atoms[0] = new Atom("_lower_"+var.getLabel()+treeMap.size());
+            atoms[0].setProperty(Atom.PROPERTY_NUMERIC, exp.floatValue());
+            atoms[0].setProperty(Atom.PROPERTY_NUMERIC_VAR, var.getLabel());
+            atoms[0].setProperty(Atom.PROPERTY_NUMERIC_EQ, false);
             atoms[1] = new Atom("_equal_"+var.getLabel()+treeMap.size());
+            atoms[1].setProperty(Atom.PROPERTY_NUMERIC, exp.floatValue());
+            atoms[1].setProperty(Atom.PROPERTY_NUMERIC_VAR, var.getLabel());
+            atoms[1].setProperty(Atom.PROPERTY_NUMERIC_EQ, true);
             treeMap.put(exp.floatValue(), atoms);
         }
 

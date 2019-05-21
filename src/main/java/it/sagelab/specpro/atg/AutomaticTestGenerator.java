@@ -3,22 +3,27 @@ package it.sagelab.specpro.atg;
 import it.sagelab.specpro.atg.coverage.*;
 import it.sagelab.specpro.collections.SequenceBuilder;
 import it.sagelab.specpro.collections.Trie;
-import it.sagelab.specpro.fe.snl2fl.Snl2FlParser;
 import it.sagelab.specpro.models.ba.BAExplorer;
 import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.ac.LassoShapedAcceptanceCondition;
+import it.sagelab.specpro.models.ltl.Formula;
+import it.sagelab.specpro.models.ltl.LTLSpec;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
-import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.reasoners.LTL2BA;
 import it.sagelab.specpro.reasoners.translators.SpotTranslator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
 public class AutomaticTestGenerator {
+
+    private static final Logger logger = LogManager.getLogger();
 
     /** Public Properties **/
     private int minLength, maxLength;
@@ -31,7 +36,6 @@ public class AutomaticTestGenerator {
 
     private final HashSet<List<Assignment>> uniqueAssignments = new HashSet<>();
 
-    private PrintStream outStream;
 
 
     public AutomaticTestGenerator() {
@@ -41,7 +45,7 @@ public class AutomaticTestGenerator {
     public AutomaticTestGenerator(int minLength, int maxLength) {
         this.minLength = minLength;
         this.maxLength = maxLength;
-        coverageCriterion = new TransitionCoverage();
+        coverageCriterion = new StateCoverage();
         baProductHandler = new BAProductHandler();
     }
 
@@ -75,32 +79,31 @@ public class AutomaticTestGenerator {
         buchiAutomata.add(ltl2ba.translate(ltlFormula));
     }
 
-    public void parseRequirements(String filePath) throws IOException {
-        parseRequirements(filePath, false);
+    public void parseRequirements(LTLSpec spec) throws IOException {
+        parseRequirements(spec, false);
     }
 
-    public void parseRequirements(String filePath, boolean conjunctionBA) throws IOException {
+    public void parseRequirements(LTLSpec spec, boolean conjunctionBA) throws IOException {
 
-        Snl2FlParser parser = new Snl2FlParser();
-        parser.parseFile(filePath);
+        SpotTranslator translator = new SpotTranslator();
 
         if(conjunctionBA) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try (PrintStream ps = new PrintStream(baos, true, "UTF-8")) {
-                parser.translate(new SpotTranslator(), ps);
+
+                translator.translate(ps, spec);
                 addFormula(new String(baos.toByteArray(), StandardCharsets.UTF_8));
             }
         } else {
 
-            List<Requirement> requirements = new ArrayList<>(parser.getRequirements());
-            for (Requirement r : requirements) {
+
+            for (Formula f: spec.getRequirements()) {
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 try (PrintStream ps = new PrintStream(baos, true, "UTF-8")) {
-                    parser.getRequirements().clear();
-                    parser.getRequirements().add(r);
-                    parser.translate(new SpotTranslator(), ps);
-
+                    LTLSpec newSpec = new LTLSpec();
+                    newSpec.addRequirement(f);
+                    translator.translate(ps, newSpec);
                     String ltlFormula = new String(baos.toByteArray(), StandardCharsets.UTF_8);
 
                     addFormula(ltlFormula);
@@ -117,14 +120,13 @@ public class AutomaticTestGenerator {
         return generate(System.out);
     }
 
-    public Map<BuchiAutomaton, Set<TestSequence>> generate(PrintStream printStream)  {
+    public Map<BuchiAutomaton, Set<TestSequence>> generate(PrintStream outStream)  {
         generatedTests = new HashMap<>();
-        outStream = printStream;
 
         double totalTime = 0;
         int count = 0;
         for(BuchiAutomaton ba: buchiAutomata) {
-            outStream.println("Generating paths for req # " + (++count) + "/" + buchiAutomata.size());
+            logger.info("Generating paths for BA # " + (++count) + "/" + buchiAutomata.size());
             long startTime = System.nanoTime();
             generate(ba);
             long endTime = System.nanoTime();
@@ -132,8 +134,7 @@ public class AutomaticTestGenerator {
             printStatistics(ba);
             double seconds = (double)elapsedTime / 1_000_000_000.0;
             totalTime += seconds;
-            outStream.println(String.format("Elapsed Time: %.3f s", seconds));
-            outStream.println("*****************************************************************************");
+            logger.info(String.format("Elapsed Time: %.3f s", seconds));
         }
 
         outStream.println("Different tests generated: " + uniqueAssignments.size());
@@ -145,20 +146,13 @@ public class AutomaticTestGenerator {
         return generatedTests;
     }
 
-    public void computeCrossCoverageWithConjBA(String filePath) throws IOException {
-        computeCrossCoverageWithConjBA(filePath, false);
-    }
-
-    public void computeCrossCoverageWithConjBA(String input, boolean ltlFormula) throws IOException {
+    public void computeCrossCoverageWithConjBA(LTLSpec spec) throws IOException {
         ArrayList<BuchiAutomaton> oldBAs = new ArrayList<>(buchiAutomata);
         buchiAutomata.clear();
-        if (ltlFormula) {
-            addFormula(input);
-        } else {
-            parseRequirements(input, true);
-        }
-        outStream.println("\n\n");
-        outStream.println("*** Cross Coverage Statistics *** ");
+
+        parseRequirements(spec, true);
+
+        logger.info("*** Cross Coverage Statistics *** ");
         coverageCriterion.reset(buchiAutomata.get(0));
         generatedTests.put(buchiAutomata.get(0), new HashSet<>());
         updateCoverage(buchiAutomata.get(0));
@@ -198,16 +192,16 @@ public class AutomaticTestGenerator {
                 Trie<Edge> inducedPaths = baExplorer.findInducedPaths(ba, test);
 
                 if(inducedPaths.size() == 0) {
-                    outStream.println("** WARN: No induced path for test " + test);
-                    outStream.println("*****************************************************************************");
+                    logger.debug("** WARN: No induced path for test " + test);
+                    logger.debug("*****************************************************************************");
                 }
 
                 for(List<Edge> path: inducedPaths) {
                     coverageCriterion.accept(path, test);
                     testSet.add(new TestSequence(new ArrayList<>(path), test));
-                    outStream.println("** Test already generated **");
-                    outStream.println(path);
-                    outStream.println(test);
+                    logger.debug("** Test already generated **");
+                    logger.debug(path);
+                    logger.debug(test);
                 }
 
             }
@@ -246,8 +240,8 @@ public class AutomaticTestGenerator {
                 coverageCriterion.accept(path, processedTest);
                 tests.add(new TestSequence(new ArrayList<>(path), processedTest));
                 uniqueAssignments.add(processedTest);
-                outStream.println(path);
-                outStream.println(processedTest);
+                //outStream.println(path);
+                //outStream.println(processedTest);
 
                 if(coverageCriterion.covered(path)) {
                     break;
@@ -259,31 +253,37 @@ public class AutomaticTestGenerator {
 
 
     private void printStatistics(BuchiAutomaton ba) {
-        outStream.println("###############################");
-        outStream.println("Stats");
-        outStream.println("# Vertexes:   " + ba.vertexSet().size());
-        outStream.println("# Acc. States:" + ba.vertexSet().stream().filter(v -> v.isAcceptingState()).count());
-        outStream.println("# Edges:      " + ba.edgeSet().size());
-        outStream.println("# Conditions: " + ba.edgeSet().stream().map(e -> e.getAssigments()).mapToInt(Set::size).sum());
+        logger.info(()-> {
+            StringBuilder builder = new StringBuilder();
+            builder.append("\n\t###############################\n");
+            builder.append("\tStats\n");
+            builder.append("\t# Vertexes:   " + ba.vertexSet().size() + "\n");
+            builder.append("\t# Acc. States:" + ba.vertexSet().stream().filter(v -> v.isAcceptingState()).count() + "\n");
+            builder.append("\t# Edges:      " + ba.edgeSet().size() + "\n");
+            builder.append("\t# Conditions: " + ba.edgeSet().stream().map(e -> e.getAssigments()).mapToInt(Set::size).sum() + "\n");
 
-        Set<TestSequence> tests = generatedTests.get(ba);
-        StateCoverage sc = new StateCoverage(ba);
-        AcceptanceStateCoverage asc = new AcceptanceStateCoverage(ba);
-        TransitionCoverage tc = new TransitionCoverage(ba);
-        ConditionCoverage cc = new ConditionCoverage(ba);
-        for(TestSequence t : tests) {
-            sc.accept(t.getPath(), t.getAssignmentList());
-            asc.accept(t.getPath(), t.getAssignmentList());
-            tc.accept(t.getPath(), t.getAssignmentList());
-            cc.accept(t.getPath(), t.getAssignmentList());
-        }
+            Set<TestSequence> tests = generatedTests.get(ba);
+            StateCoverage sc = new StateCoverage(ba);
+            AcceptanceStateCoverage asc = new AcceptanceStateCoverage(ba);
+            TransitionCoverage tc = new TransitionCoverage(ba);
+            ConditionCoverage cc = new ConditionCoverage(ba);
+            for(TestSequence t : tests) {
+                sc.accept(t.getPath(), t.getAssignmentList());
+                asc.accept(t.getPath(), t.getAssignmentList());
+                tc.accept(t.getPath(), t.getAssignmentList());
+                cc.accept(t.getPath(), t.getAssignmentList());
+            }
 
-        outStream.println("State Coverage:      " + sc.coverage());
-        outStream.println("Acc. State Coverage: " + asc.coverage());
-        outStream.println("Transition Coverage: " + tc.coverage());
-        outStream.println("Condition Coverage:  " + cc.coverage());
-        outStream.println("Target Coverage:     " + coverageCriterion.coverage());
-        outStream.println("###############################");
+            builder.append("\tState Coverage:      " + sc.coverage() + "\n");
+            builder.append("\tAcc. State Coverage: " + asc.coverage() + "\n");
+            builder.append("\tTransition Coverage: " + tc.coverage() + "\n");
+            builder.append("\tCondition Coverage:  " + cc.coverage() + "\n");
+            builder.append("\tTarget Coverage:     " + coverageCriterion.coverage() + "\n");
+            builder.append("\t###############################");
+
+            return builder.toString();
+        });
+
     }
 
 }

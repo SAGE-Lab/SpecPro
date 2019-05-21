@@ -71,6 +71,8 @@ public class Assignment {
         return null;
     }
 
+    public boolean contains(Atom a) { return assignmentsMap.containsKey(a); }
+
     public boolean getValue(Atom a) {
         return assignmentsMap.get(a);
     }

@@ -1,6 +1,7 @@
 package it.sagelab.specpro.consistency;
 
-import it.sagelab.specpro.models.psp.Requirement;
+import it.sagelab.specpro.models.InputRequirement;
+import it.sagelab.specpro.models.ltl.Formula;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,12 +19,12 @@ public class LinearInconsistencyFinder extends InconsistencyFinder {
         super(cc);
     }
 
-    public List<Requirement> run(){
+    public List<InputRequirement> run(){
         return run((req, res) -> {});
     }
 
-    public List<Requirement> run(BiConsumer<Requirement, ConsistencyChecker.Result> onProgress) {
-        ArrayList<Requirement> inconsistentRequirements = new ArrayList<>();
+    public List<InputRequirement> run(BiConsumer<InputRequirement, ConsistencyChecker.Result> onProgress) {
+        ArrayList<InputRequirement> inconsistentRequirements = new ArrayList<>();
 
 
         ConsistencyChecker.Result result = cc.run();
@@ -37,21 +38,21 @@ public class LinearInconsistencyFinder extends InconsistencyFinder {
 
         long seed = System.currentTimeMillis();
         //System.out.println("seed: " + seed);
-        Collections.shuffle(cc.getParser().getRequirements(), new Random(seed));
+        Collections.shuffle(cc.getLTLSpec().getRequirements(), new Random(seed));
 
-        int reqSize = cc.getParser().getRequirements().size();
+        int reqSize = cc.getLTLSpec().getRequirements().size();
         int i = 0;
         while(i++ < reqSize && result != ConsistencyChecker.Result.FAIL) {
-            Requirement r = cc.getParser().getRequirements().remove(0);
+            Formula r = cc.getLTLSpec().getRequirements().remove(0);
             result = cc.run();
 
             if(result == ConsistencyChecker.Result.CONSISTENT) {
-                inconsistentRequirements.add(r);
-                cc.getParser().getRequirements().add(r);
+                inconsistentRequirements.add(cc.getLTLSpec().getInputRequirement(r));
+                cc.getLTLSpec().getRequirements().add(r);
             }
 
             if(onProgress != null)
-                onProgress.accept(r, result);
+                onProgress.accept(cc.getLTLSpec().getInputRequirement(r), result);
         }
 
         new File(cc.getOutputFilePath()).delete();
@@ -63,8 +64,8 @@ public class LinearInconsistencyFinder extends InconsistencyFinder {
             return inconsistentRequirements;
     }
 
-    public ExecutorService runAsync(BiConsumer<Requirement, ConsistencyChecker.Result> onProgress,
-                         Consumer<List<Requirement>> consumer) {
+    public ExecutorService runAsync(BiConsumer<InputRequirement, ConsistencyChecker.Result> onProgress,
+                         Consumer<List<InputRequirement>> consumer) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> consumer.accept(run(onProgress)));
         return executor;

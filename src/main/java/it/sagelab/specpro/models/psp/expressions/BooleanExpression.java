@@ -14,7 +14,7 @@ public class BooleanExpression extends Expression {
     protected Operator operator;
 
     /* (non-Javadoc)
-     * @see it.sagelab.it.sagelab.fe.snl2fl.req.expressions.Expression#accept(it.sagelab.it.sagelab.fe.snl2fl.req.visitor.ExpressionVisitor)
+     * @see it.sagelab.it.sagelab.fe.psp.req.expressions.Expression#accept(it.sagelab.it.sagelab.fe.psp.req.visitor.ExpressionVisitor)
      */
     @Override
     public void accept(ExpressionVisitor visitor) {

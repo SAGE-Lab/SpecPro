@@ -3,15 +3,10 @@ package it.sagelab.specpro.reasoners.translators;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import it.sagelab.specpro.models.ltl.BinaryOperator;
-import it.sagelab.specpro.models.ltl.UnaryOperator;
-import it.sagelab.specpro.models.translators.PSP2LTL;
-import it.sagelab.specpro.models.ltl.Atom;
-import it.sagelab.specpro.models.ltl.Formula;
+import it.sagelab.specpro.models.ltl.*;
 
 
 public class NuSMVTranslator extends LTLToolTranslator {
@@ -27,8 +22,6 @@ public class NuSMVTranslator extends LTLToolTranslator {
 
     /** Property to indicate if the translation should not use INVAR statements*/
     private boolean noinvar;
-
-    public NuSMVTranslator(PSP2LTL translator) { super(translator, forbiddenVarNames); }
 
     public NuSMVTranslator() { super(forbiddenVarNames); }
 
@@ -51,13 +44,15 @@ public class NuSMVTranslator extends LTLToolTranslator {
      *
      * @param stream the stream
      */
-    public void translate(PrintStream stream) {
+    public void translate(PrintStream stream, LTLSpec spec) {
+
+        relabelAtomsWithForbiddenNames(spec);
         FormulaPrinter formulaPrinter = getFormulaPrinter(stream);
-        List<Formula> invariants = psp2ltl.getInvariants();
-        List<Formula> ltlFormulae = psp2ltl.translate();
+        List<Formula> invariants = spec.getInvariants();
+        List<Formula> ltlFormulae = spec.getRequirements();
 
         stream.println("MODULE main");
-        this.printVariables(stream);
+        this.printVariables(stream, spec);
         stream.println();
 
         Formula conjFormula = BinaryOperator.conjunctiveFormula(ltlFormulae);
@@ -94,7 +89,7 @@ public class NuSMVTranslator extends LTLToolTranslator {
 
     @Override
     public FormulaPrinter getFormulaPrinter(PrintStream stream) {
-        FormulaPrinter formulaPrinter = new FormulaPrinter(stream);
+        FormulaPrinter formulaPrinter = new FlatFormulaPrinter(stream);
         formulaPrinter.setNotOperator("!");
         formulaPrinter.setGloballyOperator("G");
         formulaPrinter.setEventuallyOperator("F");
@@ -113,20 +108,38 @@ public class NuSMVTranslator extends LTLToolTranslator {
      *
      * @param stream the stream
      */
-    private void printVariables(PrintStream stream) {
+    private void printVariables(PrintStream stream, LTLSpec spec) {
         stream.println("VAR\n");
-        // Print boolean variables
-        for(String varName : psp2ltl.getBooleanAtoms().keySet())
-            stream.println("\t" + varName + " : boolean;");
-        // Print range variables encoded with atoms
-        for(String name: psp2ltl.getRangeMap().keySet()) {
-        	TreeMap<Float, Atom[]> t = psp2ltl.getRangeMap().get(name);
-        	for(Float a_key : t.keySet()) {
-        		Atom[] a = t.get(a_key);
-        		stream.println("\t"+a[0].getName()+" : boolean; -- " + name + " < " + a_key);
-                stream.println("\t"+a[1].getName()+" : boolean; -- " + name + " = " + a_key);
-        	}
+
+        Set<Atom> booleanAtoms = spec.getAtoms().stream().filter(a -> a.getProperty(Atom.PROPERTY_NUMERIC) == null).collect(Collectors.toSet());
+        List<Atom> numericAtoms = spec.getAtoms().stream().filter(a -> a.getProperty(Atom.PROPERTY_NUMERIC) != null)
+            .sorted((a1, a2) -> {
+                int comp = ((String)a1.getProperty(Atom.PROPERTY_NUMERIC_VAR)).compareTo((String)a2.getProperty(Atom.PROPERTY_NUMERIC_VAR));
+                if(comp != 0)
+                    return comp;
+                comp = ((Float)a1.getProperty(Atom.PROPERTY_NUMERIC)).compareTo((Float) a2.getProperty(Atom.PROPERTY_NUMERIC));
+                if(comp != 0)
+                    return comp;
+                else
+                    return ((Boolean)a1.getProperty(Atom.PROPERTY_NUMERIC_EQ)) == true ? 1 : -1;
+
+            })
+                .collect(Collectors.toList());
+
+        // Print variables
+        for(Atom a : spec.getAtoms()) {
+            if(!numericAtoms.contains(a)) {
+                stream.println("\t" + a.getLabel() + " : boolean;");
+            }
         }
+
+        // Print range variables encoded with atoms
+        for(Atom a : numericAtoms) {
+            stream.print("\t"+a.getLabel()+" : boolean; -- " + a.getProperty(Atom.PROPERTY_NUMERIC_VAR));
+            stream.print((Boolean)a.getProperty(Atom.PROPERTY_NUMERIC_EQ) == true ? " = " : " < ");
+            stream.println(a.getProperty(Atom.PROPERTY_NUMERIC));
+        }
+
     }
 
 

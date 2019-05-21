@@ -24,7 +24,7 @@ public class InvariantRequirement extends QualitativeRequirement {
     }
 
     /* (non-Javadoc)
-     * @see it.sagelab.models.psp.qualitative.QualitativeRequirement#accept(it.sagelab.it.sagelab.fe.snl2fl.req.visitor.QualitativeRequirementVisitor)
+     * @see it.sagelab.models.psp.qualitative.QualitativeRequirement#accept(it.sagelab.it.sagelab.fe.psp.req.visitor.QualitativeRequirementVisitor)
      */
     @Override
     public void accept(QualitativeRequirementVisitor visitor) {
