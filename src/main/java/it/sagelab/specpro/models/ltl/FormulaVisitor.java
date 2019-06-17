@@ -31,4 +31,11 @@ public interface FormulaVisitor {
      * @param at the at
      */
     void visitAtom(Atom at);
+
+    /**
+     * Visit const.
+     *
+     * @param c the constant object
+     */
+    void visitConst(Const c);
 }

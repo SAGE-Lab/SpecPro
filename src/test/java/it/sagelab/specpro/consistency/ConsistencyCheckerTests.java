@@ -7,7 +7,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import it.sagelab.specpro.reasoners.ModelChecker;
 import it.sagelab.specpro.reasoners.NuSMV;
-import it.sagelab.specpro.fe.psp.Snl2FlParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +25,6 @@ public class ConsistencyCheckerTests {
         PSPFrontEnd fe = new PSPFrontEnd();
         LTLSpec spec = fe.parseFile(inputFile.getAbsolutePath());
 
-        Snl2FlParser parser = new Snl2FlParser();
         ConsistencyChecker cc = new ConsistencyChecker(mc, spec, "test.nusmv");
 
         ConsistencyChecker.Result result = cc.run();

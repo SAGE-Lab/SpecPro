@@ -54,4 +54,9 @@ public class RecursiveFormulaPrinter extends FormulaPrinter implements FormulaVi
         print(at.getLabel());
     }
 
+    @Override
+    public void visitConst(Const c) {
+        print(c.toString());
+    }
+
 }

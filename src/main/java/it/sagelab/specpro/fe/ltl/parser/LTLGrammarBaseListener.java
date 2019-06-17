@@ -54,6 +54,18 @@ public class LTLGrammarBaseListener implements LTLGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterConst(LTLGrammarParser.ConstContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConst(LTLGrammarParser.ConstContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAtom(LTLGrammarParser.AtomContext ctx) { }
 	/**
 	 * {@inheritDoc}

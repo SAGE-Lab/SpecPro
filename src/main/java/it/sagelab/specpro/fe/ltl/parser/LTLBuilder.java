@@ -1,5 +1,6 @@
 package it.sagelab.specpro.fe.ltl.parser;
 
+import it.sagelab.specpro.atg.LTLTestGenerator;
 import it.sagelab.specpro.models.InputRequirement;
 import it.sagelab.specpro.models.ltl.*;
 import org.antlr.v4.runtime.misc.Interval;
@@ -66,5 +67,10 @@ public class LTLBuilder extends LTLGrammarBaseListener {
     public void enterAtom(LTLGrammarParser.AtomContext ctx) {
         Atom a = spec.getOrCreateAtom(ctx.ATOM().getText());
         values.put(ctx, a);
+    }
+
+    @Override
+    public void enterConst(LTLGrammarParser.ConstContext ctx) {
+        values.put(ctx, ctx.getText().equals("true") ? Const.TRUE : Const.FALSE);
     }
 }
