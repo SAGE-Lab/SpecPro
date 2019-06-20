@@ -38,6 +38,24 @@ public class Trie <K> implements Iterable<List<K>> {
     }
 
     /**
+     * Insert a sequence of elements K in the trie, using the comparator to compare the keys.
+     * @param path the list of elements to insert
+     * @param comparator the comparator to use to compare the keys
+     */
+    public void insert(List<K> path, Comparator<K> comparator) {
+        TrieNode<K> t = root;
+
+        for(K element: path) {
+            t = t.add(element, false, comparator);
+        }
+
+        if(!t.isLeaf)
+            ++nSequences;
+
+        t.isLeaf = true;
+    }
+
+    /**
      * Insert a sequence of elements K in the trie.
      * @param path the array of elements to insert
      */
@@ -53,6 +71,25 @@ public class Trie <K> implements Iterable<List<K>> {
             ++nSequences;
 
         t.isLeaf = true;
+    }
+
+    /**
+     * Remove all partial paths that are contained in longer one. For example, if "a-a-b" and "a-a" are inserted, the
+     * second one will be discarted.
+     */
+    public void removePartialPaths() {
+        Stack<TrieNode<K>> stack = new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()) {
+            TrieNode<K> t = stack.pop();
+            if(t.children.size() > 0) {
+                if(t.isLeaf) {
+                    t.isLeaf = false;
+                    --nSequences;
+                }
+                stack.addAll(t.children.values());
+            }
+        }
     }
 
     /**
