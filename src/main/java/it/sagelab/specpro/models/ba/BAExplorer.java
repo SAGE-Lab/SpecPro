@@ -60,11 +60,8 @@ public class BAExplorer {
         paths = new Trie<>();
         this.ba = ba;
 
-        for(Vertex v : ba.initStates()) {
-            for(Edge e: ba.outgoingEdgesOf(v)) {
-                inducedDfs(e.getTarget(), test, length);
-            }
-        }
+        for(Vertex v: ba.initStates())
+            inducedDfs(v, test, length);
 
         return paths;
     }

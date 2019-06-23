@@ -16,7 +16,7 @@ public class StateCoverage extends BACoverage {
     public StateCoverage(BuchiAutomaton buchiAutomaton) {
         super(buchiAutomaton);
         visitedStates = new HashSet<>();
-        visitedStates.addAll(buchiAutomaton.initStates());
+        visitedStates.addAll(buchiAutomaton.initStatesI());
     }
 
     public StateCoverage() {
@@ -28,7 +28,7 @@ public class StateCoverage extends BACoverage {
     public void reset(BuchiAutomaton buchiAutomaton) {
         super.reset(buchiAutomaton);
         visitedStates.clear();
-        visitedStates.addAll(buchiAutomaton.initStates());
+        visitedStates.addAll(buchiAutomaton.initStatesI());
     }
 
     @Override

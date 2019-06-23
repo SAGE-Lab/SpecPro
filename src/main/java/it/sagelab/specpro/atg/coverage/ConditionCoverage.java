@@ -22,7 +22,7 @@ public class ConditionCoverage extends BACoverage {
     public ConditionCoverage(BuchiAutomaton ba) {
         super(ba);
         this.visitedConditions = new HashMap<>();
-        for(Vertex v: buchiAutomaton.initStates()) {
+        for(Vertex v: buchiAutomaton.initStatesI()) {
             for(Edge e: buchiAutomaton.outgoingEdgesOf(v)) {
                 visitedConditions.put(e, e.getAssigments());
             }
@@ -33,7 +33,7 @@ public class ConditionCoverage extends BACoverage {
     public void reset(BuchiAutomaton buchiAutomaton) {
         super.reset(buchiAutomaton);
         visitedConditions.clear();
-        for(Vertex v: buchiAutomaton.initStates()) {
+        for(Vertex v: buchiAutomaton.initStatesI()) {
             for(Edge e: buchiAutomaton.outgoingEdgesOf(v)) {
                 visitedConditions.put(e, e.getAssigments());
             }

@@ -2,7 +2,6 @@ package it.sagelab.specpro.models.ba;
 
 import it.sagelab.specpro.models.ba.ac.LassoShapedAcceptanceCondition;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
-import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedPseudograph;
 
 import java.util.*;
@@ -10,17 +9,22 @@ import java.util.stream.Collectors;
 
 public class BuchiAutomaton extends DirectedPseudograph<Vertex, Edge> {
 
-    public BuchiAutomaton(EdgeFactory<Vertex, Edge> ef) {
-        super(ef);
+    public BuchiAutomaton() {
+        super(Edge.class);
     }
 
-    public Vertex[] getInitStates() {
-        return vertexSet().stream().filter(v -> v.getId().equals("I")).toArray(n-> new Vertex[n]);
-    }
 
     public Set<Vertex> initStates() {
-        return vertexSet().stream().filter(v -> v.getId().equals("I")).collect(Collectors.toSet());
+        return vertexSet().stream().filter(v -> v.getId().equals("I")).flatMap(v -> edgesOf(v).stream()).map(e -> e.getTarget()).collect(Collectors.toSet());
+    }
 
+    public Set<Vertex> initStatesI() {
+        return vertexSet().stream().filter(v -> v.getId().equals("I")).collect(Collectors.toSet());
+    }
+
+
+    public Set<Vertex> acceptanceStates() {
+        return vertexSet().stream().filter(v -> v.isAcceptingState()).collect(Collectors.toSet());
     }
 
     public Iterator<List<Edge>> iterator(int length) {

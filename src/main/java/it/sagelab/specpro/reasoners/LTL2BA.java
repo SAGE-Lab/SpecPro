@@ -13,22 +13,45 @@ import java.io.StringReader;
 
 public class LTL2BA {
 
-    DotBuilder db;
+    public enum OptimizationLevel {
+        LOW("--low"),
+        MEDIUM("--medium"),
+        HIGH("--high");
 
-    DOTImporter<Vertex, Edge> importer;
+        private final String option;
+
+        OptimizationLevel(String option) {
+            this.option = option;
+        }
+
+        @Override
+        public String toString(){
+            return option;
+        }
+    }
+
+    private final DotBuilder db;
+
+    private final DOTImporter<Vertex, Edge> importer;
+
+    private OptimizationLevel level = OptimizationLevel.LOW;
 
     public LTL2BA() {
         db = new DotBuilder();
         importer = new DOTImporter<>(db, db, db);
     }
 
+    public void setOptimizationLevel(OptimizationLevel level) {
+        this.level = level;
+    }
+
     public BuchiAutomaton translate(String formula) {
-        BuchiAutomaton g = new BuchiAutomaton(db);
+        BuchiAutomaton g = new BuchiAutomaton();
         Runtime rt = Runtime.getRuntime();
         Process process = null;
         String input = null;
         try {
-            ProcessBuilder builder = new ProcessBuilder("ltl2tgba", "-B", formula, "--low","-d");
+            ProcessBuilder builder = new ProcessBuilder("ltl2tgba", "-B", formula, level.toString(),"-d");
             builder.redirectErrorStream(true);
             builder.redirectOutput(ProcessBuilder.Redirect.PIPE);
             process = builder.start();
