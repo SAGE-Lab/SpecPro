@@ -1,6 +1,7 @@
 package it.sagelab.specpro.cli;
 
-import it.sagelab.specpro.atg.AutomaticTestGenerator;
+import it.sagelab.specpro.atg.CoverageBesedTestGenerator;
+import it.sagelab.specpro.atg.TestSequence;
 import it.sagelab.specpro.atg.cache.MaxLengthCacheStrategy;
 import it.sagelab.specpro.atg.cache.NoCacheStrategy;
 import it.sagelab.specpro.atg.cache.RandomDeleteCacheStrategy;
@@ -10,6 +11,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 
 import java.io.IOException;
+import java.util.Set;
 
 public class AtgCommand extends Command {
 
@@ -27,8 +29,8 @@ public class AtgCommand extends Command {
     public Options createOptionMenu() {
         Options options = new Options();
 
-        options.addOption(null, "minLength", true, "Min length of generated paths");
-        options.addOption(null, "maxLength", true, "Max length of generated paths");
+        options.addOption(null, "minLength", true, "Min length of generated utils");
+        options.addOption(null, "maxLength", true, "Max length of generated utils");
         options.addOption("c", "coverage", true, "Choose the coverage criteria. " +
                 "Possible values are 'state', 'transition', 'acceptance', 'acc+state' or 'acc+transition'.");
         /*
@@ -47,7 +49,7 @@ public class AtgCommand extends Command {
 
     @Override
     public void run(CommandLine commandLine) throws IOException {
-        AutomaticTestGenerator atg = new AutomaticTestGenerator();
+        CoverageBesedTestGenerator atg = new CoverageBesedTestGenerator();
 
         if(commandLine.hasOption("minLength")) {
             int minLength = Integer.parseInt(commandLine.getOptionValue("minLength"));
@@ -121,14 +123,16 @@ public class AtgCommand extends Command {
             }
         }
 
-        //atg.parseRequirements(spec, commandLine.hasOption("conjunction"));
-        atg.parseRequirements(spec, true);
-
         if(commandLine.hasOption("expand-trans")) {
             atg.expandTransitions();
         }
 
-        atg.generate(outStream);
+        Set<TestSequence> tests = atg.generate(spec);
+
+        outStream.println("Different tests generated: " + tests.size());
+        tests.forEach(l -> outStream.println(l.getAssignmentList()));
+
+        outStream.println();
 
         if(commandLine.hasOption("cross-coverage")) {
             atg.computeCrossCoverageWithConjBA(spec);

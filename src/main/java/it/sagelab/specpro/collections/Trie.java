@@ -74,7 +74,7 @@ public class Trie <K> implements Iterable<List<K>> {
     }
 
     /**
-     * Remove all partial paths that are contained in longer one. For example, if "a-a-b" and "a-a" are inserted, the
+     * Remove all partial utils that are contained in longer one. For example, if "a-a-b" and "a-a" are inserted, the
      * second one will be discarted.
      */
     public void removePartialPaths() {
@@ -149,6 +149,13 @@ public class Trie <K> implements Iterable<List<K>> {
     @Override
     public Iterator<List<K>> iterator() {
         return new TrieIterator<>(this);
+    }
+
+    public Set<List<K>> toSet() {
+        Set<List<K>> s = new HashSet<>();
+        for(List<K> list: this)
+            s.add(list);
+        return s;
     }
 
 
