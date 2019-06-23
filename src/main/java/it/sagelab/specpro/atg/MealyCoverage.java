@@ -52,7 +52,7 @@ public class MealyCoverage {
         ArrayList<Edge> traversedEdges = new ArrayList<>();
         //System.out.println("Evaluating test: " + newTest);
         visit(parser.resetState, newTest, traversedEdges);
-        //System.out.println("Valid paths: " + validSequences.size());
+        //System.out.println("Valid utils: " + validSequences.size());
 
         //System.out.println("Lengths: " + test.size() + "\t" + newTest.size());
 
@@ -84,7 +84,7 @@ public class MealyCoverage {
         System.out.println("State Coverage: " + stateCoverage);
         System.out.println("Transition Coverage: " + edgeCoverage);
         System.out.println("Precision: " + precision);
-        System.out.println(stateCoverage + "\t" + edgeCoverage + "\t" + precision);
+        System.out.println("$$$\t" + nEvaluatedTests + "\t" + stateCoverage + "\t" + edgeCoverage + "\t" + precision);
     }
 
     public void printDebugData() {
