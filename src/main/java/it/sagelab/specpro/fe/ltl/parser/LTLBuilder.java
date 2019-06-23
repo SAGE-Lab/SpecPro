@@ -5,6 +5,9 @@ import it.sagelab.specpro.models.InputRequirement;
 import it.sagelab.specpro.models.ltl.*;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.util.HashSet;
 
 /**
  * The Class LTLBuilder.
@@ -40,6 +43,22 @@ public class LTLBuilder extends LTLGrammarBaseListener {
             String text = fc.start.getInputStream().getText(new Interval(fc.start.getStartIndex(), fc.stop.getStopIndex()));
             r.setText(text);
             spec.addRequirement(f, r);
+        }
+    }
+
+    @Override
+    public void exitIoDeclaration(LTLGrammarParser.IoDeclarationContext ctx) {
+        HashSet<Atom> atoms = new HashSet<>();
+        for(TerminalNode a: ctx.ATOM()) {
+            atoms.add(spec.getOrCreateAtom(a.getText()));
+        }
+
+        if(ctx.INPUTS() != null) {
+            atoms.forEach(spec::addInputVariable);
+        }
+
+        if(ctx.OUTPUTS() != null) {
+            atoms.forEach(spec::addOututVariable);
         }
     }
 

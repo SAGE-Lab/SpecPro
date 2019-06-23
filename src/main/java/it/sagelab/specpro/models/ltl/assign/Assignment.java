@@ -86,6 +86,11 @@ public class Assignment {
         return true;
     }
 
+    /**
+     * Checks if the input assignment is compatible with the current instance
+     * @param assignment the assignment to check
+     * @return true if the assignment is compatible with the current instance
+     */
     public boolean isCompatible(Assignment assignment) {
         for(Map.Entry<Atom, Boolean> entry : assignment.getAssignments().entrySet()) {
             if(this.assignmentsMap.containsKey(entry.getKey())) {
@@ -112,7 +117,7 @@ public class Assignment {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == null || !(obj instanceof Assignment))
+        if(!(obj instanceof Assignment))
             return false;
         if(obj == this)
             return true;

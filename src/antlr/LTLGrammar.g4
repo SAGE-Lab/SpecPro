@@ -4,7 +4,9 @@ grammar LTLGrammar;
 package it.sagelab.specpro.fe.ltl.parser;
 }
 
-file: (formula ';'?)+;
+file: ioDeclaration* (formula ';'?)+;
+
+ioDeclaration: (INPUTS | OUTPUTS) ':' (ATOM ','?)* ';';
 
 formula
         : '(' formula ')'                                               #BracketFormula
@@ -16,6 +18,8 @@ formula
         ;
 
 WS: [ \t\r\n]+ -> skip ;
+INPUTS: 'inputs';
+OUTPUTS: 'outputs';
 TRUE: 'true';
 FALSE: 'false';
 ATOM: [a-zA-Z0-9_]+;

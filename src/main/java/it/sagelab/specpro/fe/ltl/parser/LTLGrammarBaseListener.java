@@ -30,6 +30,18 @@ public class LTLGrammarBaseListener implements LTLGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIoDeclaration(LTLGrammarParser.IoDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIoDeclaration(LTLGrammarParser.IoDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterUnaryOp(LTLGrammarParser.UnaryOpContext ctx) { }
 	/**
 	 * {@inheritDoc}
