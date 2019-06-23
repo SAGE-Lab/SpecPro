@@ -4,7 +4,6 @@ import it.sagelab.specpro.cli.*;
 import it.sagelab.specpro.fe.AbstractLTLFrontEnd;
 import it.sagelab.specpro.fe.LTLFrontEnd;
 import it.sagelab.specpro.fe.PSPFrontEnd;
-import it.sagelab.specpro.fe.psp.Snl2FlException;
 import it.sagelab.specpro.models.ltl.LTLSpec;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.Level;
@@ -63,7 +62,6 @@ public class Main {
             Command command = commands.get(args[0]);
             System.out.println(command);
             new HelpFormatter().printHelp("SpecPro " + command.getName() + " [-h] [-o <outfile>] -i <infile> [OPTIONS]", command.createOptionMenu());
-            System.exit(0);
         }
         else {
             new HelpFormatter().printHelp("SpecPro [COMMAND] [-h] [-o <outfile>] -i <infile> [OPTIONS]", getOptions());
@@ -128,8 +126,6 @@ public class Main {
         printVersionRow("");
         System.out.println(VERSION_BORDER);
         System.out.println();
-
-        System.exit(0);
     }
 
     public static void main(String[] args) {
@@ -146,10 +142,12 @@ public class Main {
 
             if (commandLine.hasOption("h")) {
                 printHelp(commandLine, args2);
+                System.exit(0);
             }
 
             if (commandLine.hasOption("version")) {
                 printVersion();
+                System.exit(0);
             }
 
             if(!commandLine.hasOption("i")) {
@@ -173,7 +171,7 @@ public class Main {
                         frontEnd = new PSPFrontEnd();
                         break;
                     default:
-                        throw  new Snl2FlException("Option " + commandLine.getOptionValue("fe") + " not recognized");
+                        throw  new IllegalArgumentException("Option " + commandLine.getOptionValue("fe") + " not recognized");
                 }
             } else {
                 frontEnd = new PSPFrontEnd();
@@ -207,7 +205,7 @@ public class Main {
             command.setOutStream(outStream);
             command.run(commandLine2);
 
-        } catch (ParseException | IOException | Snl2FlException e) {
+        } catch (ParseException | IOException | IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());
             System.err.println();
             System.exit(-1);

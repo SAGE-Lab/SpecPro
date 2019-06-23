@@ -1,6 +1,5 @@
 package it.sagelab.specpro.fe;
 
-import it.sagelab.specpro.fe.psp.Snl2FlException;
 import it.sagelab.specpro.fe.psp.parser.ThrowingErrorListener;
 import it.sagelab.specpro.models.ltl.LTLSpec;
 import org.antlr.v4.runtime.*;
@@ -25,10 +24,9 @@ public abstract class AbstractLTLFrontEnd {
      *
      * @param filePath The path of the file
      * @return an object containing the ltl specification
-     * @throws Snl2FlException
      * @throws IOException
      */
-    public LTLSpec parseFile(String filePath) throws Snl2FlException, IOException {
+    public LTLSpec parseFile(String filePath) throws IOException {
         return parse(CharStreams.fromFileName(filePath));
     }
 
@@ -38,9 +36,9 @@ public abstract class AbstractLTLFrontEnd {
      *
      * @param text The string to parse
      * @return a reference to the parser object
-     * @throws Snl2FlException
+     * @throws ParseException
      */
-    public LTLSpec parseString(String text) throws Snl2FlException {
+    public LTLSpec parseString(String text) throws ParseException {
         return parse(CharStreams.fromString(text));
     }
 
@@ -49,14 +47,13 @@ public abstract class AbstractLTLFrontEnd {
      *
      * @param stream The stream to parse
      * @return a reference to the parser object
-     * @throws Snl2FlException
      * @throws IOException
      */
-    public LTLSpec parseStream(InputStream stream) throws Snl2FlException, IOException {
+    public LTLSpec parseStream(InputStream stream) throws IOException {
         return parse(CharStreams.fromStream(stream));
     }
 
-    public LTLSpec parse(CharStream inStream) {
+    public LTLSpec parse(CharStream inStream) throws ParseException {
         try {
             lexer = getLexer(inStream);
             lexer.removeErrorListeners();
@@ -73,7 +70,7 @@ public abstract class AbstractLTLFrontEnd {
 
             return getLTLSpec();
         } catch (ParseCancellationException e) {
-            throw new Snl2FlException(e.getMessage());
+            throw new ParseException(e);
         }
     }
 
