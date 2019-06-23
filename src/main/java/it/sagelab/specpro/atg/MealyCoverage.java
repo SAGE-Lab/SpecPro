@@ -6,6 +6,7 @@ import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -76,15 +77,15 @@ public class MealyCoverage {
     }
 
 
-    public void printMeasures() {
+    public void printMeasures(PrintStream stream) {
         double stateCoverage = 100.0 * visitedStates.size() / parser.graph.vertexSet().size();
         double edgeCoverage = 100.0 * visitedEdges.size() / parser.graph.edgeSet().size();
         double precision = 100.0 * nSuccessfulTests / nEvaluatedTests;
-        System.out.println("Evaluated Tests: " + nEvaluatedTests);
-        System.out.println("State Coverage: " + stateCoverage);
-        System.out.println("Transition Coverage: " + edgeCoverage);
-        System.out.println("Precision: " + precision);
-        System.out.println("$$$\t" + nEvaluatedTests + "\t" + stateCoverage + "\t" + edgeCoverage + "\t" + precision);
+        stream.println("Evaluated Tests: " + nEvaluatedTests);
+        stream.println("State Coverage: " + stateCoverage);
+        stream.println("Transition Coverage: " + edgeCoverage);
+        stream.println("Precision: " + precision);
+        stream.println("$$$\t" + nEvaluatedTests + "\t" + stateCoverage + "\t" + edgeCoverage + "\t" + precision);
     }
 
     public void printDebugData() {
