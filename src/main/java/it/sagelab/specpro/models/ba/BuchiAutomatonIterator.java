@@ -21,9 +21,7 @@ public class BuchiAutomatonIterator implements Iterator<List<Edge>> {
 
         HashSet<Edge> initEdges = new HashSet<>();
         for(Vertex v : buchiAutomaton.initStates()) {
-            for (Edge e : buchiAutomaton.outgoingEdgesOf(v)) {
-                initEdges.addAll(buchiAutomaton.outgoingEdgesOf(e.getTarget()));
-            }
+            initEdges.addAll(buchiAutomaton.outgoingEdgesOf(v));
         }
 
         stack.add(initEdges.iterator());
