@@ -7,10 +7,7 @@ import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.ac.EndsWithAcceptanceStateCondition;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 
 public class RandomOutputSelector implements OutputSelector {
@@ -34,8 +31,14 @@ public class RandomOutputSelector implements OutputSelector {
         TestSequence oututSequence = new TestSequence();
         for(int i = 0; i < output.size(); ++i) {
             Edge edge = output.get(i);
-            Assignment assignment = edge.getRandAssignment().combine(inputs.get(i));
-            oututSequence.add(edge, assignment);
+            Assignment inputAssigment = inputs.get(i);
+            Optional<Assignment> optional = edge.getAssigments().stream().filter(a -> inputAssigment.isCompatible(a)).map(a -> a.combine(inputAssigment)).findAny();
+            if(optional.isPresent() && optional.get() != null) {
+                oututSequence.add(edge, optional.get());
+            } else {
+                throw new RuntimeException("Selected an incompatible edge!");
+            }
+
         }
 
 

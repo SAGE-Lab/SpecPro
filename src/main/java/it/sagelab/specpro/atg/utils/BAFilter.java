@@ -7,12 +7,12 @@ import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
-public class BAInputFilter {
+public class BAFilter {
 
-    public static BuchiAutomaton filter(BuchiAutomaton automaton, Set<Atom> inputs) {
+    public static BuchiAutomaton inputFilter(BuchiAutomaton automaton, Set<Atom> inputs) {
         BuchiAutomaton inputAutomaton = new BuchiAutomaton();
         for(Vertex v: automaton.vertexSet())
             inputAutomaton.addVertex(v);
@@ -25,16 +25,20 @@ public class BAInputFilter {
         return inputAutomaton;
     }
 
+    public static void trim(List<Assignment> assignments) {
+        while(assignments.size() > 0) {
+            if(assignments.get(assignments.size() - 1).getAssignments().isEmpty()) {
+                assignments.remove(assignments.size() - 1);
+            } else {
+                return;
+            }
+        }
+    }
+
     private static Edge newEdge(Edge e, Set<Atom> inputs) {
         Edge e1 = new Edge(e.getSource(), e.getTarget(), new HashSet<>());
         for(Assignment assignment: e.getAssigments()) {
-            Assignment a = new Assignment();
-            for(Map.Entry<Atom, Boolean> entry: assignment.getAssignments().entrySet()) {
-                if(inputs.contains(entry.getKey())) {
-                    a.add(entry.getKey(), entry.getValue());
-                }
-            }
-            addAssignment(e1, a);
+            addAssignment(e1, assignment.filter(inputs));
         }
         return e1;
     }
@@ -46,12 +50,11 @@ public class BAInputFilter {
             if(a1.contains(a))
                 return;
             if(a.contains(a1))
-                toRemove.add(a);
+                toRemove.add(a1);
         }
 
         e.getAssigments().removeAll(toRemove);
         e.getAssigments().add(a);
     }
-
 
 }

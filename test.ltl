@@ -1,0 +1,4 @@
+inputs: r;
+outputs: q;
+
+G(r -> X F q)

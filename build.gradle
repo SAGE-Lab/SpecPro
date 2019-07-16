@@ -8,6 +8,8 @@ group = 'it.sagelab'
 sourceCompatibility = 1.8
 mainClassName = 'it.sagelab.specpro.Main'
 
+applicationDefaultJvmArgs = ["-Xms1g", "-Xmx30g"]
+
 buildscript {
     repositories {
         mavenCentral()
@@ -106,5 +108,19 @@ run {
 
 applicationDistribution.from("$projectDir") {
     into ''
-    include 'README.md', 'LICENSE', 'ltl2gba_launcher.pl'
+    include 'README.md', 'LICENSE'
+}
+
+
+task createComputeCoverageApp(type: CreateStartScripts) {
+    mainClassName = 'it.sagelab.specpro.atg.ComputeCoverage'
+    classpath = startScripts.classpath
+    outputDir = startScripts.outputDir
+    applicationName = 'computeCoverage'
+}
+
+applicationDistribution.into("bin") {
+    duplicatesStrategy= DuplicatesStrategy.EXCLUDE
+    from(createComputeCoverageApp)
+    fileMode = 0755
 }

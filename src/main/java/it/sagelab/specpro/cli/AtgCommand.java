@@ -146,7 +146,7 @@ public class AtgCommand extends Command {
                         spTestGenerator.setOutputSelector(new IdentityOutputSelector());
                         break;
                     case "acceptance":
-                        spTestGenerator.setOutputSelector(new AccCounterOutputSelector(spec.getOutputVariables()));
+                        spTestGenerator.setOutputSelector(new AccCounterOutputSelector(spec));
                 }
             }
         }
@@ -167,7 +167,7 @@ public class AtgCommand extends Command {
             MealyCoverage mealyCoverage = new MealyCoverage(value);
 
             for(TestSequence t: tests) {
-                mealyCoverage.evaluateTest(t.getAssignmentList(), 1);
+                mealyCoverage.evaluateTest(t.getAssignmentList(), 0);
             }
 
             mealyCoverage.printMeasures(outStream);

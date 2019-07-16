@@ -24,6 +24,8 @@ public abstract class LTLTestGenerator {
      */
     public abstract Set<TestSequence> generate(LTLSpec spec) throws IOException;
 
+    public abstract Set<TestCase> generateTestCases(LTLSpec spec, PrintStream outStream) throws IOException;
+
 
     public void addFormula(String ltlFormula) {
         final LTL2BA ltl2ba = new LTL2BA();

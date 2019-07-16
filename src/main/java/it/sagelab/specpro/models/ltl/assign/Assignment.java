@@ -4,6 +4,7 @@ import it.sagelab.specpro.models.ltl.Atom;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Assignment {
 
@@ -49,6 +50,22 @@ public class Assignment {
 
     public Map<Atom, Boolean> getAssignments() {
         return assignmentsMap;
+    }
+
+    /**
+     * Create a new filtered assignment that contains only atoms given in the input set
+     * @param vars the set of allowed atoms
+     * @return a new filtered assignment
+     */
+    public Assignment filter(Set<Atom> vars) {
+        Assignment a = new Assignment();
+        a.setStartBeta(this.isStartBeta());
+        for(Map.Entry<Atom, Boolean> entry: assignmentsMap.entrySet()) {
+            if(vars.contains(entry.getKey())) {
+                a.add(entry.getKey(), entry.getValue());
+            }
+        }
+        return a;
     }
 
     public Assignment combine(Assignment assignment) {
@@ -121,7 +138,7 @@ public class Assignment {
             return false;
         if(obj == this)
             return true;
-        return this.assignmentsMap.equals(((Assignment) obj).getAssignments());
+        return this.assignmentsMap.equals(((Assignment) obj).getAssignments()) && this.isStartBeta() == ((Assignment) obj).isStartBeta();
     }
 
     @Override

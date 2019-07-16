@@ -18,6 +18,7 @@ public class MealyCoverage {
     private Set<Vertex> visitedStates;
     private Set<Edge> visitedEdges;
     private Set<List<Assignment>> unsuccessfulTests;
+    private Set<TestCase> unsuccessfulTestCases;
     private Vertex currentState;
     private int nEvaluatedTests;
     private int nSuccessfulTests;
@@ -25,13 +26,37 @@ public class MealyCoverage {
     public MealyCoverage(String inputFile) throws IOException {
         parser = new KISSParser();
         parser.parse(inputFile);
-        parser.saveToFile(inputFile.replace(".kiss", ".dot"));
+        //parser.saveToFile(inputFile.replace(".kiss", ".dot"));
         visitedStates = new HashSet<>();
         visitedEdges = new HashSet<>();
         nEvaluatedTests = 0;
         nSuccessfulTests = 0;
         unsuccessfulTests = new HashSet<>();
+        unsuccessfulTestCases = new HashSet<>();
         currentState = parser.resetState;
+    }
+
+    public void evaluateTestCase(TestCase testCase) {
+        ++nEvaluatedTests;
+        ArrayList<Edge> traversedEdges = new ArrayList<>();
+        ArrayList<Assignment> output = new ArrayList<>();
+
+        validSequences = new HashSet<>();
+        visit2(parser.resetState, testCase, traversedEdges, output);
+
+        if(validSequences.size() > 0) {
+            ++nSuccessfulTests;
+        }
+        else {
+            unsuccessfulTestCases.add(testCase);
+        }
+        for(List<Edge> sequence: validSequences) {
+            for(Edge e: sequence) {
+                visitedEdges.add(e);
+                visitedStates.add(e.getSource());
+                visitedStates.add(e.getTarget());
+            }
+        }
     }
 
     public void evaluateTest(List<Assignment> test, int nRepetitionsOfBeta) {
@@ -53,13 +78,6 @@ public class MealyCoverage {
         ArrayList<Edge> traversedEdges = new ArrayList<>();
         //System.out.println("Evaluating test: " + newTest);
         visit(parser.resetState, newTest, traversedEdges);
-        //System.out.println("Valid utils: " + validSequences.size());
-
-        //System.out.println("Lengths: " + test.size() + "\t" + newTest.size());
-
-
-
-
 
         if(validSequences.size() > 0) {
             ++nSuccessfulTests;
@@ -81,11 +99,11 @@ public class MealyCoverage {
         double stateCoverage = 100.0 * visitedStates.size() / parser.graph.vertexSet().size();
         double edgeCoverage = 100.0 * visitedEdges.size() / parser.graph.edgeSet().size();
         double precision = 100.0 * nSuccessfulTests / nEvaluatedTests;
-        stream.println("Evaluated Tests: " + nEvaluatedTests);
-        stream.println("State Coverage: " + stateCoverage);
-        stream.println("Transition Coverage: " + edgeCoverage);
-        stream.println("Precision: " + precision);
-        stream.println("$$$\t" + nEvaluatedTests + "\t" + stateCoverage + "\t" + edgeCoverage + "\t" + precision);
+//        stream.println("Evaluated Tests: " + nEvaluatedTests);
+//        stream.println("State Coverage: " + stateCoverage);
+//        stream.println("Transition Coverage: " + edgeCoverage);
+//        stream.println("Precision: " + precision);
+        stream.print(String.format("%.2f, %.2f, %.2f, ", stateCoverage, edgeCoverage, precision));
     }
 
     public void printDebugData() {
@@ -94,6 +112,13 @@ public class MealyCoverage {
         System.out.println("Unsuccessful tests:");
         for(List<Assignment> test: unsuccessfulTests) {
             System.out.println(test);
+        }
+
+        for(TestCase t: unsuccessfulTestCases) {
+            System.out.println("Input: " + t.getInput());
+            for(List<Assignment> output: t.getOutputs()) {
+                System.out.println("\t" + output);
+            }
         }
     }
 
@@ -139,31 +164,65 @@ public class MealyCoverage {
         }
         Assignment currentAssignment = test.get(traversedEdges.size());
 
-        Set<Edge> edgeSet = parser.graph.edgesOf(currentState);
+        //Set<Edge> edgeSet = parser.graph.edgesOf(currentState);
+        Set<Edge> edgeSet = parser.graph.edgesOf(currentState).stream()
+                .filter(e -> checkInput(e, currentAssignment))
+                .filter(e -> checkOutput(e, currentAssignment)).collect(Collectors.toSet());
+
         for(Edge e: edgeSet) {
-            boolean validInput = true, validOutput = true;
-            Assignment edgeAssignment = e.getAssigments().iterator().next();
-
-            for(Atom i: parser.inputs) {
-                if(currentAssignment.contains(i) && edgeAssignment.contains(i)) {
-                    validInput &= edgeAssignment.contains(i) && edgeAssignment.getValue(i) == currentAssignment.getValue(i);
-                }
-            }
-
-            for(Atom o: parser.outputs) {
-                if(currentAssignment.contains(o)) {
-                    validOutput &= edgeAssignment.contains(o) && edgeAssignment.getValue(o) == currentAssignment.getValue(o);
-                }
-            }
-
-            if(validInput && validOutput) {
                 traversedEdges.add(e);
                 visit(e.getTarget(), test, traversedEdges);
                 traversedEdges.remove(traversedEdges.size() - 1);
             }
+    }
 
+    private void visit2(Vertex currentState, TestCase test, List<Edge> traversedEdges, List<Assignment> output) {
+        if(traversedEdges.size() == test.getInput().size()) {
+            validSequences.add(new ArrayList<>(traversedEdges));
+            return;
         }
 
+        Assignment currentInput = test.getInput().get(traversedEdges.size());
+        Set<Edge> edgeSet = parser.graph.edgesOf(currentState).stream().filter(e -> checkInput(e, currentInput)).collect(Collectors.toSet());
+
+        Set<Assignment> succ = test.getOutputs().getSuccessors(output);
+
+        for(Edge e: edgeSet) {
+            for(Assignment a: succ) {
+                if(checkOutput(e, a)) {
+                    traversedEdges.add(e);
+                    output.add(a);
+                    visit2(e.getTarget(), test, traversedEdges, output);
+                    traversedEdges.remove(traversedEdges.size() - 1);
+                    output.remove(output.size() - 1);
+                }
+            }
+        }
+
+    }
+
+    private boolean checkInput(Edge e, Assignment input) {
+        boolean validInput = true;
+        for(Assignment a: e.getAssigments()) {
+            for (Atom i : parser.inputs) {
+                if (input.contains(i) && a.contains(i)) {
+                    validInput &= a.getValue(i) == input.getValue(i);
+                }
+            }
+        }
+        return validInput;
+    }
+
+    private boolean checkOutput(Edge e, Assignment output) {
+        boolean validOutput = true;
+        for(Assignment a: e.getAssigments()) {
+            for (Atom o : parser.outputs) {
+                if (output.contains(o)) {
+                    validOutput &= a.contains(o) && a.getValue(o) == output.getValue(o);
+                }
+            }
+        }
+        return validOutput;
     }
 
 }

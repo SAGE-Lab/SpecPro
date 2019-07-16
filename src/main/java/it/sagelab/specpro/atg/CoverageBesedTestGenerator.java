@@ -93,6 +93,11 @@ public class CoverageBesedTestGenerator extends LTLTestGenerator {
         return tests;
     }
 
+    @Override
+    public Set<TestCase> generateTestCases(LTLSpec spec, PrintStream outStream) throws IOException {
+        return null;
+    }
+
     public void computeCrossCoverageWithConjBA(LTLSpec spec) throws IOException {
         ArrayList<BuchiAutomaton> oldBAs = new ArrayList<>(buchiAutomata);
         buchiAutomata.clear();
