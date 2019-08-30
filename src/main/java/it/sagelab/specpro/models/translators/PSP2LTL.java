@@ -1,14 +1,11 @@
 package it.sagelab.specpro.models.translators;
 
-import it.sagelab.specpro.fe.psp.Snl2FlException;
 import it.sagelab.specpro.models.ltl.*;
 import it.sagelab.specpro.models.psp.expressions.ExpressionVisitor;
 import it.sagelab.specpro.models.psp.expressions.*;
 import it.sagelab.specpro.fe.ltl.patterns.Pattern;
 import it.sagelab.specpro.fe.ltl.patterns.PatternUnifier;
-import it.sagelab.specpro.fe.psp.parser.RequirementsBuilder;
 import it.sagelab.specpro.models.psp.Requirement;
-import it.sagelab.specpro.models.psp.qualitative.QualitativeRequirement;
 
 import java.util.*;
 
@@ -42,7 +39,6 @@ public class PSP2LTL implements ExpressionVisitor {
         spec = new LTLSpec();
         for(Requirement r : requirements) {
 
-            try {
                 Pattern pattern = patternMap.get(r.key());
                 if(pattern == null)
                     throw new RuntimeException("Pattern " + r.key() + " not found!");
@@ -51,9 +47,6 @@ public class PSP2LTL implements ExpressionVisitor {
                 Formula f = patternUnifier.unify(pattern, scopeFormulae, bodyFormulae);
                 spec.addRequirement(f, r);
 
-            } catch (RuntimeException e) {
-                throw new Snl2FlException("Requirement " + requirements.indexOf(r) + ": " + e.getMessage());
-            }
         }
 
         List<Formula> invariants = getInvariants();

@@ -1,6 +1,5 @@
 package it.sagelab.specpro.fe;
 
-import it.sagelab.specpro.fe.psp.Snl2FlException;
 import it.sagelab.specpro.models.ltl.*;
 import org.junit.jupiter.api.Test;
 
@@ -47,7 +46,7 @@ public class LTLFrontEndTests {
     @Test
     public void testParseStringWrongSyntax() {
         LTLFrontEnd frontEnd = new LTLFrontEnd();
-        assertThrows(Snl2FlException.class, () -> {
+        assertThrows(ParseException.class, () -> {
                     LTLSpec spec = frontEnd.parseString("G(x | y)\n<(? U z)");
         });
     }
@@ -70,6 +69,31 @@ public class LTLFrontEndTests {
         assertThrows(IOException.class, () -> {
             LTLSpec spec = frontEnd.parseFile("wrong/path/file.txt");
         });
+    }
+
+    @Test
+    public void testParseConst() {
+        LTLFrontEnd frontEnd = new LTLFrontEnd();
+
+        LTLSpec spec = frontEnd.parseString("G(true -> a | false)");
+        assertEquals(1, spec.getRequirements().size());
+        assertEquals(0, spec.getInvariants().size());
+        assertEquals(1, spec.getSymbolTable().size());
+        assertTrue(spec.getRequirements().get(0) instanceof UnaryOperator);
+        UnaryOperator f1 = (UnaryOperator) spec.getRequirements().get(0);
+        assertEquals(UnaryOperator.Operator.GLOBALLY, f1.getOperator());
+        assertTrue(f1.getChild() instanceof BinaryOperator);
+        BinaryOperator f2 = (BinaryOperator) f1.getChild();
+        assertEquals(BinaryOperator.Operator.IMPLICATION, f2.getOperator());
+        assertTrue(f2.getLeftFormula() instanceof Const);
+        assertEquals("true", f2.getLeftFormula().toString());
+        assertTrue(f2.getRightFormula() instanceof BinaryOperator);
+        BinaryOperator f3 = (BinaryOperator) f2.getRightFormula();
+        assertEquals(BinaryOperator.Operator.OR, f3.getOperator());
+        assertTrue(f3.getLeftFormula() instanceof Atom);
+        assertEquals("a", f3.getLeftFormula().toString());
+        assertTrue(f3.getRightFormula() instanceof Const);
+        assertEquals("false", f3.getRightFormula().toString());
     }
 
 

@@ -58,6 +58,19 @@ public class Edge extends DefaultEdge implements Iterable<Assignment> {
         return assignmentSet;
     }
 
+    /**
+     * Returns a random assignment among the ones associated with the edge
+     *
+     * @return an assignment
+     */
+    public Assignment getRandAssignment() {
+        if(getAssigments().size() > 0) {
+            return getAssigments().iterator().next();
+        } else {
+            return new Assignment();
+        }
+    }
+
     @Override
     public String toString() {
         return "(" + source + " -> " + target + ")";

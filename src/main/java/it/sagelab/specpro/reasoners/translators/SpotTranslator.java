@@ -21,8 +21,8 @@ public class SpotTranslator extends LTLToolTranslator {
     public FormulaPrinter getFormulaPrinter(PrintStream stream) {
         FormulaPrinter formulaPrinter = new FlatFormulaPrinter(stream);
         formulaPrinter.setNotOperator("!");
-        formulaPrinter.setGloballyOperator("[]");
-        formulaPrinter.setEquivalenceOperator("<>");
+        formulaPrinter.setGloballyOperator("G");
+        formulaPrinter.setEventuallyOperator("F");
         formulaPrinter.setNextOperator("X");
         formulaPrinter.setAndOperator("&");
         formulaPrinter.setOrOperator("|");

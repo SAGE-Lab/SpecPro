@@ -5,7 +5,6 @@ import it.sagelab.specpro.models.InputRequirement;
 import it.sagelab.specpro.models.ltl.LTLSpec;
 import it.sagelab.specpro.reasoners.ModelChecker;
 import it.sagelab.specpro.reasoners.NuSMV;
-import it.sagelab.specpro.fe.psp.Snl2FlParser;
 import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,7 +26,6 @@ public class InconsistencyFinderTests {
         PSPFrontEnd fe = new PSPFrontEnd();
         LTLSpec spec = fe.parseFile(inputFile.getAbsolutePath());
 
-        Snl2FlParser parser = new Snl2FlParser();
         ConsistencyChecker cc = new ConsistencyChecker(mc, spec, "test.nusmv");
 
         BinaryInconsistencyFinder incFinder = new BinaryInconsistencyFinder(cc);
@@ -35,9 +33,6 @@ public class InconsistencyFinderTests {
 
 
         List<InputRequirement> requirementList = incFinder.run();
-
-//        for(Requirement r : requirementList)
-//            System.out.println(r.getText());
 
     }
 

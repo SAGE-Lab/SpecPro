@@ -7,23 +7,19 @@ import it.sagelab.specpro.models.ba.BAExplorer;
 import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.ac.LassoShapedAcceptanceCondition;
-import it.sagelab.specpro.models.ltl.Formula;
 import it.sagelab.specpro.models.ltl.LTLSpec;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
-import it.sagelab.specpro.reasoners.LTL2BA;
-import it.sagelab.specpro.reasoners.translators.SpotTranslator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.swing.plaf.nimbus.State;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
-public class AutomaticTestGenerator {
+public class CoverageBesedWordsGenerator extends LTLTestGenerator {
 
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(CoverageBesedWordsGenerator.class);
 
     /** Public Properties **/
     private int minLength, maxLength;
@@ -31,18 +27,17 @@ public class AutomaticTestGenerator {
     private final BAProductHandler baProductHandler;
 
     /** Internal use only data **/
-    private ArrayList<BuchiAutomaton> buchiAutomata = new ArrayList<>();
     private Map<BuchiAutomaton, Set<TestSequence>> generatedTests;
 
     private final HashSet<List<Assignment>> uniqueAssignments = new HashSet<>();
 
 
 
-    public AutomaticTestGenerator() {
+    public CoverageBesedWordsGenerator() {
         this(2, 10);
     }
 
-    public AutomaticTestGenerator(int minLength, int maxLength) {
+    public CoverageBesedWordsGenerator(int minLength, int maxLength) {
         this.minLength = minLength;
         this.maxLength = maxLength;
         coverageCriterion = new StateCoverage();
@@ -73,60 +68,14 @@ public class AutomaticTestGenerator {
         this.maxLength = maxLength;
     }
 
-    public void addFormula(String ltlFormula) {
-        final LTL2BA ltl2ba = new LTL2BA();
-
-        buchiAutomata.add(ltl2ba.translate(ltlFormula));
-    }
-
-    public void parseRequirements(LTLSpec spec) throws IOException {
-        parseRequirements(spec, false);
-    }
-
-    public void parseRequirements(LTLSpec spec, boolean conjunctionBA) throws IOException {
-
-        SpotTranslator translator = new SpotTranslator();
-
-        if(conjunctionBA) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            try (PrintStream ps = new PrintStream(baos, true, "UTF-8")) {
-
-                translator.translate(ps, spec);
-                addFormula(new String(baos.toByteArray(), StandardCharsets.UTF_8));
-            }
-        } else {
-
-
-            for (Formula f: spec.getRequirements()) {
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                try (PrintStream ps = new PrintStream(baos, true, "UTF-8")) {
-                    LTLSpec newSpec = new LTLSpec();
-                    newSpec.addRequirement(f);
-                    translator.translate(ps, newSpec);
-                    String ltlFormula = new String(baos.toByteArray(), StandardCharsets.UTF_8);
-
-                    addFormula(ltlFormula);
-                }
-            }
-        }
-    }
-
-    public void expandTransitions() {
-        buchiAutomata.forEach(BuchiAutomaton::expandImplicitTransitions);
-    }
-
-    public Map<BuchiAutomaton, Set<TestSequence>> generate() {
-        return generate(System.out);
-    }
-
-    public Map<BuchiAutomaton, Set<TestSequence>> generate(PrintStream outStream)  {
+    public Set<TestSequence> generate(LTLSpec spec) throws IOException {
+        parseRequirements(spec, true);
         generatedTests = new HashMap<>();
 
         double totalTime = 0;
         int count = 0;
         for(BuchiAutomaton ba: buchiAutomata) {
-            logger.info("Generating paths for BA # " + (++count) + "/" + buchiAutomata.size());
+            logger.info("Generating utils for BA # " + (++count) + "/" + buchiAutomata.size());
             long startTime = System.nanoTime();
             generate(ba);
             long endTime = System.nanoTime();
@@ -137,13 +86,16 @@ public class AutomaticTestGenerator {
             logger.info(String.format("Elapsed Time: %.3f s", seconds));
         }
 
-        outStream.println("Different tests generated: " + uniqueAssignments.size());
-        uniqueAssignments.forEach(l -> outStream.println(l));
+        Set<TestSequence> tests = generatedTests.values().stream().flatMap(s -> s.stream()).collect(Collectors.toSet());
 
-        outStream.println();
-        outStream.println(String.format("Total time: %.3f s", totalTime));
+        logger.info(String.format("Total time: %.3f s", totalTime));
 
-        return generatedTests;
+        return tests;
+    }
+
+    @Override
+    public Set<TestCase> generateTestCases(LTLSpec spec, PrintStream outStream) throws IOException {
+        return null;
     }
 
     public void computeCrossCoverageWithConjBA(LTLSpec spec) throws IOException {
@@ -157,7 +109,8 @@ public class AutomaticTestGenerator {
         generatedTests.put(buchiAutomata.get(0), new HashSet<>());
         updateCoverage(buchiAutomata.get(0));
         printStatistics(buchiAutomata.get(0));
-        buchiAutomata = oldBAs;
+        buchiAutomata.clear();
+        buchiAutomata.addAll(oldBAs);
     }
 
     private void generate(BuchiAutomaton ba) {
@@ -199,7 +152,7 @@ public class AutomaticTestGenerator {
                 for(List<Edge> path: inducedPaths) {
                     coverageCriterion.accept(path, test);
                     testSet.add(new TestSequence(new ArrayList<>(path), test));
-                    logger.debug("** Test already generated **");
+                    logger.debug("** Word already generated **");
                     logger.debug(path);
                     logger.debug(test);
                 }

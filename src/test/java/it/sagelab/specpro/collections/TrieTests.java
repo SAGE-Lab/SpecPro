@@ -218,4 +218,78 @@ public class TrieTests {
         assertTrue(jointTrie.containsSequence(Arrays.asList("bb", "cc")));
     }
 
+    @Test
+    public void testInsertWithComparator() {
+        List<String> str1 = Arrays.asList("A", "B", "C");
+        List<String> str2 = Arrays.asList("a", "b", "d");
+        List<String> str3 = Arrays.asList("a", "B", "D", "f");
+
+        Trie<String> trie = new Trie<>();
+        trie.insert(str1, String::compareToIgnoreCase);
+        trie.insert(str2, String::compareToIgnoreCase);
+        trie.insert(str3, String::compareToIgnoreCase);
+
+        assertTrue(trie.containsSequence(Arrays.asList("A", "B", "C")));
+        assertTrue(trie.containsSequence(Arrays.asList("A", "B", "d")));
+        assertFalse(trie.containsSequence(Arrays.asList("a", "b", "d")));
+        assertTrue(trie.containsSequence(Arrays.asList("A", "B", "d", "f")));
+        assertFalse(trie.containsSequence(Arrays.asList("a", "B", "D", "f")));
+
+    }
+
+    @Test
+    public void testCancelSequences() {
+        List<String> p1 = Arrays.asList("a", "bc", "def");
+        List<String> p2 = Arrays.asList("a", "bc", "x");
+        List<String> p3 = Arrays.asList("a", "bc");
+
+        Trie<String> trie = new Trie<>();
+        trie.insert(p1);
+        trie.insert(p2);
+        trie.insert(p3);
+
+        assertEquals(3, trie.size());
+        trie.remove(p3);
+        assertEquals(2, trie.size());
+        trie.remove(p2);
+        assertEquals(1, trie.size());
+        assertTrue(trie.containsSequence(p1));
+        assertFalse(trie.containsSequence(p2));
+        assertFalse(trie.containsSequence(p3));
+
+        for(List<String> sequence: trie) {
+            assertEquals(p1, sequence);
+        }
+    }
+
+    @Test
+    public void testInsertWithDuplicatedSequences() {
+        List<String> p1 = Arrays.asList("a", "bc", "def");
+        List<String> p2 = Arrays.asList("a", "bc", "x");
+        List<String> p3 = Arrays.asList("a", "bc");
+
+        Trie<String> trie = new Trie<>();
+        trie.insert(p1);
+        trie.insert(p2);
+        trie.insert(p3);
+
+        assertEquals(3, trie.size());
+        trie.insert(p1);
+        assertEquals(3, trie.size());
+        trie.insert(p2);
+        assertEquals(3, trie.size());
+        trie.insert(p3);
+        assertEquals(3, trie.size());
+
+        Iterator<List<String>> itr = trie.iterator();
+        assertTrue(itr.hasNext());
+        assertEquals(p3, itr.next());
+        assertTrue(itr.hasNext());
+        assertEquals(p1, itr.next());
+        assertTrue(itr.hasNext());
+        assertEquals(p2, itr.next());
+        assertFalse(itr.hasNext());
+
+    }
+
 }

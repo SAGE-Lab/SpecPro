@@ -18,12 +18,17 @@ public class BAExplorer {
     private int length;
     private BuchiAutomaton ba;
     private final Set<AcceptanceCondition> conditions;
+    private int maxPaths = Integer.MAX_VALUE;
 
     public BAExplorer()  {
         conditions = new HashSet<>();
 
         path = null;
         length = 0;
+    }
+
+    public void setMaxPaths(int maxPaths) {
+        this.maxPaths = maxPaths;
     }
 
     public void addAcceptanceCondition(AcceptanceCondition condition) {
@@ -59,12 +64,10 @@ public class BAExplorer {
     public Trie<Edge> findInducedPaths(BuchiAutomaton ba, List<Assignment> test) {
         paths = new Trie<>();
         this.ba = ba;
+        this.setLength(test.size());
 
-        for(Vertex v : ba.initStates()) {
-            for(Edge e: ba.outgoingEdgesOf(v)) {
-                inducedDfs(e.getTarget(), test, length);
-            }
-        }
+        for(Vertex v: ba.initStates())
+            inducedDfs(v, test, length);
 
         return paths;
     }
@@ -118,6 +121,9 @@ public class BAExplorer {
         Set<Edge> edges = ba.outgoingEdgesOf(v);
 
         for(Edge e: edges) {
+            if(paths.size() >= maxPaths) {
+                return;
+            }
             if(isInduced(e, test.get(test.size() - n))) {
                 path[path.length - n] = e;
                 inducedDfs(e.getTarget(), test,n - 1);

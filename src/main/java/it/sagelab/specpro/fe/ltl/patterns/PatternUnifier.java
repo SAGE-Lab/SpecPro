@@ -2,11 +2,7 @@ package it.sagelab.specpro.fe.ltl.patterns;
 
 import java.util.List;
 
-import it.sagelab.specpro.models.ltl.Atom;
-import it.sagelab.specpro.models.ltl.BinaryOperator;
-import it.sagelab.specpro.models.ltl.Formula;
-import it.sagelab.specpro.models.ltl.UnaryOperator;
-import it.sagelab.specpro.models.ltl.FormulaVisitor;
+import it.sagelab.specpro.models.ltl.*;
 import it.sagelab.specpro.models.psp.expressions.Expression;
 import it.sagelab.specpro.models.psp.Requirement;
 
@@ -80,6 +76,11 @@ public class PatternUnifier implements FormulaVisitor {
             formula = scopeFormulae.get(scopeIndex);
         if(bodyIndex != -1)
             formula = bodyFormulae.get(bodyIndex);
+    }
+
+    @Override
+    public void visitConst(Const c) {
+
     }
 
     /**

@@ -15,6 +15,12 @@ public class LTLSpec {
     /** Boolean Vars */
     private final Map<String, Atom> symbolTable;
 
+    /** Set of Input variables **/
+    private final Set<Atom> inputVariables;
+
+    /** Set of Output variables */
+    private final Set<Atom> outputVariables;
+
     private final Map<Formula, InputRequirement> spec2req;
 
     public LTLSpec() {
@@ -22,6 +28,8 @@ public class LTLSpec {
         invariants = new ArrayList<>();
         symbolTable = new HashMap<>();
         spec2req = new HashMap<>();
+        inputVariables = new HashSet<>();
+        outputVariables = new HashSet<>();
     }
 
     /**
@@ -81,5 +89,21 @@ public class LTLSpec {
 
     public Map<String, Atom> getSymbolTable() {
         return symbolTable;
+    }
+
+    public Set<Atom> getInputVariables() {
+        return inputVariables;
+    }
+
+    public Set<Atom> getOutputVariables() {
+        return outputVariables;
+    }
+
+    public void addInputVariable(Atom a) {
+        inputVariables.add(a);
+    }
+
+    public void addOututVariable(Atom a) {
+        outputVariables.add(a);
     }
 }

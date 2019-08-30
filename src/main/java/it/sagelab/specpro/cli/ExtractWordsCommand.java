@@ -1,6 +1,6 @@
 package it.sagelab.specpro.cli;
 
-import it.sagelab.specpro.atg.AutomaticTestGenerator;
+import it.sagelab.specpro.atg.*;
 import it.sagelab.specpro.atg.cache.MaxLengthCacheStrategy;
 import it.sagelab.specpro.atg.cache.NoCacheStrategy;
 import it.sagelab.specpro.atg.cache.RandomDeleteCacheStrategy;
@@ -10,36 +10,32 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 
 import java.io.IOException;
+import java.util.Set;
 
-public class AtgCommand extends Command {
+public class ExtractWordsCommand extends Command {
 
     @Override
     public String getName() {
-        return "atg";
+        return "extract-words";
     }
 
     @Override
     public String getDescription() {
-        return "Automatic Test Genearation of the given specification (it requires Spot)";
+        return "Extracts a set of words from the Buchi Automaton of the given specification, using " +
+                "the given coverage criteria as a stopping condition [Spot is required]";
     }
 
     @Override
     public Options createOptionMenu() {
         Options options = new Options();
 
-        options.addOption(null, "minLength", true, "Min length of generated paths");
-        options.addOption(null, "maxLength", true, "Max length of generated paths");
+        options.addOption(null, "minLength", true, "Min length of the generated words");
+        options.addOption(null, "maxLength", true, "Max length of the generated words");
         options.addOption("c", "coverage", true, "Choose the coverage criteria. " +
                 "Possible values are 'state', 'transition', 'acceptance', 'acc+state' or 'acc+transition'.");
-        /*
-        options.addOption(null, "conjunction", false,
-                "Generates only one buchi automata with the conjunction of all the specifications");
-        options.addOption(null, "cross-coverage", false, "Compute the coverage of the conjunction BA with the tests generated");
-        */
         options.addOption(null, "cache", true,"Set the cache strategy. " +
                 "Possible values are 'reset', 'max-length', 'random-del' or 'no'.");
-        options.addOption(null, "cache-maxLength", true, "Max path legnth stored in the cache (only for max-length strategy).");
-
+        options.addOption(null, "cache-maxLength", true, "Max path length stored in the cache (only for max-length strategy).");
         options.addOption(null, "expand-trans", false, "Expand implicit transitions in BAs before starting test case generation");
 
         return options;
@@ -47,42 +43,42 @@ public class AtgCommand extends Command {
 
     @Override
     public void run(CommandLine commandLine) throws IOException {
-        AutomaticTestGenerator atg = new AutomaticTestGenerator();
+        CoverageBesedWordsGenerator testGenerator  = new CoverageBesedWordsGenerator();
 
-        if(commandLine.hasOption("minLength")) {
+        if (commandLine.hasOption("minLength")) {
             int minLength = Integer.parseInt(commandLine.getOptionValue("minLength"));
-            atg.setMinLength(minLength);
+            testGenerator.setMinLength(minLength);
         }
 
-        if(commandLine.hasOption("maxLength")) {
+        if (commandLine.hasOption("maxLength")) {
             int maxLength = Integer.parseInt(commandLine.getOptionValue("maxLength"));
-            atg.setMaxLength(maxLength);
+            testGenerator.setMaxLength(maxLength);
         }
 
-        if(commandLine.hasOption("coverage")) {
+        if (commandLine.hasOption("coverage")) {
             String value = commandLine.getOptionValue("coverage");
 
             switch (value) {
                 case "state":
-                    atg.setCoverageCriterion(new StateCoverage());
+                    testGenerator.setCoverageCriterion(new StateCoverage());
                     break;
                 case "transition":
-                    atg.setCoverageCriterion(new TransitionCoverage());
+                    testGenerator.setCoverageCriterion(new TransitionCoverage());
                     break;
                 case "condition":
-                    atg.setCoverageCriterion(new ConditionCoverage());
+                    testGenerator.setCoverageCriterion(new ConditionCoverage());
                     break;
                 case "acceptance":
-                    atg.setCoverageCriterion(new AcceptanceStateCoverage());
+                    testGenerator.setCoverageCriterion(new AcceptanceStateCoverage());
                     break;
                 case "acc+state":
-                    atg.setCoverageCriterion(new CombinedCoverage(new StateCoverage(), new AcceptanceStateCoverage()));
+                    testGenerator.setCoverageCriterion(new CombinedCoverage(new StateCoverage(), new AcceptanceStateCoverage()));
                     break;
                 case "acc+transition":
-                    atg.setCoverageCriterion(new CombinedCoverage(new TransitionCoverage(), new AcceptanceStateCoverage()));
+                    testGenerator.setCoverageCriterion(new CombinedCoverage(new TransitionCoverage(), new AcceptanceStateCoverage()));
                     break;
                 case "acc+condition":
-                    atg.setCoverageCriterion(new CombinedCoverage(new ConditionCoverage(), new AcceptanceStateCoverage()));
+                    testGenerator.setCoverageCriterion(new CombinedCoverage(new ConditionCoverage(), new AcceptanceStateCoverage()));
                     break;
                 default:
                     System.err.println("Value for option coverage not valid. See 'SpecPro atg --help'.");
@@ -91,29 +87,29 @@ public class AtgCommand extends Command {
 
         }
 
-        if(commandLine.hasOption("cache")) {
+        if (commandLine.hasOption("cache")) {
             String value = commandLine.getOptionValue("cache");
 
-            switch(value) {
+            switch (value) {
                 case "reset":
-                    atg.getBaProductHandler().setCacheStrategy(new ResetCacheStrategy());
+                    testGenerator.getBaProductHandler().setCacheStrategy(new ResetCacheStrategy());
                     break;
                 case "max-length":
                     int maxLength = 10;
-                    if(commandLine.hasOption("cache-maxLength")) {
+                    if (commandLine.hasOption("cache-maxLength")) {
                         maxLength = Integer.parseInt(commandLine.getOptionValue("cache-maxLength"));
                     }
-                    atg.getBaProductHandler().setCacheStrategy(new MaxLengthCacheStrategy(maxLength));
+                    testGenerator.getBaProductHandler().setCacheStrategy(new MaxLengthCacheStrategy(maxLength));
                     break;
                 case "random-del":
                     long maxEntries = 1_000_000;
-                    if(commandLine.hasOption("cache-maxEntries")) {
+                    if (commandLine.hasOption("cache-maxEntries")) {
                         maxEntries = Long.parseLong("cache-maxLength");
                     }
-                    atg.getBaProductHandler().setCacheStrategy(new RandomDeleteCacheStrategy(maxEntries));
+                    testGenerator.getBaProductHandler().setCacheStrategy(new RandomDeleteCacheStrategy(maxEntries));
                     break;
                 case "no":
-                    atg.getBaProductHandler().setCacheStrategy(new NoCacheStrategy());
+                    testGenerator.getBaProductHandler().setCacheStrategy(new NoCacheStrategy());
                     break;
                 default:
                     System.err.println("Value for option cache not valid. See 'SpecPro atg --help'.");
@@ -121,17 +117,14 @@ public class AtgCommand extends Command {
             }
         }
 
-        //atg.parseRequirements(spec, commandLine.hasOption("conjunction"));
-        atg.parseRequirements(spec, true);
 
         if(commandLine.hasOption("expand-trans")) {
-            atg.expandTransitions();
+            testGenerator.expandTransitions();
         }
 
-        atg.generate(outStream);
+        Set<TestSequence> tests = testGenerator.generate(spec);
 
-        if(commandLine.hasOption("cross-coverage")) {
-            atg.computeCrossCoverageWithConjBA(spec);
-        }
+        outStream.println("Different tests generated: " + tests.size());
+        tests.forEach(l -> outStream.println(l.getAssignmentList()));
     }
 }

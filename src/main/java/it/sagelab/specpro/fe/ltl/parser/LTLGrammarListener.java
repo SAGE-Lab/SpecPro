@@ -20,6 +20,16 @@ public interface LTLGrammarListener extends ParseTreeListener {
 	 */
 	void exitFile(LTLGrammarParser.FileContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link LTLGrammarParser#ioDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterIoDeclaration(LTLGrammarParser.IoDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LTLGrammarParser#ioDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitIoDeclaration(LTLGrammarParser.IoDeclarationContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code UnaryOp}
 	 * labeled alternative in {@link LTLGrammarParser#formula}.
 	 * @param ctx the parse tree
@@ -43,6 +53,18 @@ public interface LTLGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBracketFormula(LTLGrammarParser.BracketFormulaContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Const}
+	 * labeled alternative in {@link LTLGrammarParser#formula}.
+	 * @param ctx the parse tree
+	 */
+	void enterConst(LTLGrammarParser.ConstContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Const}
+	 * labeled alternative in {@link LTLGrammarParser#formula}.
+	 * @param ctx the parse tree
+	 */
+	void exitConst(LTLGrammarParser.ConstContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code Atom}
 	 * labeled alternative in {@link LTLGrammarParser#formula}.

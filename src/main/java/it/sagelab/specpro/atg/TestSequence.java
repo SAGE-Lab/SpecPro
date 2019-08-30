@@ -1,8 +1,11 @@
 package it.sagelab.specpro.atg;
 
 import it.sagelab.specpro.models.ba.Edge;
+import it.sagelab.specpro.models.ba.Vertex;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
+import org.jgrapht.GraphPath;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestSequence {
@@ -16,6 +19,11 @@ public class TestSequence {
         this.assignmentList = assignmentList;
     }
 
+    public TestSequence() {
+        this.path = new ArrayList<>();
+        this.assignmentList = new ArrayList<>();
+    }
+
     public List<Edge> getPath() {
         return path;
     }
@@ -24,8 +32,27 @@ public class TestSequence {
         return assignmentList;
     }
 
+    public void add(Edge e, Assignment a) {
+        this.path.add(e);
+        this.assignmentList.add(a);
+    }
+
+    public void add(Edge e) {
+        path.add(e);
+        assignmentList.add(e.getRandAssignment());
+    }
+
+    public void add(GraphPath<Vertex, Edge> graphPath) {
+        if(graphPath != null) {
+            for (Edge e : graphPath.getEdgeList()) {
+                add(e);
+            }
+        }
+    }
+
     @Override
     public String toString() {
         return assignmentList.toString();
     }
+
 }

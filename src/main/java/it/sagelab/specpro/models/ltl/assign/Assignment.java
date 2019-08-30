@@ -4,6 +4,8 @@ import it.sagelab.specpro.models.ltl.Atom;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class Assignment {
 
@@ -51,6 +53,35 @@ public class Assignment {
         return assignmentsMap;
     }
 
+    /**
+     * Create a new filtered assignment that contains only atoms given in the input set
+     * @param vars the set of allowed atoms
+     * @param assignValue function to assign the value to atoms in the vars set that are not contained in the assignment.
+     *                    If null, no value is assigned to these atoms.
+     * @return a new filtered assignment
+     */
+    public Assignment filter(Set<Atom> vars, Predicate<Atom> assignValue) {
+        Assignment a = new Assignment();
+        a.setStartBeta(this.isStartBeta());
+        for(Atom i : vars) {
+            if(assignmentsMap.containsKey(i)) {
+                a.add(i, assignmentsMap.get(i));
+            } else if(assignValue != null) {
+                a.add(i, assignValue.test(i));
+            }
+        }
+        return a;
+    }
+
+    /**
+     * Create a new filtered assignment that contains only atoms given in the input set
+     * @param vars the set of allowed atoms
+     * @return a new filtered assignment
+     */
+    public Assignment filter(Set<Atom> vars) {
+        return filter(vars, null);
+    }
+
     public Assignment combine(Assignment assignment) {
         try {
             Assignment newAss = new Assignment(this);
@@ -86,6 +117,11 @@ public class Assignment {
         return true;
     }
 
+    /**
+     * Checks if the input assignment is compatible with the current instance
+     * @param assignment the assignment to check
+     * @return true if the assignment is compatible with the current instance
+     */
     public boolean isCompatible(Assignment assignment) {
         for(Map.Entry<Atom, Boolean> entry : assignment.getAssignments().entrySet()) {
             if(this.assignmentsMap.containsKey(entry.getKey())) {
@@ -112,11 +148,11 @@ public class Assignment {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == null || !(obj instanceof Assignment))
+        if(!(obj instanceof Assignment))
             return false;
         if(obj == this)
             return true;
-        return this.assignmentsMap.equals(((Assignment) obj).getAssignments());
+        return this.assignmentsMap.equals(((Assignment) obj).getAssignments()) && this.isStartBeta() == ((Assignment) obj).isStartBeta();
     }
 
     @Override

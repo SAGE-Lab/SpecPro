@@ -1,9 +1,13 @@
 package it.sagelab.specpro.fe.ltl.parser;
 
+import it.sagelab.specpro.atg.LTLTestGenerator;
 import it.sagelab.specpro.models.InputRequirement;
 import it.sagelab.specpro.models.ltl.*;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.util.HashSet;
 
 /**
  * The Class LTLBuilder.
@@ -43,6 +47,22 @@ public class LTLBuilder extends LTLGrammarBaseListener {
     }
 
     @Override
+    public void exitIoDeclaration(LTLGrammarParser.IoDeclarationContext ctx) {
+        HashSet<Atom> atoms = new HashSet<>();
+        for(TerminalNode a: ctx.ATOM()) {
+            atoms.add(spec.getOrCreateAtom(a.getText()));
+        }
+
+        if(ctx.INPUTS() != null) {
+            atoms.forEach(spec::addInputVariable);
+        }
+
+        if(ctx.OUTPUTS() != null) {
+            atoms.forEach(spec::addOututVariable);
+        }
+    }
+
+    @Override
     public void exitBracketFormula(LTLGrammarParser.BracketFormulaContext ctx) {
         values.put(ctx, values.get(ctx.formula()));
     }
@@ -66,5 +86,10 @@ public class LTLBuilder extends LTLGrammarBaseListener {
     public void enterAtom(LTLGrammarParser.AtomContext ctx) {
         Atom a = spec.getOrCreateAtom(ctx.ATOM().getText());
         values.put(ctx, a);
+    }
+
+    @Override
+    public void enterConst(LTLGrammarParser.ConstContext ctx) {
+        values.put(ctx, ctx.getText().equals("true") ? Const.TRUE : Const.FALSE);
     }
 }

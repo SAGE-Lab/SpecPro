@@ -3,7 +3,7 @@ package it.sagelab.specpro.models.translators;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import it.sagelab.specpro.fe.psp.Snl2FlException;
+import it.sagelab.specpro.fe.ParseException;
 import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.psp.expressions.ExpressionVisitor;
 import it.sagelab.specpro.models.psp.expressions.*;
@@ -41,7 +41,7 @@ public class RangeMapVisitor implements ExpressionVisitor {
     @Override
     public void visitCompareExpression(CompareExpression exp) {
         if(exp.getLeftExp() instanceof VariableExpression && exp.getRightExp() instanceof VariableExpression)
-            throw new Snl2FlException("Comparison between two variables is not supported.");
+            throw new ParseException("Comparison between two variables is not supported.");
         if(exp.getLeftExp() instanceof VariableExpression)
             add((VariableExpression) exp.getLeftExp(),  (NumberExpression) exp.getRightExp());
         else

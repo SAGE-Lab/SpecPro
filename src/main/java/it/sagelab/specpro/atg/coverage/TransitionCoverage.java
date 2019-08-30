@@ -16,7 +16,7 @@ public class TransitionCoverage extends BACoverage {
     public TransitionCoverage(BuchiAutomaton buchiAutomaton) {
         super(buchiAutomaton);
         visitedEdges = new HashSet<>();
-        for(Vertex v: buchiAutomaton.initStates())
+        for(Vertex v: buchiAutomaton.initStatesI())
             visitedEdges.addAll(buchiAutomaton.outgoingEdgesOf(v));
     }
 
@@ -29,7 +29,7 @@ public class TransitionCoverage extends BACoverage {
     public void reset(BuchiAutomaton buchiAutomaton) {
         super.reset(buchiAutomaton);
         visitedEdges.clear();
-        for(Vertex v: buchiAutomaton.initStates())
+        for(Vertex v: buchiAutomaton.initStatesI())
             visitedEdges.addAll(buchiAutomaton.outgoingEdgesOf(v));
     }
 
@@ -67,7 +67,7 @@ public class TransitionCoverage extends BACoverage {
 
     @Override
     public double coverage() {
-        return ((double) visitedEdges.size()) / ((double) buchiAutomaton.edgeSet().size());
+        return ((double) visitedEdges.size()) / ((double) buchiAutomaton.edgeSet().size()) * 100;
     }
 
 }
