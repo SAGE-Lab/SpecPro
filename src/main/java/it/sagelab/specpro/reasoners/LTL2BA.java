@@ -4,19 +4,21 @@ import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ba.DotBuilder;
 import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.Vertex;
+import it.sagelab.specpro.models.ltl.LTLSpec;
+import it.sagelab.specpro.reasoners.translators.SpotTranslator;
 import org.apache.commons.io.IOUtils;
 import org.jgrapht.io.AttributeType;
 import org.jgrapht.io.DOTImporter;
 import org.jgrapht.io.DefaultAttribute;
 import org.jgrapht.io.ImportException;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class LTL2BA {
 
     public static boolean USE_OWL = false;
+    private static SpotTranslator translator = new SpotTranslator();
 
     public enum OptimizationLevel {
         LOW("--low"),
@@ -50,6 +52,13 @@ public class LTL2BA {
         this.level = level;
     }
 
+    public BuchiAutomaton translate(LTLSpec spec) throws IOException{
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos, true, "UTF-8");
+        translator.translate(ps, spec);
+        return translate(new String(baos.toByteArray(), StandardCharsets.UTF_8));
+    }
+
     public BuchiAutomaton translate(String formula) {
         BuchiAutomaton g = new BuchiAutomaton();
         Runtime rt = Runtime.getRuntime();
@@ -68,6 +77,8 @@ public class LTL2BA {
 
             input = IOUtils.toString(process.getInputStream());
 
+            // IOUtils.write(input, new FileOutputStream("ba.dot"));
+
             int exitValue = process.waitFor();
             if(exitValue != 0) {
                 System.err.println(input);
@@ -75,12 +86,6 @@ public class LTL2BA {
             }
             else {
                 input = input.replace("label=\"\\n[Büchi]\"", "");
-
-                boolean allAcceptance = false;
-                if(input.contains("label=\"t\\n[all]\"")) {
-                    input = input.replace("label=\"t\\n[all]\"", "");
-                    allAcceptance = true;
-                }
 
                 importer.importGraph(g, new StringReader(input));
             }

@@ -7,12 +7,26 @@ import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class BAFilter {
 
-    public static BuchiAutomaton inputFilter(BuchiAutomaton automaton, Set<Atom> inputs) {
+    private Predicate<Atom> assignValue;
+
+    public BAFilter(Predicate<Atom> assignValue) {
+        this.assignValue = assignValue;
+    }
+
+    public BAFilter() {
+        this((a) -> false);
+    }
+
+    public void setAssignValue(Predicate<Atom> assignValue) {
+        this.assignValue = assignValue;
+    }
+
+    public BuchiAutomaton inputFilter(BuchiAutomaton automaton, Set<Atom> inputs) {
         BuchiAutomaton inputAutomaton = new BuchiAutomaton();
         for(Vertex v: automaton.vertexSet())
             inputAutomaton.addVertex(v);
@@ -25,25 +39,21 @@ public class BAFilter {
         return inputAutomaton;
     }
 
-    public static void trim(List<Assignment> assignments) {
-        while(assignments.size() > 0) {
-            if(assignments.get(assignments.size() - 1).getAssignments().isEmpty()) {
-                assignments.remove(assignments.size() - 1);
-            } else {
-                return;
-            }
-        }
-    }
 
-    private static Edge newEdge(Edge e, Set<Atom> inputs) {
+    private Edge newEdge(Edge e, Set<Atom> inputs) {
         Edge e1 = new Edge(e.getSource(), e.getTarget(), new HashSet<>());
         for(Assignment assignment: e.getAssigments()) {
             addAssignment(e1, assignment.filter(inputs));
         }
+
+        for(Assignment a: e1) {
+            fill(a, inputs);
+        }
+
         return e1;
     }
 
-    private static void addAssignment(Edge e, Assignment a) {
+    private void addAssignment(Edge e, Assignment a) {
 
         Set<Assignment> toRemove = new HashSet<>();
         for(Assignment a1: e.getAssigments()) {
@@ -55,6 +65,14 @@ public class BAFilter {
 
         e.getAssigments().removeAll(toRemove);
         e.getAssigments().add(a);
+    }
+
+    private void fill(Assignment a, Set<Atom> inputs) {
+        for(Atom i: inputs) {
+            if(!a.contains(i)) {
+                a.add(i, assignValue.test(i));
+            }
+        }
     }
 
 }

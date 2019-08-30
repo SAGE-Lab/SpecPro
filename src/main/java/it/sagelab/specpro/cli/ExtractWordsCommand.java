@@ -22,7 +22,7 @@ public class ExtractWordsCommand extends Command {
     @Override
     public String getDescription() {
         return "Extracts a set of words from the Buchi Automaton of the given specification, using " +
-                "the given coverage criteria as a stopping condition (it requires Spot)";
+                "the given coverage criteria as a stopping condition [Spot is required]";
     }
 
     @Override

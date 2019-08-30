@@ -21,9 +21,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 
-public class SPTestGenerator extends LTLTestGenerator {
+public class IOTestGenerator extends LTLTestGenerator {
 
-    private static final Logger logger = LogManager.getLogger(CoverageBesedTestGenerator.class);
+    private static final Logger logger = LogManager.getLogger(CoverageBesedWordsGenerator.class);
 
     OutputSelector outputSelector = new RandomOutputSelector();
     OutputGenerator outputGenerator = new OutputGenerator();
@@ -47,7 +47,7 @@ public class SPTestGenerator extends LTLTestGenerator {
         Trie<Assignment> inputSequences = new Trie<>();
         HashSet<Edge> visitedEdges = new HashSet<>();
 
-        BuchiAutomaton automaton = BAFilter.inputFilter(buchiAutomata.get(0), spec.getInputVariables());
+        BuchiAutomaton automaton = new BAFilter().inputFilter(buchiAutomata.get(0), spec.getInputVariables());
 
         Set<Vertex> initStates = automaton.initStates();
         Set<Vertex> acceptanceStates = automaton.acceptanceStates();
@@ -105,18 +105,6 @@ public class SPTestGenerator extends LTLTestGenerator {
         logger.info("Input sequences: " + inputSequences.size());
 
         return inputSequences;
-    }
-
-    @Override
-    public Set<TestSequence> generate(LTLSpec spec) throws IOException {
-        parseRequirements(spec, true);
-        HashSet<TestSequence> tests = new HashSet<>();
-
-//        for(List<Assignment> assignments: inputSequences) {
-//            tests.add(outputSelector.selectOutput(buchiAutomata.get(0), assignments));
-//        }
-
-        return tests;
     }
 
     @Override

@@ -8,7 +8,6 @@ import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ltl.LTLSpec;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +28,7 @@ public class OutputGenerator {
         TestCase tc = new TestCase(inputs);
 
         Set<List<Edge>> paths =  explorer.findInducedPaths(automaton, inputs).toSet();
+
         int kMax = automaton.vertexSet().size();
         int k = 0;
         while((paths == null || paths.size() == 0) && k < kMax) {

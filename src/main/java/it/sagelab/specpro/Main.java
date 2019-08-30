@@ -49,7 +49,7 @@ public class Main {
             options.addOption(null, "version",false,"Print version information and exit");
             options.addOption("i", "input", true, "Input file [required]");
             options.addOption("o", "output", true, "Output file");
-            options.addOption("fe", "frontend", true, "Select input format to use. Possible values are: ltl, psp (default).");
+            options.addOption("f", "frontend", true, "Select input format to use. Possible values are: ltl, psp (default).");
             options.addOption("v", "verbose", false, "Print additional information");
         }
 
