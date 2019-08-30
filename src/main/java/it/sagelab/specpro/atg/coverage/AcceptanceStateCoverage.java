@@ -98,6 +98,6 @@ public class AcceptanceStateCoverage extends BACoverage {
 
     @Override
     public double coverage() {
-        return ((double) visitedStates.size()) / ((double) acceptanceStates.size());
+        return ((double) visitedStates.size()) / ((double) acceptanceStates.size()) * 100;
     }
 }

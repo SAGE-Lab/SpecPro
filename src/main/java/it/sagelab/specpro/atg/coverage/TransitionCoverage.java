@@ -67,7 +67,7 @@ public class TransitionCoverage extends BACoverage {
 
     @Override
     public double coverage() {
-        return ((double) visitedEdges.size()) / ((double) buchiAutomaton.edgeSet().size());
+        return ((double) visitedEdges.size()) / ((double) buchiAutomaton.edgeSet().size()) * 100;
     }
 
 }

@@ -93,7 +93,7 @@ public class ConditionCoverage extends BACoverage {
     public double coverage() {
         int coveredConditions = visitedConditions.values().stream().mapToInt(Set::size).sum();
         int totalConditions = buchiAutomaton.edgeSet().stream().map(e -> e.getAssigments()).mapToInt(Set::size).sum();
-        return ((double) coveredConditions) / ((double) totalConditions);
+        return ((double) coveredConditions) / ((double) totalConditions) * 100;
     }
 
 }

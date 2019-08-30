@@ -66,6 +66,6 @@ public class StateCoverage extends BACoverage {
 
     @Override
     public double coverage() {
-        return ((double) visitedStates.size()) / ((double) buchiAutomaton.vertexSet().size());
+        return ((double) visitedStates.size()) / ((double) buchiAutomaton.vertexSet().size()) * 100;
     }
 }

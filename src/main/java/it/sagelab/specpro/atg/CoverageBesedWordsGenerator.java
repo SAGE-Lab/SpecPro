@@ -17,9 +17,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class CoverageBesedTestGenerator extends LTLTestGenerator {
+public class CoverageBesedWordsGenerator extends LTLTestGenerator {
 
-    private static final Logger logger = LogManager.getLogger(CoverageBesedTestGenerator.class);
+    private static final Logger logger = LogManager.getLogger(CoverageBesedWordsGenerator.class);
 
     /** Public Properties **/
     private int minLength, maxLength;
@@ -33,11 +33,11 @@ public class CoverageBesedTestGenerator extends LTLTestGenerator {
 
 
 
-    public CoverageBesedTestGenerator() {
+    public CoverageBesedWordsGenerator() {
         this(2, 10);
     }
 
-    public CoverageBesedTestGenerator(int minLength, int maxLength) {
+    public CoverageBesedWordsGenerator(int minLength, int maxLength) {
         this.minLength = minLength;
         this.maxLength = maxLength;
         coverageCriterion = new StateCoverage();
@@ -152,7 +152,7 @@ public class CoverageBesedTestGenerator extends LTLTestGenerator {
                 for(List<Edge> path: inducedPaths) {
                     coverageCriterion.accept(path, test);
                     testSet.add(new TestSequence(new ArrayList<>(path), test));
-                    logger.debug("** Test already generated **");
+                    logger.debug("** Word already generated **");
                     logger.debug(path);
                     logger.debug(test);
                 }

@@ -18,12 +18,10 @@ public abstract class LTLTestGenerator {
     protected final ArrayList<BuchiAutomaton> buchiAutomata = new ArrayList<>();
 
     /**
-     * Generates a set of test sequences starting from the input ltl specification
+     * Generates a set of test cases starting from the input ltl specification
      * @param spec The input ltl specification
      * @return The test suite generated
      */
-    public abstract Set<TestSequence> generate(LTLSpec spec) throws IOException;
-
     public abstract Set<TestCase> generateTestCases(LTLSpec spec, PrintStream outStream) throws IOException;
 
 

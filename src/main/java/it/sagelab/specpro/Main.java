@@ -28,13 +28,13 @@ public class Main {
             Command translate = new TranslateCommand();
             Command consistency = new ConsistencyCommand();
             Command muc = new MucCommand();
-            Command atg = new AtgCommand();
+            Command extractWords = new ExtractWordsCommand();
             Command testCaseGeneratorCommand = new TestCaseGeneratorCommand();
 
             commands.put(translate.getName(), translate);
             commands.put(consistency.getName(), consistency);
             commands.put(muc.getName(), muc);
-            commands.put(atg.getName(), atg);
+            commands.put(extractWords.getName(), extractWords);
             commands.put(testCaseGeneratorCommand.getName(), testCaseGeneratorCommand);
         }
 
