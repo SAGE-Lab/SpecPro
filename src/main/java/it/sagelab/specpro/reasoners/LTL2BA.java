@@ -37,11 +37,29 @@ public class LTL2BA {
         }
     }
 
+    public enum AutomatonType {
+        NBA("-B"),
+        MONITOR("-M");
+
+        private final String option;
+
+        AutomatonType(String option) {
+            this.option = option;
+        }
+
+        @Override
+        public String toString(){
+            return option;
+        }
+    }
+
     private final DotBuilder db;
 
     private final DOTImporter<Vertex, Edge> importer;
 
     private OptimizationLevel level = OptimizationLevel.LOW;
+
+    private AutomatonType type = AutomatonType.NBA;
 
     public LTL2BA() {
         db = new DotBuilder();
@@ -50,6 +68,10 @@ public class LTL2BA {
 
     public void setOptimizationLevel(OptimizationLevel level) {
         this.level = level;
+    }
+
+    public void setType(AutomatonType type) {
+        this.type = type;
     }
 
     public BuchiAutomaton translate(LTLSpec spec) throws IOException{
@@ -69,7 +91,7 @@ public class LTL2BA {
             if(LTL2BA.USE_OWL) {
                 builder = new ProcessBuilder("./owl.sh", formula);
             } else {
-                builder = new ProcessBuilder("ltl2tgba", "-B", formula, level.toString(),"-d");
+                builder = new ProcessBuilder("ltl2tgba", type.toString(), formula, level.toString(),"-d");
             }
             builder.redirectErrorStream(true);
             builder.redirectOutput(ProcessBuilder.Redirect.PIPE);
@@ -77,7 +99,8 @@ public class LTL2BA {
 
             input = IOUtils.toString(process.getInputStream());
 
-            // IOUtils.write(input, new FileOutputStream("ba.dot"));
+            IOUtils.write(input, new FileOutputStream(type == AutomatonType.NBA ? "ba.dot" : "monitor.dot"));
+
 
             int exitValue = process.waitFor();
             if(exitValue != 0) {
@@ -86,6 +109,7 @@ public class LTL2BA {
             }
             else {
                 input = input.replace("label=\"\\n[Büchi]\"", "");
+                input = input.replace("label=\"t\\n[all]\"", "");
 
                 importer.importGraph(g, new StringReader(input));
             }
