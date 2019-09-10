@@ -52,7 +52,7 @@ public class MealyMachineBuilder extends KISSGrammarBaseListener {
         for(TerminalNode id: ctx.ID()) {
             inputVariables.add(new Atom(id.toString()));
         }
-        mealyMachine.setInputs(new HashSet<>(inputVariables));
+        mealyMachine.setInputs(inputVariables);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class MealyMachineBuilder extends KISSGrammarBaseListener {
             outputVariables.add(new Atom(id.toString()));
         }
 
-        mealyMachine.setOutputs(new HashSet<>(outputVariables));
+        mealyMachine.setOutputs(outputVariables);
     }
 
     @Override
@@ -81,6 +81,10 @@ public class MealyMachineBuilder extends KISSGrammarBaseListener {
 
         Assignment inputs = buildAssignment(ctx.values(0).getText(), inputVariables);
         Assignment outputs = buildAssignment(ctx.values(1).getText(), outputVariables);
+
+        for(Atom o: outputVariables) {
+            outputs.getAssignments().putIfAbsent(o, false);
+        }
 
         Edge e = new Edge(s1, s2, inputs, outputs);
         mealyMachine.addVertex(s1);

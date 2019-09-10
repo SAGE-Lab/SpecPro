@@ -21,7 +21,7 @@ public class KISSGrammarParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, WS=20, ID=21;
+		T__17=18, T__18=19, T__19=20, WS=21, ID=22;
 	public static final int
 		RULE_file = 0, RULE_declaration = 1, RULE_number = 2, RULE_transition = 3, 
 		RULE_values = 4;
@@ -36,14 +36,14 @@ public class KISSGrammarParser extends Parser {
 		return new String[] {
 			null, "'\n'", "'.inputs'", "'.outputs'", "'.i'", "'.o'", "'.p'", "'.s'", 
 			"'.r'", "'0'", "'1'", "'2'", "'3'", "'4'", "'5'", "'6'", "'7'", "'8'", 
-			"'9'", "'-'"
+			"'9'", "'+'", "'-'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, null, null, null, "WS", "ID"
+			null, null, null, null, null, null, null, null, null, "WS", "ID"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -134,7 +134,7 @@ public class KISSGrammarParser extends Parser {
 			setState(18);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__1) | (1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << T__7) | (1L << T__8) | (1L << T__9) | (1L << T__18))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__1) | (1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << T__7) | (1L << T__8) | (1L << T__9) | (1L << T__19))) != 0)) {
 				{
 				{
 				setState(12);
@@ -154,7 +154,7 @@ public class KISSGrammarParser extends Parser {
 					break;
 				case T__8:
 				case T__9:
-				case T__18:
+				case T__19:
 					{
 					setState(11);
 					transition();
@@ -496,6 +496,7 @@ public class KISSGrammarParser extends Parser {
 	public final TransitionContext transition() throws RecognitionException {
 		TransitionContext _localctx = new TransitionContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_transition);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -507,6 +508,22 @@ public class KISSGrammarParser extends Parser {
 			match(ID);
 			setState(53);
 			values();
+			setState(58);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while (_la==T__18) {
+				{
+				{
+				setState(54);
+				match(T__18);
+				setState(55);
+				values();
+				}
+				}
+				setState(60);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -542,15 +559,15 @@ public class KISSGrammarParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(56); 
+			setState(62); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(55);
+				setState(61);
 				_la = _input.LA(1);
-				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__8) | (1L << T__9) | (1L << T__18))) != 0)) ) {
+				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__8) | (1L << T__9) | (1L << T__19))) != 0)) ) {
 				_errHandler.recoverInline(this);
 				}
 				else {
@@ -560,10 +577,10 @@ public class KISSGrammarParser extends Parser {
 				}
 				}
 				}
-				setState(58); 
+				setState(64); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__8) | (1L << T__9) | (1L << T__18))) != 0) );
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__8) | (1L << T__9) | (1L << T__19))) != 0) );
 			}
 		}
 		catch (RecognitionException re) {
@@ -578,24 +595,25 @@ public class KISSGrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\27?\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\30E\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\5\2\17\n\2\3\2\3\2\7\2\23\n\2\f\2\16"+
 		"\2\26\13\2\3\3\3\3\6\3\32\n\3\r\3\16\3\33\3\3\3\3\6\3 \n\3\r\3\16\3!\3"+
 		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3.\n\3\3\4\6\4\61\n\4\r\4\16"+
-		"\4\62\3\5\3\5\3\5\3\5\3\5\3\6\6\6;\n\6\r\6\16\6<\3\6\2\2\7\2\4\6\b\n\2"+
-		"\4\3\2\13\24\4\2\13\f\25\25\2E\2\24\3\2\2\2\4-\3\2\2\2\6\60\3\2\2\2\b"+
-		"\64\3\2\2\2\n:\3\2\2\2\f\17\5\4\3\2\r\17\5\b\5\2\16\f\3\2\2\2\16\r\3\2"+
-		"\2\2\17\20\3\2\2\2\20\21\7\3\2\2\21\23\3\2\2\2\22\16\3\2\2\2\23\26\3\2"+
-		"\2\2\24\22\3\2\2\2\24\25\3\2\2\2\25\3\3\2\2\2\26\24\3\2\2\2\27\31\7\4"+
-		"\2\2\30\32\7\27\2\2\31\30\3\2\2\2\32\33\3\2\2\2\33\31\3\2\2\2\33\34\3"+
-		"\2\2\2\34.\3\2\2\2\35\37\7\5\2\2\36 \7\27\2\2\37\36\3\2\2\2 !\3\2\2\2"+
-		"!\37\3\2\2\2!\"\3\2\2\2\".\3\2\2\2#$\7\6\2\2$.\5\6\4\2%&\7\7\2\2&.\5\6"+
-		"\4\2\'(\7\b\2\2(.\5\6\4\2)*\7\t\2\2*.\5\6\4\2+,\7\n\2\2,.\7\27\2\2-\27"+
-		"\3\2\2\2-\35\3\2\2\2-#\3\2\2\2-%\3\2\2\2-\'\3\2\2\2-)\3\2\2\2-+\3\2\2"+
-		"\2.\5\3\2\2\2/\61\t\2\2\2\60/\3\2\2\2\61\62\3\2\2\2\62\60\3\2\2\2\62\63"+
-		"\3\2\2\2\63\7\3\2\2\2\64\65\5\n\6\2\65\66\7\27\2\2\66\67\7\27\2\2\678"+
-		"\5\n\6\28\t\3\2\2\29;\t\3\2\2:9\3\2\2\2;<\3\2\2\2<:\3\2\2\2<=\3\2\2\2"+
-		"=\13\3\2\2\2\t\16\24\33!-\62<";
+		"\4\62\3\5\3\5\3\5\3\5\3\5\3\5\7\5;\n\5\f\5\16\5>\13\5\3\6\6\6A\n\6\r\6"+
+		"\16\6B\3\6\2\2\7\2\4\6\b\n\2\4\3\2\13\24\4\2\13\f\26\26\2L\2\24\3\2\2"+
+		"\2\4-\3\2\2\2\6\60\3\2\2\2\b\64\3\2\2\2\n@\3\2\2\2\f\17\5\4\3\2\r\17\5"+
+		"\b\5\2\16\f\3\2\2\2\16\r\3\2\2\2\17\20\3\2\2\2\20\21\7\3\2\2\21\23\3\2"+
+		"\2\2\22\16\3\2\2\2\23\26\3\2\2\2\24\22\3\2\2\2\24\25\3\2\2\2\25\3\3\2"+
+		"\2\2\26\24\3\2\2\2\27\31\7\4\2\2\30\32\7\30\2\2\31\30\3\2\2\2\32\33\3"+
+		"\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34.\3\2\2\2\35\37\7\5\2\2\36 \7\30"+
+		"\2\2\37\36\3\2\2\2 !\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\".\3\2\2\2#$\7\6\2"+
+		"\2$.\5\6\4\2%&\7\7\2\2&.\5\6\4\2\'(\7\b\2\2(.\5\6\4\2)*\7\t\2\2*.\5\6"+
+		"\4\2+,\7\n\2\2,.\7\30\2\2-\27\3\2\2\2-\35\3\2\2\2-#\3\2\2\2-%\3\2\2\2"+
+		"-\'\3\2\2\2-)\3\2\2\2-+\3\2\2\2.\5\3\2\2\2/\61\t\2\2\2\60/\3\2\2\2\61"+
+		"\62\3\2\2\2\62\60\3\2\2\2\62\63\3\2\2\2\63\7\3\2\2\2\64\65\5\n\6\2\65"+
+		"\66\7\30\2\2\66\67\7\30\2\2\67<\5\n\6\289\7\25\2\29;\5\n\6\2:8\3\2\2\2"+
+		";>\3\2\2\2<:\3\2\2\2<=\3\2\2\2=\t\3\2\2\2><\3\2\2\2?A\t\3\2\2@?\3\2\2"+
+		"\2AB\3\2\2\2B@\3\2\2\2BC\3\2\2\2C\13\3\2\2\2\n\16\24\33!-\62<B";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
