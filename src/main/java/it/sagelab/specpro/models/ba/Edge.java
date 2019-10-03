@@ -13,20 +13,23 @@ public class Edge extends DefaultEdge implements Iterable<Assignment> {
     String label;
     Map<String, Attribute> attributes;
     Set<Assignment> assignmentSet = null;
+    final int id;
 
-    public Edge(Vertex source, Vertex target, Set<Assignment> assignments) {
+    public Edge(Vertex source, Vertex target, Set<Assignment> assignments, int id) {
         this.source = source;
         this.target = target;
         this.label = null;
         this.attributes = Collections.emptyMap();
         this.assignmentSet = assignments;
+        this.id = id;
     }
 
-    public Edge(Vertex source, Vertex target, String label, Map<String, Attribute> attributes) {
+    public Edge(Vertex source, Vertex target, String label, Map<String, Attribute> attributes, int id) {
         this.source = source;
         this.target = target;
         this.label = label;
         this.attributes = attributes;
+        this.id = id;
     }
 
     @Override
@@ -45,6 +48,10 @@ public class Edge extends DefaultEdge implements Iterable<Assignment> {
 
     public String getLabel() {
         return label;
+    }
+
+    public int getId() {
+        return id;
     }
 
     void setAssignmentSet(Set<Assignment> assignmentSet) {
@@ -76,6 +83,15 @@ public class Edge extends DefaultEdge implements Iterable<Assignment> {
         return "(" + source + " -> " + target + ")";
     }
 
+    @Override
+    public Iterator<Assignment> iterator() {
+        return getAssigments().iterator();
+    }
+
+    @Override
+    public int hashCode(){
+        return id;
+    }
 
     /***************************************************
      *
@@ -133,8 +149,4 @@ public class Edge extends DefaultEdge implements Iterable<Assignment> {
         return index;
     }
 
-    @Override
-    public Iterator<Assignment> iterator() {
-        return getAssigments().iterator();
-    }
 }

@@ -7,9 +7,7 @@ import it.sagelab.specpro.models.ba.Vertex;
 import it.sagelab.specpro.models.ltl.LTLSpec;
 import it.sagelab.specpro.reasoners.translators.SpotTranslator;
 import org.apache.commons.io.IOUtils;
-import org.jgrapht.io.AttributeType;
 import org.jgrapht.io.DOTImporter;
-import org.jgrapht.io.DefaultAttribute;
 import org.jgrapht.io.ImportException;
 
 import java.io.*;
@@ -53,17 +51,11 @@ public class LTL2BA {
         }
     }
 
-    private final DotBuilder db;
-
-    private final DOTImporter<Vertex, Edge> importer;
-
     private OptimizationLevel level = OptimizationLevel.LOW;
 
     private AutomatonType type = AutomatonType.NBA;
 
     public LTL2BA() {
-        db = new DotBuilder();
-        importer = new DOTImporter<>(db, db, db);
     }
 
     public void setOptimizationLevel(OptimizationLevel level) {
@@ -111,6 +103,8 @@ public class LTL2BA {
                 input = input.replace("label=\"\\n[Büchi]\"", "");
                 input = input.replace("label=\"t\\n[all]\"", "");
 
+                DotBuilder db = new DotBuilder();
+                DOTImporter<Vertex, Edge> importer = new DOTImporter<>(db, db, db);
                 importer.importGraph(g, new StringReader(input));
             }
 

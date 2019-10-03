@@ -50,7 +50,7 @@ public class OutputGenerator {
                         }
                     }
 
-                    p.set(i, new Edge(e.getSource(), e.getTarget(), assignments));
+                    p.set(i, new Edge(e.getSource(), e.getTarget(), assignments, e.getId()));
                 }
 
                 SequenceBuilder<Assignment> sequenceBuilder = new SequenceBuilder<>(p);
