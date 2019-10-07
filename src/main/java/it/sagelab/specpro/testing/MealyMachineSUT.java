@@ -48,6 +48,10 @@ public class MealyMachineSUT extends SUT {
         return mealyMachine.outgoingEdgesOf(currentState).stream().filter(e -> e.getInputs().isCompatible(input)).collect(Collectors.toSet());
     }
 
+    public String getCurrentState() {
+        return currentState;
+    }
+
     @Override
     public String toString() {
         return mealyMachine.toString();

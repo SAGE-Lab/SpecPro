@@ -52,6 +52,7 @@ public class TestingEnvironment {
         Trace trace = new Trace();
         TestOracle.Value value = null;
         testGenerator.reset();
+        sut.reset();
 
         while(testGenerator.hasNext()) {
 
@@ -70,7 +71,7 @@ public class TestingEnvironment {
                 value = oracle.evaluatePartial(trace);
 
             } catch (InvalidInputException e) {
-                trace.add(null);
+                trace.add(currentInput);
                 value = TestOracle.Value.FALSE;
             }
 

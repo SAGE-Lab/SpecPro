@@ -7,6 +7,8 @@ import it.sagelab.specpro.models.ba.Vertex;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 import it.sagelab.specpro.models.ltl.assign.Trace;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,6 +18,7 @@ public class SimpleTestOracle extends TestOracle {
     final private BAExplorer explorer;
     private Set<Vertex> currentStates;
     private int currentTraceLength;
+    private Set<List<Edge>> lastEvaluation = Collections.emptySet();
 
     public SimpleTestOracle(BuchiAutomaton automaton){
         this.automaton = automaton;
@@ -32,7 +35,8 @@ public class SimpleTestOracle extends TestOracle {
 
     @Override
     public Value evaluateComplete(Trace trace) {
-        return explorer.findInducedPaths(automaton, trace).size() > 0 ? Value.TRUE : Value.FALSE;
+        lastEvaluation = explorer.findInducedPaths(automaton, trace).toSet();
+        return lastEvaluation.size() > 0 ? Value.TRUE : Value.FALSE;
     }
 
     @Override
@@ -52,6 +56,10 @@ public class SimpleTestOracle extends TestOracle {
 
     public Set<Vertex> getCurrentStates() {
         return currentStates;
+    }
+
+    public Set<List<Edge>> getLastEvaluation() {
+        return lastEvaluation;
     }
 
     public BAExplorer getExplorer() {
