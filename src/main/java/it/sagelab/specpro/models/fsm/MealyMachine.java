@@ -3,6 +3,8 @@ package it.sagelab.specpro.models.fsm;
 import it.sagelab.specpro.models.ltl.Atom;
 import org.jgrapht.graph.DirectedPseudograph;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 public class MealyMachine extends DirectedPseudograph<String, Edge> {
@@ -38,6 +40,34 @@ public class MealyMachine extends DirectedPseudograph<String, Edge> {
 
     public void setOutputs(List<Atom> outputs) {
         this.outputs = outputs;
+    }
+
+    /**
+     * Save the mealy machine in KISS format
+     * @param fileName
+     */
+    public void saveKissFile(String fileName) throws IOException {
+        FileWriter fileWriter = new FileWriter(fileName);
+        fileWriter.write(".inputs ");
+        for(Atom a: inputs) {
+            fileWriter.write(a.getName());
+            fileWriter.write(" ");
+        }
+        fileWriter.write("\n");
+        fileWriter.write(".outputs ");
+        for(Atom a: outputs) {
+            fileWriter.write(a.getName());
+            fileWriter.write(" ");
+        }
+        fileWriter.write("\n");
+        fileWriter.write(".i "  + inputs.size() + "\n");
+        fileWriter.write(".o "  + outputs.size() + "\n");
+        fileWriter.write(".p " + edgeSet().size() + "\n");
+        fileWriter.write(".s " + vertexSet().size() + "\n");
+        fileWriter.write(".r " + resetState + "\n");
+        fileWriter.write(toString());
+        fileWriter.flush();
+        fileWriter.close();
     }
 
     @Override
