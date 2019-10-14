@@ -116,10 +116,4 @@ public abstract class TestGenerator {
         return getInput(SetUtils.pickRandom(e.getAssigments()));
     }
 
-    protected Set<Edge> getCompatibleEdges(Vertex v, Assignment assignment) {
-        return automaton.outgoingEdgesOf(v).stream()
-                .filter(e -> e.getAssigments().stream().filter(a -> a.isCompatible(assignment)).findAny().isPresent())
-                .collect(Collectors.toSet());
-    }
-
 }

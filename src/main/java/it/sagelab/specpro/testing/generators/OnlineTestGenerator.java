@@ -1,6 +1,5 @@
 package it.sagelab.specpro.testing.generators;
 
-import it.sagelab.specpro.collections.SetUtils;
 import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.Vertex;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
@@ -13,6 +12,7 @@ import it.sagelab.specpro.models.ltl.assign.Trace;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class OnlineTestGenerator extends TestGenerator {
@@ -69,21 +69,31 @@ public class OnlineTestGenerator extends TestGenerator {
     public boolean isCurrentTraceComplete(Trace trace, TestOracle.Value value) {
 
         Vertex previousState = currentRun.get(currentIndex).getSource();
-        Set<Edge> comatibleEdges = getCompatibleEdges(previousState, trace.last());
+        Vertex nextState = currentRun.get(currentIndex).getTarget();
+        Set<Edge> compatibleEdges = automaton.compatibleEdges(previousState, trace.last());
         Edge edge = currentRun.get(currentIndex);
 
-        if(comatibleEdges.contains(edge)) {
+        if(compatibleEdges.contains(edge)) {
             traversedEdges.add(edge);
         } else {
-            currentRun = null;
-            for(Vertex v: oracle.getCurrentStates()) {
-                currentRun = shortestPathFromTo(v, currentGoal);
-                if(currentRun != null) {
-                    traversedEdges.add(automaton.getEdge(previousState, v));
-                    break;
+            if(oracle.getCurrentStates().contains(nextState)) {
+                Optional<Edge> opEdge = compatibleEdges.stream().filter(e -> e.getTarget().equals(nextState)).findFirst();
+                if(opEdge.isPresent()) {
+                    traversedEdges.add(opEdge.get());
+                } else {
+                    return true;
                 }
+            } else {
+                currentRun = null;
+                for(Vertex v: oracle.getCurrentStates()) {
+                    currentRun = shortestPathFromTo(v, currentGoal);
+                    if(currentRun != null) {
+                        traversedEdges.add(automaton.getEdge(previousState, v));
+                        break;
+                    }
+                }
+                currentIndex = -1;
             }
-            currentIndex = -1;
         }
 
         return currentRun != null && currentIndex >= currentRun.size() - 1;

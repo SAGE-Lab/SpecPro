@@ -48,16 +48,17 @@ public class MealyMachine extends DirectedPseudograph<String, Edge> {
      */
     public void saveKissFile(String fileName) throws IOException {
         FileWriter fileWriter = new FileWriter(fileName);
-        fileWriter.write(".inputs ");
+        fileWriter.write(".inputs");
         for(Atom a: inputs) {
-            fileWriter.write(a.getName());
             fileWriter.write(" ");
+            fileWriter.write(a.getName());
         }
         fileWriter.write("\n");
-        fileWriter.write(".outputs ");
+        fileWriter.write(".outputs");
         for(Atom a: outputs) {
-            fileWriter.write(a.getName());
             fileWriter.write(" ");
+            fileWriter.write(a.getName());
+
         }
         fileWriter.write("\n");
         fileWriter.write(".i "  + inputs.size() + "\n");

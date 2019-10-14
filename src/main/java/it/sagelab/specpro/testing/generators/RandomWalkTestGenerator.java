@@ -57,9 +57,11 @@ public class RandomWalkTestGenerator extends TestGenerator {
 
     @Override
     public boolean isCurrentTraceComplete(Trace trace, TestOracle.Value value) {
-        Set<Edge> compatibleEdges = getCompatibleEdges(currentState, trace.last());
+        Set<Edge> compatibleEdges = automaton.compatibleEdges(currentState, trace.last());
         if(compatibleEdges.contains(currentGoal)) {
             traversedEdges.add(currentGoal);
+            return true;
+        } else if(compatibleEdges.isEmpty()) {
             return true;
         } else {
             Edge e = SetUtils.pickRandom(compatibleEdges);

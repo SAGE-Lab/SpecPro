@@ -101,6 +101,6 @@ public class BuchiAutomaton extends DirectedPseudograph<Vertex, Edge> {
     }
 
     private boolean isInduced(Edge e, Assignment assignment) {
-        return e.getAssigments().stream().filter(a -> a.isCompatible(assignment)).findAny().isPresent();
+        return e.getAssigments().stream().anyMatch(a -> a.isCompatible(assignment));
     }
 }
