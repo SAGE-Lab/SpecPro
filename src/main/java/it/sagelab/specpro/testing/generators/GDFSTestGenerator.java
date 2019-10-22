@@ -19,6 +19,7 @@ public class GDFSTestGenerator extends TestGenerator {
 
 
     protected final Map<Edge, Integer> visitsCounter;
+    protected  final Map<Edge, Assignment> inputMap;
     protected final SimpleTestOracle oracle;
 
     protected int minLength = 1;
@@ -32,8 +33,8 @@ public class GDFSTestGenerator extends TestGenerator {
 
     public GDFSTestGenerator(BuchiAutomaton automaton, Set<Atom> inputVariables) {
         super(automaton, inputVariables);
-
         visitsCounter = new HashMap<>();
+        inputMap = new HashMap<>();
 
         oracle = new SimpleTestOracle(automaton);
         oracle.getExplorer().getAcceptanceConditions().clear();
@@ -65,8 +66,8 @@ public class GDFSTestGenerator extends TestGenerator {
         }
         finishedTest = false;
         currentState = automaton.initStates().iterator().next();
-        Optional<Integer> value = visitsCounter.values().stream().min(Integer::compareTo);
-        return !value.isPresent() || value.get() < minCounterValue;
+        Optional<Integer> minValue = visitsCounter.values().stream().min(Integer::compareTo);
+        return !minValue.isPresent() || (minValue.get() < minCounterValue);
     }
 
     @Override
@@ -78,6 +79,12 @@ public class GDFSTestGenerator extends TestGenerator {
         currentEdge = nextEdge(currentState);
 
         Assignment input = getInput(currentEdge);
+
+        for(Edge e: automaton.compatibleEdges(currentState, input)) {
+            if(getInput(e).equals(input)) {
+                visitsCounter.compute(e, (edge, val) -> val + 1);
+            }
+        }
 
         visitsCounter.compute(currentEdge , (edge, val) -> val + 1);
 
@@ -132,6 +139,11 @@ public class GDFSTestGenerator extends TestGenerator {
         }
 
         return edges.get(0);
+    }
+
+    @Override
+    protected Assignment getInput(Edge e) {
+        return inputMap.computeIfAbsent(e, super::getInput);
     }
 
 }
