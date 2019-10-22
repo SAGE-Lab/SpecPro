@@ -91,7 +91,7 @@ public class LTL2BA {
 
             input = IOUtils.toString(process.getInputStream());
 
-            IOUtils.write(input, new FileOutputStream(type == AutomatonType.NBA ? "ba.dot" : "monitor.dot"));
+            //IOUtils.write(input, new FileOutputStream(type == AutomatonType.NBA ? "ba.dot" : "monitor.dot"));
 
 
             int exitValue = process.waitFor();

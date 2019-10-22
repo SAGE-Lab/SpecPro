@@ -160,7 +160,14 @@ public class PSP2LTL implements ExpressionVisitor {
     @Override
     public void visitVariableExpression(VariableExpression exp) {
         if(exp.getType() == VariableExpression.Type.BOOLEAN) {
-            formula = spec.getOrCreateAtom(exp.getLabel());
+            Atom a = spec.getOrCreateAtom(exp.getLabel());
+            formula = a;
+            if(exp.isInput()) {
+                spec.addInputVariable(a);
+            }
+            if(exp.isOutput()) {
+                spec.addOututVariable(a);
+            }
         }
     }
 

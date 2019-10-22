@@ -1,11 +1,19 @@
 package it.sagelab.specpro.testing;
 
+import it.sagelab.specpro.models.ba.BuchiAutomaton;
+import it.sagelab.specpro.models.ltl.Formula;
+import it.sagelab.specpro.models.ltl.LTLSpec;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
+import it.sagelab.specpro.reasoners.LTL2BA;
 import it.sagelab.specpro.testing.generators.TestGenerator;
+import it.sagelab.specpro.testing.oracles.SimpleTestOracle;
 import it.sagelab.specpro.testing.oracles.TestOracle;
 import it.sagelab.specpro.models.ltl.assign.Trace;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class TestingEnvironment {
 
@@ -63,6 +71,11 @@ public class TestingEnvironment {
                     currentInput = i;
                     Assignment o = sut.exec(i);
                     trace.add(i.combine(o));
+
+                    if(trace.last() == null) {
+                        throw new RuntimeException(trace.toString());
+                    }
+
                     if (trace.size() >= maxTraceLength) {
                         break;
                     }
@@ -92,6 +105,29 @@ public class TestingEnvironment {
         }
 
         return results;
+    }
+
+    public List<Formula> findViolatedRequirements(LTLSpec spec, Trace t) throws IOException {
+        List<Formula> violatedRequirements = new ArrayList<>();
+
+        for(Formula f: spec.getRequirements()) {
+            LTL2BA ltl2ba = new LTL2BA();
+
+            ltl2ba.setType(LTL2BA.AutomatonType.NBA);
+            LTLSpec reqSpec = new LTLSpec();
+            reqSpec.addRequirement(f);
+            BuchiAutomaton automaton = ltl2ba.translate(reqSpec);
+            automaton.expandEdges();
+
+            SimpleTestOracle oracle = new SimpleTestOracle(automaton);
+
+            if(oracle.evaluateComplete(t) == TestOracle.Value.FALSE) {
+                violatedRequirements.add(f);
+            }
+
+        }
+
+        return violatedRequirements;
     }
 
 
