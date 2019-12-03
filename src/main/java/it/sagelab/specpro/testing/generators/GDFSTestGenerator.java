@@ -19,7 +19,8 @@ public class GDFSTestGenerator extends TestGenerator {
 
 
     protected final Map<Edge, Integer> visitsCounter;
-    protected  final Map<Edge, Assignment> inputMap;
+    protected final Map<Edge, Assignment> inputMap;
+    protected final HashMap<Vertex, Integer> distanceToAcceptance;
     protected final SimpleTestOracle oracle;
 
     protected int minLength = 1;
@@ -39,6 +40,20 @@ public class GDFSTestGenerator extends TestGenerator {
         oracle = new SimpleTestOracle(automaton);
         oracle.getExplorer().getAcceptanceConditions().clear();
         oracle.getExplorer().addAcceptanceCondition(new EndsWithAcceptanceStateCondition());
+
+        distanceToAcceptance = new HashMap<>();
+        LinkedList<Vertex> toVisit = new LinkedList<>();
+        for(Vertex acc : automaton.acceptanceStates()) {
+            distanceToAcceptance.put(acc, 0);
+            toVisit.addAll(automaton.incomingEdgesOf(acc).stream().map(e -> e.getSource()).filter(v -> !distanceToAcceptance.keySet().contains(v)).collect(toList()));
+        }
+
+        while(!toVisit.isEmpty()) {
+            Vertex vertex = toVisit.pop();
+            int distance = automaton.outgoingEdgesOf(vertex).stream().map(e -> e.getTarget()).mapToInt(v -> distanceToAcceptance.getOrDefault(v, Integer.MAX_VALUE)).min().getAsInt();
+            distanceToAcceptance.put(vertex, distance + 1);
+            toVisit.addAll(automaton.incomingEdgesOf(vertex).stream().map(e -> e.getSource()).filter(v -> !distanceToAcceptance.keySet().contains(v)).collect(toList()));
+        }
     }
 
     public void setMinLength(int minLength) {
@@ -124,7 +139,8 @@ public class GDFSTestGenerator extends TestGenerator {
 
     protected Edge selectEdgeWithBestScore(Set<Edge> edgeSet) {
         List<Edge> edges = edgeSet.stream().sorted((e1, e2) -> {
-            int score = 2 * Integer.compare(visitsCounter.getOrDefault(e1, 0),  visitsCounter.getOrDefault(e2, 0));
+            int score = 4 * Integer.compare(visitsCounter.getOrDefault(e1, Integer.MAX_VALUE),  visitsCounter.getOrDefault(e2, Integer.MAX_VALUE));
+            score += 2 * Integer.compare(distanceToAcceptance.get(e1.getTarget()), distanceToAcceptance.get(e2.getTarget()));
             score += -Integer.compare(automaton.outDegreeOf(e1.getTarget()), automaton.outDegreeOf(e2.getTarget()));
             if(score != 0) {
                 return score;

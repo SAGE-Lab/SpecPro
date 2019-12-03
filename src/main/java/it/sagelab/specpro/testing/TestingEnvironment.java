@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class TestingEnvironment {
 
@@ -56,11 +57,19 @@ public class TestingEnvironment {
     }
 
     public HashMap<Trace, TestOracle.Value> runTests() {
+        return runTests(null);
+    }
+
+    public HashMap<Trace, TestOracle.Value> runTests(Consumer<HashMap<Trace, TestOracle.Value>> consumer) {
         HashMap<Trace, TestOracle.Value> results = new HashMap<>();
         Trace trace = new Trace();
         TestOracle.Value value = null;
         testGenerator.reset();
         sut.reset();
+
+        if(consumer != null) {
+            consumer.accept(results);
+        }
 
         while(testGenerator.hasNext()) {
 
@@ -96,6 +105,10 @@ public class TestingEnvironment {
                 trace = new Trace();
                 sut.reset();
                 oracle.reset();
+
+                if(consumer != null) {
+                    consumer.accept(results);
+                }
             }
 
             if(stopIfError && value == TestOracle.Value.FALSE) {
