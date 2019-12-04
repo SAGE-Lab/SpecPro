@@ -3,6 +3,11 @@ package it.sagelab.specpro.consistency;
 import it.sagelab.specpro.models.InputRequirement;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public abstract class InconsistencyFinder {
 
@@ -13,4 +18,10 @@ public abstract class InconsistencyFinder {
     }
 
     public abstract List<InputRequirement> run();
+
+    public Future<List<InputRequirement>> runAsync() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        return executor.submit(this::run);
+    }
+
 }

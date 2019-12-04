@@ -64,11 +64,4 @@ public class LinearInconsistencyFinder extends InconsistencyFinder {
             return inconsistentRequirements;
     }
 
-    public ExecutorService runAsync(BiConsumer<InputRequirement, ConsistencyChecker.Result> onProgress,
-                         Consumer<List<InputRequirement>> consumer) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> consumer.accept(run(onProgress)));
-        return executor;
-    }
-
 }

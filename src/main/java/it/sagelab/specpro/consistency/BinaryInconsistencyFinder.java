@@ -29,8 +29,6 @@ public class BinaryInconsistencyFinder extends InconsistencyFinder{
     }
 
     protected void find(List<Formula> reqs, List<Formula> incReqs) {
-        //System.out.println("reqs: " + reqs.stream().map(requirement -> requirement.getReqId()).collect(toList()));
-        //System.out.println("incReqs: " + incReqs.stream().map(requirement -> requirement.getReqId()).collect(toList()));
         if(reqs.size() <= 1) {
             if(isConsistent(null, incReqs))
                 incReqs.addAll(reqs);
