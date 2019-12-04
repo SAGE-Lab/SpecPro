@@ -41,7 +41,7 @@ public class BAFilter {
 
 
     private Edge newEdge(Edge e, Set<Atom> inputs) {
-        Edge e1 = new Edge(e.getSource(), e.getTarget(), new HashSet<>());
+        Edge e1 = new Edge(e.getSource(), e.getTarget(), new HashSet<>(), e.getId());
         for(Assignment assignment: e.getAssigments()) {
             addAssignment(e1, assignment.filter(inputs));
         }

@@ -123,6 +123,9 @@ public class Assignment {
      * @return true if the assignment is compatible with the current instance
      */
     public boolean isCompatible(Assignment assignment) {
+        if(assignment == null) {
+            return false;
+        }
         for(Map.Entry<Atom, Boolean> entry : assignment.getAssignments().entrySet()) {
             if(this.assignmentsMap.containsKey(entry.getKey())) {
                 if(!this.assignmentsMap.get(entry.getKey()).equals(entry.getValue())) {

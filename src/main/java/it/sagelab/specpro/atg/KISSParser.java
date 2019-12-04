@@ -22,6 +22,7 @@ public class KISSParser {
     Graph<Vertex, Edge> graph;
     private Map<String, Vertex> vertexMap;
     Vertex resetState;
+    private int edgeId = 0;
 
 
     public Graph<Vertex, Edge> parse(String filePath) throws FileNotFoundException {
@@ -81,7 +82,7 @@ public class KISSParser {
         addAssignmentsValue(a, args[3], outputs);
         Vertex v1 = getVertex(args[1]);
         Vertex v2 = getVertex(args[2]);
-        Edge edge = new Edge(v1, v2, Collections.singleton(a));
+        Edge edge = new Edge(v1, v2, Collections.singleton(a), ++edgeId);
         graph.addEdge(v1, v2, edge);
     }
 

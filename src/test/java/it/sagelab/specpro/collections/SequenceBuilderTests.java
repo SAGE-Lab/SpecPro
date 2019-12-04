@@ -16,8 +16,8 @@ public class SequenceBuilderTests {
     @Test
     public void testPathIteratorWithMultipleConditions() {
         ArrayList<Edge> path = new ArrayList<>();
-        path.add(new Edge(null, null, "a | b", null));
-        path.add(new Edge(null, null, "c | d", null));
+        path.add(new Edge(null, null, "a | b", null, 0));
+        path.add(new Edge(null, null, "c | d", null, 0));
 
         HashSet<Atom> atoms = new HashSet<>();
         int count = 0;

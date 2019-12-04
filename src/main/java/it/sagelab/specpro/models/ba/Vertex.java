@@ -38,6 +38,11 @@ public class Vertex {
     }
 
     @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if(o instanceof Vertex && ((Vertex)o).getId().equals(id))
             return true;

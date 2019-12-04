@@ -31,6 +31,20 @@ public class BuchiAutomaton extends DirectedPseudograph<Vertex, Edge> {
         return new BuchiAutomatonIterator(this, new LassoShapedAcceptanceCondition(), length);
     }
 
+    public void expandEdges() {
+        Set<Edge> edgeSet = edgeSet().stream().filter(e -> e.getAssigments().size() > 1).collect(Collectors.toSet());
+        int lastId = edgeSet.stream().mapToInt(e -> e.getId()).max().orElse(0);
+        for(Edge e: edgeSet) {
+            removeEdge(e);
+            for(Assignment a: e.getAssigments()) {
+                Set<Assignment> assignmentSet = new HashSet<>();
+                assignmentSet.add(a);
+                Edge edge = new Edge(e.getSource(), e.getTarget(), assignmentSet, ++lastId);
+                addEdge(edge.getSource(), edge.getTarget(), edge);
+            }
+        }
+    }
+
     public void expandImplicitTransitions() {
         new HashSet<>(edgeSet()).stream().filter(e -> e.getAssigments().size() > 1).peek(this::expand).count();
     }
@@ -39,7 +53,7 @@ public class BuchiAutomaton extends DirectedPseudograph<Vertex, Edge> {
         Set<Assignment> assignments = getCombinedAssignments(new LinkedList<>(e.getAssigments()));
 
         for(Assignment a: assignments) {
-            Edge edge = new Edge(e.getSource(), e.getTarget(), "", null);
+            Edge edge = new Edge(e.getSource(), e.getTarget(), "", null, 0);
             Set<Assignment> assignmentSet = new HashSet<>();
             assignmentSet.add(a);
             edge.setAssignmentSet(assignmentSet);
@@ -80,5 +94,13 @@ public class BuchiAutomaton extends DirectedPseudograph<Vertex, Edge> {
         }
 
         return combinedAssignments;
+    }
+
+    public Set<Edge> compatibleEdges(Vertex v, Assignment assignment) {
+        return outgoingEdgesOf(v).stream().filter(e -> isInduced(e, assignment)).collect(Collectors.toSet());
+    }
+
+    private boolean isInduced(Edge e, Assignment assignment) {
+        return e.getAssigments().stream().anyMatch(a -> a.isCompatible(assignment));
     }
 }
