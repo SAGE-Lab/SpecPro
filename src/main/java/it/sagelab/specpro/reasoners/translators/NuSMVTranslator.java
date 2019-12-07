@@ -127,7 +127,7 @@ public class NuSMVTranslator extends LTLToolTranslator {
                 .collect(Collectors.toList());
 
         // Print variables
-        for(Atom a : spec.getAtoms()) {
+        for(Atom a : booleanAtoms) {
             if(!numericAtoms.contains(a)) {
                 stream.println("\t" + a.getLabel() + " : boolean;");
             }

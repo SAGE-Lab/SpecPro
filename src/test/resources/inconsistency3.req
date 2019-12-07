@@ -1,0 +1,3 @@
+Globally, it is always the case that X holds.
+Globally, it is always the case that Y holds.
+Globally, it is always the case that if Y holds, then not X eventually holds.

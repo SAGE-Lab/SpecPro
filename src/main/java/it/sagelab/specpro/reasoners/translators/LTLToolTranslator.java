@@ -61,7 +61,7 @@ public abstract class LTLToolTranslator {
         Set<Atom> relabeledAtoms = new HashSet<>();
         for(Atom a: spec.getAtoms()) {
             if(forbiddenVarNames.contains(a.getName())) {
-                a.setLabel(varPrefix + a.getLabel());
+                a.setLabel(varPrefix + a.getName());
                 relabeledAtoms.add(a);
             }
         }

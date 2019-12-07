@@ -7,19 +7,21 @@ import it.sagelab.specpro.reasoners.ModelChecker;
 import it.sagelab.specpro.reasoners.NuSMV;
 import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvFileSource;
+
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class InconsistencyFinderTests {
 
     @EnabledIf("systemEnvironment.get('SPECPRO_NUSMV') != null")
     @ParameterizedTest
-    //@ValueSource(strings = {"test7.req", "fault1.req", "fault2.req", "fault3.req", "fault4.req", "fault5.req", "fault6.req"})
-    @ValueSource(strings = {"inconsistency1.req", "inconsistency2.req"})
-    public void testConsistencyWithNuSMV(String filePath) throws IOException {
+    @CsvFileSource(resources = "/inconsistency.csv")
+    public void testConsistencyWithNuSMV(String filePath, int mucSize) throws IOException {
         ModelChecker mc = new NuSMV(30);
 
         File inputFile = new File(getClass().getResource("/" + filePath).getFile());
@@ -33,6 +35,8 @@ public class InconsistencyFinderTests {
 
 
         List<InputRequirement> requirementList = incFinder.run();
+
+        assertEquals(mucSize, requirementList.size());
 
     }
 

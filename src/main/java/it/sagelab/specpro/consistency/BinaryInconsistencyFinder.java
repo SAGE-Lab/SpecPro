@@ -66,6 +66,10 @@ public class BinaryInconsistencyFinder extends InconsistencyFinder{
             return true;
 
         ConsistencyChecker.Result result = cc.run();
+        if(result == ConsistencyChecker.Result.FAIL) {
+            throw new RuntimeException(cc.getMc().getMessage());
+        }
+
         return result == ConsistencyChecker.Result.CONSISTENT;
 
     }
