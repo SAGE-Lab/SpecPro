@@ -101,7 +101,8 @@ public class TestingEnvironment {
                     || trace.size() >= maxTraceLength
                     || testGenerator.isCurrentTraceComplete(trace, value)) {
                 testGenerator.traceCompleted(trace);
-                results.put(trace, oracle.evaluateComplete(trace));
+                value = oracle.evaluateComplete(trace);
+                results.put(trace, value);
                 trace = new Trace();
                 sut.reset();
                 oracle.reset();
