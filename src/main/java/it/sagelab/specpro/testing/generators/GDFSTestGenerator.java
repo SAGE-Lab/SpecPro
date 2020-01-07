@@ -3,11 +3,10 @@ package it.sagelab.specpro.testing.generators;
 import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.Vertex;
-import it.sagelab.specpro.models.ba.ac.EndsWithAcceptanceStateCondition;
 import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 import it.sagelab.specpro.models.ltl.assign.Trace;
-import it.sagelab.specpro.testing.oracles.SimpleTestOracle;
+import it.sagelab.specpro.testing.oracles.FLTLOracle;
 import it.sagelab.specpro.testing.oracles.TestOracle;
 
 import java.util.*;
@@ -21,7 +20,7 @@ public class GDFSTestGenerator extends TestGenerator {
     protected final Map<Edge, Integer> visitsCounter;
     protected final Map<Edge, Assignment> inputMap;
     protected final HashMap<Vertex, Integer> distanceToAcceptance;
-    protected final SimpleTestOracle oracle;
+    protected final FLTLOracle oracle;
 
     protected int minLength = 1;
     protected int minCounterValue = 1;
@@ -37,9 +36,7 @@ public class GDFSTestGenerator extends TestGenerator {
         visitsCounter = new HashMap<>();
         inputMap = new HashMap<>();
 
-        oracle = new SimpleTestOracle(automaton);
-        oracle.getExplorer().getAcceptanceConditions().clear();
-        oracle.getExplorer().addAcceptanceCondition(new EndsWithAcceptanceStateCondition());
+        oracle = new FLTLOracle(automaton);
 
         distanceToAcceptance = new HashMap<>();
         LinkedList<Vertex> toVisit = new LinkedList<>();

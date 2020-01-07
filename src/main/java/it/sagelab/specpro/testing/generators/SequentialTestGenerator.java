@@ -9,7 +9,7 @@ import it.sagelab.specpro.models.ba.ac.EndsWithAcceptanceStateCondition;
 import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.assign.Trace;
 import it.sagelab.specpro.testing.GoalsContainer;
-import it.sagelab.specpro.testing.oracles.SimpleTestOracle;
+import it.sagelab.specpro.testing.oracles.ValidPrefixOracle;
 import it.sagelab.specpro.testing.oracles.TestOracle;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
@@ -17,10 +17,9 @@ import java.util.*;
 
 public class SequentialTestGenerator extends TestGenerator {
 
-    private final SimpleTestOracle oracle;
+    private final ValidPrefixOracle oracle;
     private VisitStateAcceptanceCondition condition;
 
-    //private final BuchiAutomaton inputAutomaton;
     private final HashMap<Vertex, Vertex> nearestAccState;
     private HashSet<Edge> visitedEdges;
     private List<Edge> nextRun;
@@ -29,7 +28,7 @@ public class SequentialTestGenerator extends TestGenerator {
 
     public SequentialTestGenerator(BuchiAutomaton automaton, Set<Atom> inputVariables) {
         super(automaton, inputVariables);
-        this.oracle = new SimpleTestOracle(automaton);
+        this.oracle = new ValidPrefixOracle(automaton);
         condition = new VisitStateAcceptanceCondition();
         //this.oracle.getExplorer().addAcceptanceCondition(condition);
         this.oracle.getExplorer().addAcceptanceCondition(new EndsWithAcceptanceStateCondition());

@@ -4,7 +4,7 @@ import it.sagelab.specpro.models.ba.Edge;
 import it.sagelab.specpro.models.ba.Vertex;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
 import it.sagelab.specpro.testing.GoalsContainer;
-import it.sagelab.specpro.testing.oracles.SimpleTestOracle;
+import it.sagelab.specpro.testing.oracles.ValidPrefixOracle;
 import it.sagelab.specpro.testing.oracles.TestOracle;
 import it.sagelab.specpro.models.ba.BuchiAutomaton;
 import it.sagelab.specpro.models.ltl.Atom;
@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class OnlineTestGenerator extends TestGenerator {
 
-    private final SimpleTestOracle oracle;
+    private final ValidPrefixOracle oracle;
     private Edge currentGoal;
     private GoalsContainer<Edge> criteria;
     private List<Edge> currentRun;
@@ -27,7 +27,7 @@ public class OnlineTestGenerator extends TestGenerator {
 
     public OnlineTestGenerator(BuchiAutomaton automaton, Set<Atom> inputVariables) {
         super(automaton, inputVariables);
-        this.oracle = new SimpleTestOracle(automaton);
+        this.oracle = new ValidPrefixOracle(automaton);
     }
 
     @Override

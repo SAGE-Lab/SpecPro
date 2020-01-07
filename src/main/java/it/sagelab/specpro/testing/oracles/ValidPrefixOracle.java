@@ -12,16 +12,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SimpleTestOracle extends TestOracle {
+public class ValidPrefixOracle extends TestOracle {
 
-    private final BuchiAutomaton automaton;
     final private BAExplorer explorer;
     private Set<Vertex> currentStates;
     private int currentTraceLength;
     private Set<List<Edge>> lastEvaluation = Collections.emptySet();
 
-    public SimpleTestOracle(BuchiAutomaton automaton){
-        this.automaton = automaton;
+    public ValidPrefixOracle(BuchiAutomaton automaton){
+        super(automaton);
         this.explorer = new BAExplorer();
         this.explorer.setMaxPaths(1);
         reset();

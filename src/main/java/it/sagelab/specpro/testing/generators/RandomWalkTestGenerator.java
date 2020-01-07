@@ -7,17 +7,15 @@ import it.sagelab.specpro.models.ba.Vertex;
 import it.sagelab.specpro.models.ltl.Atom;
 import it.sagelab.specpro.models.ltl.assign.Trace;
 import it.sagelab.specpro.testing.GoalsContainer;
-import it.sagelab.specpro.testing.oracles.SimpleTestOracle;
+import it.sagelab.specpro.testing.oracles.ValidPrefixOracle;
 import it.sagelab.specpro.testing.oracles.TestOracle;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class RandomWalkTestGenerator extends TestGenerator {
 
-    private final SimpleTestOracle oracle;
+    private final ValidPrefixOracle oracle;
     private Edge currentGoal;
     private Set<Edge> traversedEdges;
     private Vertex currentState;
@@ -25,7 +23,7 @@ public class RandomWalkTestGenerator extends TestGenerator {
 
     public RandomWalkTestGenerator(BuchiAutomaton automaton, Set<Atom> inputVariables) {
         super(automaton, inputVariables);
-        oracle = new SimpleTestOracle(automaton);
+        oracle = new ValidPrefixOracle(automaton);
         traversedEdges = new HashSet<>();
     }
 
