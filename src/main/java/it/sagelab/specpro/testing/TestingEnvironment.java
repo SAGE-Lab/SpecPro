@@ -1,6 +1,8 @@
 package it.sagelab.specpro.testing;
 
+import it.sagelab.specpro.models.ltl.LTLDcSpec;
 import it.sagelab.specpro.models.ltl.assign.Assignment;
+import it.sagelab.specpro.models.ltl.assign.NumericAssignment;
 import it.sagelab.specpro.testing.generators.TestGenerator;
 import it.sagelab.specpro.testing.oracles.TestOracle;
 import it.sagelab.specpro.models.ltl.assign.Trace;
@@ -15,6 +17,7 @@ public class TestingEnvironment {
     private final SUT sut;
     private int maxTraceLength;
     private boolean stopIfError;
+    private LTLDcSpec spec;
 
     public TestingEnvironment(TestGenerator testGenerator, TestOracle oracle, SUT sut) {
         this.testGenerator = testGenerator;
@@ -48,6 +51,10 @@ public class TestingEnvironment {
         this.maxTraceLength = maxTraceLength;
     }
 
+    public void enableLTLDcTranslation(LTLDcSpec spec) {
+        this.spec = spec;
+    }
+
     public HashMap<Trace, TestOracle.Value> runTests() {
         return runTests(null);
     }
@@ -70,13 +77,8 @@ public class TestingEnvironment {
             try {
                 for (Assignment i : input) {
                     currentInput = i;
-                    Assignment o = sut.exec(i);
-                    trace.add(i.combine(o));
-
-                    if(trace.last() == null) {
-                        throw new RuntimeException(trace.toString());
-                    }
-
+                    Assignment t = exec(i);
+                    trace.add(t);
                     if (trace.size() >= maxTraceLength) {
                         break;
                     }
@@ -111,6 +113,24 @@ public class TestingEnvironment {
         }
 
         return results;
+    }
+
+    private Assignment exec(Assignment i) {
+        Assignment o;
+        if(spec != null) {
+            NumericAssignment numericInput = spec.fromBool2Numeric(i);
+            o = sut.exec(numericInput);
+            if(o instanceof NumericAssignment) {
+                o = spec.fromNumeric2Bool((NumericAssignment) o);
+            }
+        } else {
+            o = sut.exec(i);
+        }
+        Assignment c = i.combine(o);
+        if(c == null) {
+            throw new RuntimeException("Output " + o + " not compatible with input " + i);
+        }
+        return c;
     }
 
 

@@ -1,6 +1,7 @@
 package it.sagelab.specpro.fe;
 
 import it.sagelab.specpro.models.InputRequirement;
+import it.sagelab.specpro.models.ltl.LTLDcSpec;
 import it.sagelab.specpro.models.ltl.LTLSpec;
 import it.sagelab.specpro.models.psp.Requirement;
 import it.sagelab.specpro.models.psp.Scope;
@@ -9,6 +10,7 @@ import it.sagelab.specpro.models.psp.qualitative.QualitativeRequirement;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,6 +94,12 @@ public class PSPFrontEndTests {
         assertEquals("(!(_lower_Y0) | !(_equal_Y0))", spec.getInvariants().get(1).toString());
         assertEquals("([](!((!(_lower_X0) & !(_equal_X0)))) | <>(((!(_lower_X0) & !(_equal_X0)) & <>((_lower_Y0 & Z)))))",
                 spec.getRequirements().get(0).toString());
+
+        assertTrue(spec instanceof LTLDcSpec);
+        LTLDcSpec dcSpec = (LTLDcSpec) spec;
+        assertEquals(2, dcSpec.getNumericVariableNames().size());
+        assertEquals(1, dcSpec.getThresholds("X").size());
+        assertEquals(1, dcSpec.getThresholds("Y").size());
     }
 
     @Test
@@ -129,6 +137,12 @@ public class PSPFrontEndTests {
                         " & <>(((((_lower_X0 | _equal_X0) | _lower_X2) | _equal_X2) | _lower_X1))) -> " +
                         "((!(!(_equal_X2)) | Z) U ((((_lower_X0 | _equal_X0) | _lower_X2) | _equal_X2) | _lower_X1))))",
                 spec.getRequirements().get(0).toString());
+
+        assertTrue(spec instanceof LTLDcSpec);
+        LTLDcSpec dcSpec = (LTLDcSpec) spec;
+        assertEquals(1, dcSpec.getNumericVariableNames().size());
+        assertEquals(3, dcSpec.getThresholds("X").size());
+        assertEquals(Arrays.asList(0.0f, 5.0f, 10.0f), dcSpec.getThresholds("X"));
     }
 
 
