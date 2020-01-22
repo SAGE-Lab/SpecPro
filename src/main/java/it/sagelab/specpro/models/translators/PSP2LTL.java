@@ -163,6 +163,19 @@ public class PSP2LTL implements ExpressionVisitor {
             if(exp.isOutput()) {
                 spec.addOututVariable(a);
             }
+        } else {
+            for(Atom[] atoms: spec.getRangeMap().get(exp.getLabel()).values()) {
+                if(exp.isInput()) {
+                    spec.addNumericInputVariable(exp.getLabel());
+                    spec.addInputVariable(atoms[0]);
+                    spec.addInputVariable(atoms[1]);
+                }
+                if(exp.isOutput()) {
+                    spec.addNumericOutputVariable(exp.getLabel());
+                    spec.addOututVariable(atoms[0]);
+                    spec.addOututVariable(atoms[1]);
+                }
+            }
         }
     }
 

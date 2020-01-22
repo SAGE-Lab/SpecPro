@@ -13,8 +13,16 @@ public class LTLDcSpec extends LTLSpec {
     /** The range map. */
     private Map<String, TreeMap<Float, Atom[]>> rangeMap;
 
+    /** Set of Input variables **/
+    private final Set<String> numericInputVariables;
+
+    /** Set of Output variables */
+    private final Set<String> numericOutputVariables;
+
     public LTLDcSpec(List<? extends Requirement> requirements) {
         computeRangeMap(requirements);
+        numericInputVariables = new HashSet<>();
+        numericOutputVariables = new HashSet<>();
     }
 
     public Map<String, TreeMap<Float, Atom[]>> getRangeMap() {
@@ -157,4 +165,19 @@ public class LTLDcSpec extends LTLSpec {
         rangeMap = rangeMapVisitor.getRangeMap();
     }
 
+    public Set<String> getNumericInputVariables() {
+        return numericInputVariables;
+    }
+
+    public Set<String> getNumericOutputVariables() {
+        return numericOutputVariables;
+    }
+
+    public void addNumericInputVariable(String var) {
+        this.numericInputVariables.add(var);
+    }
+
+    public void addNumericOutputVariable(String var) {
+        this.numericOutputVariables.add(var);
+    }
 }
