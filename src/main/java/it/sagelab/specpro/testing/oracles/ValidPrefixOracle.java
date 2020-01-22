@@ -28,7 +28,9 @@ public class ValidPrefixOracle extends TestOracle {
 
     @Override
     public void reset() {
-        this.currentStates = automaton.initStates();
+        if(automaton != null) {
+            this.currentStates = automaton.initStates();
+        }
         this.currentTraceLength = 0;
     }
 
