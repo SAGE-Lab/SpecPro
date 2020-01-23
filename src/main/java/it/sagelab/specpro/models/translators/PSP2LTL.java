@@ -136,6 +136,10 @@ public class PSP2LTL implements ExpressionVisitor {
     public void visitCompareExpression(CompareExpression exp) {
         Float threshold = null;
         String varName = null;
+
+        exp.getLeftExp().accept(this);
+        exp.getRightExp().accept(this);
+
         if(exp.getLeftExp() instanceof NumberExpression)
             threshold =  ((NumberExpression)exp.getLeftExp()).floatValue();
         if(exp.getLeftExp() instanceof VariableExpression)

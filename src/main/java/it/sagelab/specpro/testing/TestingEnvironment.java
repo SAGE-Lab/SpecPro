@@ -118,8 +118,8 @@ public class TestingEnvironment {
     private Assignment exec(Assignment i) {
         Assignment o;
         if(spec != null) {
-            NumericAssignment numericInput = spec.fromBool2Numeric(i);
-            o = sut.exec(numericInput);
+            i = spec.fromBool2Numeric(i);
+            o = sut.exec(i);
             if(o instanceof NumericAssignment) {
                 o = spec.fromNumeric2Bool((NumericAssignment) o);
             }

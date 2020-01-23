@@ -93,13 +93,21 @@ public class LTLDcSpec extends LTLSpec {
 
     }
 
+    /**
+     * Create a new numeric assignment that contains a numeric assignment defined by the LTL(Dc) boolean variables.
+     * The LTL(Dc) boolean variables are kept in the new assignment, alongside the numeric value.
+     *
+     * @param assignment the LTL(Dc) boolean assignment to evaluate
+     * @return the new assigment extended with the numeric variables
+     */
     public NumericAssignment fromBool2Numeric(Assignment assignment) {
         NumericAssignment na = new NumericAssignment();
         HashMap<String, Assignment> numericAssignments = new HashMap<>();
         for(Atom a: assignment.getAssignments().keySet()) {
-            if(a.getProperty(Atom.PROPERTY_NUMERIC) == null) {
-                na.add(a, assignment.getValue(a));
-            } else {
+
+            na.add(a, assignment.getValue(a));
+
+            if(a.getProperty(Atom.PROPERTY_NUMERIC) != null) {
                 numericAssignments.putIfAbsent((String) a.getProperty(Atom.PROPERTY_NUMERIC_VAR), new Assignment());
                 numericAssignments.get(a.getProperty(Atom.PROPERTY_NUMERIC_VAR)).add(a, assignment.getValue(a));
             }
@@ -117,14 +125,20 @@ public class LTLDcSpec extends LTLSpec {
         return na;
     }
 
-    public Assignment fromNumeric2Bool(NumericAssignment numericAssignment) {
-        Assignment assignment = new Assignment(numericAssignment);
+    /**
+     * Creates a new numerical assignments that contains the LTL(Dc) boolean variables corresponding to the numeric
+     * values in the input assignment.
+     * The numeric variables are kept in the new assignment, alongside the LTL(Dc) boolean values.
+     * @param numericAssignment the numeric assignment to evaluate
+     * @return the new assignment extended with the LTL(Dc) boolean variables
+     */
+    public NumericAssignment fromNumeric2Bool(NumericAssignment numericAssignment) {
 
         for(Map.Entry<Atom, Float> entry: numericAssignment.getFloatAssignments().entrySet()) {
-            assignment.add(getDcAssignment(entry.getKey().getName(), entry.getValue()));
+            numericAssignment.add(getDcAssignment(entry.getKey().getName(), entry.getValue()));
         }
 
-        return assignment;
+        return numericAssignment;
     }
 
     /**
