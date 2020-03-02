@@ -133,33 +133,33 @@ new test.
 
 You can easily define your own **System Under Test** by creating a new class extenging the `SUT` abstract class
 
-    import it.sagelab.specpro.models.ltl.Atom;
-    import it.sagelab.specpro.models.ltl.assign.Assignment;
-    import it.sagelab.specpro.testing.SUT;
-    
-    public class CustomSUT extends SUT {
+       import it.sagelab.specpro.models.ltl.Atom;
+       import it.sagelab.specpro.models.ltl.assign.Assignment;
+       import it.sagelab.specpro.testing.SUT;
+       
+       public class CustomSUT extends SUT {
     
 and implements its abstract methods:
  
  - **Reset:** called whenever the SUT should be resetted to its initial state
  
      
-    @Override
-    public void reset() {
-    }
+       @Override
+       public void reset() {
+       }
     
  - **Exec:** it takes the input assignment to execute on the SUT and returns a new assignment with the output
  of the system
  
  
-     @Override
-     public Assignment exec(Assignment input) {
-         boolean inputVar = input.getAssignments().get("inputVar");
-         ...
-         Assignment output = new Assignment();
-         output.add(new Atom("outputVar"), false);
-         return output;
-     }
+       @Override
+       public Assignment exec(Assignment input) {
+           boolean inputVar = input.getAssignments().get("inputVar");
+           ...
+           Assignment output = new Assignment();
+           output.add(new Atom("outputVar"), false);
+           return output;
+       }
 
 
 
