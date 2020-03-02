@@ -103,6 +103,9 @@ Once you have installed ANTLR4, all you have to do is:
         
         antlr4 -o ../main/java/it/sagelab/specpro/fe/psp/parser RequirementsGrammar.g4
 
+## Documentation
+To learn more about SpecPro you can read the [tutorial](docs/TUTORIAL.md) and download the [brochure](docs/brochure.pdf).
+
 ## References
 
    [1] Dwyer, M.B., Avrunin, G.S., Corbett, J.C.: Patterns in property
