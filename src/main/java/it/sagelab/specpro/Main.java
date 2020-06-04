@@ -164,8 +164,8 @@ public class Main {
                 outStream = System.out;
             }
 
-            if(commandLine.hasOption("fe")) {
-                switch (commandLine.getOptionValue("fe")) {
+            if(commandLine.hasOption("f")) {
+                switch (commandLine.getOptionValue("f")) {
                     case "ltl":
                         frontEnd = new LTLFrontEnd();
                         break;
@@ -173,7 +173,7 @@ public class Main {
                         frontEnd = new PSPFrontEnd();
                         break;
                     default:
-                        throw  new IllegalArgumentException("Option " + commandLine.getOptionValue("fe") + " not recognized");
+                        throw  new IllegalArgumentException("Option " + commandLine.getOptionValue("f") + " not recognized");
                 }
             } else {
                 frontEnd = new PSPFrontEnd();
